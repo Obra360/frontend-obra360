@@ -101,7 +101,6 @@
             </ul>
         </li>
         </ul>
-
     </div>
    </nav>
    <div class="main">
@@ -252,107 +251,50 @@
      </div>
     </nav>
     <main class="content">
-     <main class="col-12 col-md-9 col-lg-10 p-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="h4 mb-0">
-        Inicio
-       </h1>
-       <button class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1">
-        </i>
-        Nueva obra
-       </button>
-      </div>
-      <!-- Cards de obras -->
-      <div class="row g-3 mb-4">
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Centro
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            48
-           </strong>
-           Protomax
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Unidades
-          </p>
-         </div>
+        <div class="container mt-4">
+            <h1 class="mb-4">👥 Listado de personal</h1>
+
+            <!-- Botón solo visible si es administrador -->
+            <div class="d-flex justify-content-end mb-3">
+            <a href="/html/personal/nuevo-personal.html" class="btn btn-primary">
+                <i class="bi bi-person-plus"></i> Agregar nuevo operador
+            </a>
+            </div>
+
+            <!-- Tabla -->
+            <div class="table-responsive">
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Nombre de usuario</th>
+                    <th>Correo</th>
+                    <th>Rol</th>
+                    <th>Acciones</th> <!-- Solo visible si es admin -->
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>admin</td>
+                    <td>admin@example.com</td>
+                    <td><span class="badge bg-danger">Administrador</span></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>operador1</td>
+                    <td>op1@obra360.com</td>
+                    <td><span class="badge bg-secondary">Operador</span></td>
+                    <td>
+                    <button class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                    </td>
+                </tr>
+                <!-- Más filas... -->
+                </tbody>
+            </table>
+            </div>
         </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Ampliación del Hospital
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Excavaciones
-          </p>
-          <p>
-           <strong>
-            8
-           </strong>
-           Estructuras
-          </p>
-         </div>
-        </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Edificio Norte
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            123
-           </strong>
-           Proyectos
-          </p>
-          <p>
-           <strong>
-            12
-           </strong>
-           Asesores
-          </p>
-         </div>
-        </div>
-       </div>
-      </div>
-      <!-- Acciones -->
-      <div class="d-flex flex-wrap gap-3">
-       <button class="btn btn-success">
-        <i class="bi bi-plus-circle me-1">
-        </i>
-        Agregar material
-       </button>
-       <button class="btn btn-outline-secondary">
-        <i class="bi bi-bar-chart me-1">
-        </i>
-        Ver reporte
-       </button>
-      </div>
-     </main>
-    </main>
+        </main>
     <footer class="footer">
      <div class="container-fluid">
       <div class="row text-muted">

@@ -8,8 +8,8 @@
   <meta content="AdminKit" name="author"/>
   <meta content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web" name="keywords"/>
   <link href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="img/icons/icon-48x48.png" rel="shortcut icon">
-   <link href="https://demo-basic.adminkit.io/" rel="canonical"/>
+  <link href="img/icons/icon-48x48.png" rel="shortcut icon"/>
+  <link href="https://demo-basic.adminkit.io/" rel="canonical">
    <title>
     Obra 360
    </title>
@@ -23,84 +23,84 @@
     <div class="sidebar-content js-simplebar">
      <a class="sidebar-brand" href="index.html">
       <span class="align-middle">
-        Obra 360
+       Obra 360
       </span>
      </a>
      <ul class="sidebar-nav">
-        <li class="sidebar-header">Secciones</li>
+    <li class="sidebar-header">Secciones</li>
 
-        <!-- Inicio -->
+    <!-- Inicio -->
+    <li class="sidebar-item">
+        <a class="sidebar-link" href="/html/index/index.html">
+        <i class="align-middle" data-feather="sliders"></i>
+        <span class="align-middle">Inicio</span>
+        </a>
+    </li>
+
+    <!-- Obras -->
+    <li class="sidebar-item">
+        <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
+        <i class="align-middle" data-feather="home"></i>
+        <span class="align-middle">Obras</span>
+        </a>
+        <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
         <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/index/index.html">
-            <i class="align-middle" data-feather="sliders"></i>
-            <span class="align-middle">Inicio</span>
-            </a>
+            <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
         </li>
-
-        <!-- Obras -->
         <li class="sidebar-item">
-            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="home"></i>
-            <span class="align-middle">Obras</span>
-            </a>
-            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
-            </li>
-            </ul>
-        </li>
-
-        <!-- Materiales -->
-        <li class="sidebar-item">
-            <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="box"></i>
-            <span class="align-middle">Materiales</span>
-            </a>
-            <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
-            </li>
-            </ul>
-        </li>
-
-        <!-- Certificaciones -->
-        <li class="sidebar-item">
-            <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="file-text"></i>
-            <span class="align-middle">Certificaciones</span>
-            </a>
-            <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Alta de certificación</a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
-            </li>
-            </ul>
-        </li>
-
-        <!-- Personal -->
-        <li class="sidebar-item">
-            <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="users"></i>
-            <span class="align-middle">Personal</span>
-            </a>
-            <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
-            </li>
-            </ul>
+            <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
         </li>
         </ul>
+    </li>
+
+    <!-- Materiales -->
+    <li class="sidebar-item">
+        <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
+        <i class="align-middle" data-feather="box"></i>
+        <span class="align-middle">Materiales</span>
+        </a>
+        <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
+        </li>
+        </ul>
+    </li>
+
+    <!-- Certificaciones -->
+    <li class="sidebar-item">
+        <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link collapsed">
+        <i class="align-middle" data-feather="file-text"></i>
+        <span class="align-middle">Certificaciones</span>
+        </a>
+        <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Alta de certificación</a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
+        </li>
+        </ul>
+    </li>
+
+    <!-- Personal -->
+    <li class="sidebar-item">
+        <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
+        <i class="align-middle" data-feather="users"></i>
+        <span class="align-middle">Personal</span>
+        </a>
+        <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
+        </li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
+        </li>
+        </ul>
+    </li>
+    </ul>
 
     </div>
    </nav>
@@ -214,9 +214,9 @@
          </i>
         </a>
         <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
-          <span class="text-dark">
-           MyM
-          </span>
+         <span class="text-dark">
+          MyM
+         </span>
         </a>
         <div class="dropdown-menu dropdown-menu-end">
          <a class="dropdown-item" href="pages-profile.html">
@@ -252,107 +252,36 @@
      </div>
     </nav>
     <main class="content">
-     <main class="col-12 col-md-9 col-lg-10 p-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="h4 mb-0">
-        Inicio
-       </h1>
-       <button class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1">
-        </i>
-        Nueva obra
-       </button>
+      <div class="p-4">
+        <h1 class="mb-4">Nueva obra</h1>
+        <form>
+          <div class="mb-3">
+            <label class="form-label" for="empresa">Empresa</label>
+            <input type="text" class="form-control" id="empresa" placeholder="Ej: MyM Construcciones" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="tipo-obra">Tipo de obra</label>
+            <select class="form-select" id="tipo-obra" required>
+              <option value="">Seleccionar tipo</option>
+              <option>Obra pública</option>
+              <option>Obra privada</option>
+              <option>Infraestructura</option>
+              <option>Remodelación</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="ciudad">Ciudad</label>
+            <input type="text" class="form-control" id="ciudad" placeholder="Ej: Resistencia" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Guardar obra</button>
+          <a href="/html/obras/obras.html" class="btn btn-outline-secondary ms-2">Cancelar</a>
+        </form>
       </div>
-      <!-- Cards de obras -->
-      <div class="row g-3 mb-4">
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Centro
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            48
-           </strong>
-           Protomax
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Unidades
-          </p>
-         </div>
-        </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Ampliación del Hospital
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Excavaciones
-          </p>
-          <p>
-           <strong>
-            8
-           </strong>
-           Estructuras
-          </p>
-         </div>
-        </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Edificio Norte
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            123
-           </strong>
-           Proyectos
-          </p>
-          <p>
-           <strong>
-            12
-           </strong>
-           Asesores
-          </p>
-         </div>
-        </div>
-       </div>
-      </div>
-      <!-- Acciones -->
-      <div class="d-flex flex-wrap gap-3">
-       <button class="btn btn-success">
-        <i class="bi bi-plus-circle me-1">
-        </i>
-        Agregar material
-       </button>
-       <button class="btn btn-outline-secondary">
-        <i class="bi bi-bar-chart me-1">
-        </i>
-        Ver reporte
-       </button>
-      </div>
-     </main>
     </main>
+
     <footer class="footer">
      <div class="container-fluid">
       <div class="row text-muted">

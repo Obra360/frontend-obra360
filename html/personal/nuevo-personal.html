@@ -101,7 +101,6 @@
             </ul>
         </li>
         </ul>
-
     </div>
    </nav>
    <div class="main">
@@ -252,107 +251,32 @@
      </div>
     </nav>
     <main class="content">
-     <main class="col-12 col-md-9 col-lg-10 p-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="h4 mb-0">
-        Inicio
-       </h1>
-       <button class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1">
-        </i>
-        Nueva obra
-       </button>
+      <div class="container mt-4">
+        <h1 class="mb-4">🆕 Alta de nuevo operador</h1>
+
+        <form action="/ruta-backend/crear-operador" method="POST" class="card p-4 shadow-sm">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre de usuario</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="correo" class="form-label">Correo electrónico</label>
+            <input type="email" id="correo" name="correo" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" id="password" name="password" class="form-control" required>
+          </div>
+
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-person-plus-fill"></i> Crear operador
+          </button>
+        </form>
       </div>
-      <!-- Cards de obras -->
-      <div class="row g-3 mb-4">
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Centro
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            48
-           </strong>
-           Protomax
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Unidades
-          </p>
-         </div>
-        </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Ampliación del Hospital
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            65
-           </strong>
-           Excavaciones
-          </p>
-          <p>
-           <strong>
-            8
-           </strong>
-           Estructuras
-          </p>
-         </div>
-        </div>
-       </div>
-       <div class="col-md-4">
-        <div class="card shadow-sm h-100">
-         <div class="card-body">
-          <h5 class="card-title">
-           Edificio Norte
-          </h5>
-          <p class="card-text text-muted">
-           En progreso
-          </p>
-          <p>
-           <strong>
-            123
-           </strong>
-           Proyectos
-          </p>
-          <p>
-           <strong>
-            12
-           </strong>
-           Asesores
-          </p>
-         </div>
-        </div>
-       </div>
-      </div>
-      <!-- Acciones -->
-      <div class="d-flex flex-wrap gap-3">
-       <button class="btn btn-success">
-        <i class="bi bi-plus-circle me-1">
-        </i>
-        Agregar material
-       </button>
-       <button class="btn btn-outline-secondary">
-        <i class="bi bi-bar-chart me-1">
-        </i>
-        Ver reporte
-       </button>
-      </div>
-     </main>
     </main>
+
     <footer class="footer">
      <div class="container-fluid">
       <div class="row text-muted">
