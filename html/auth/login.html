@@ -14,7 +14,7 @@
 
 	<link rel="canonical" href="https://demo-basic.adminkit.io/pages-sign-in.html" />
 
-	<title>Sign In | AdminKit Demo</title>
+	<title>Sign In</title>
 
 	<link href="/src/app.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -53,7 +53,7 @@
 											</div>
 										</div>
 										<div class="d-grid gap-2 mt-3">
-											<a href="index.html" class="btn btn-lg btn-primary">Sign in</a>
+											<button type="submit" class="btn btn-lg btn-primary">Sign in</button>
 										</div>
 									</form>
 								</div>
@@ -68,7 +68,34 @@
 		</div>
 	</main>
 
-	<script src="js/app.js"></script>
+	<script src="/src/app.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
+	<script>
+	const client = supabase.createClient(
+		'https://hvgyzhmqyunnquarpbhh.supabase.co',
+		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE'
+	);
+
+	document.querySelector("form").addEventListener("submit", async function (e) {
+		e.preventDefault();
+
+		const email = document.querySelector('input[name="email"]').value.trim();
+		const password = document.querySelector('input[name="password"]').value.trim();
+
+		if (!email || !password) {
+		alert("Por favor completa todos los campos.");
+		return;
+		}
+
+		const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+		if (error) {
+		alert("Error: " + error.message);
+		} else if (data.session) {
+		window.location.href = "/html/index/index.html";
+		}
+	});
+	</script>
 
 </body>
 
