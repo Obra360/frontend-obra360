@@ -16,6 +16,20 @@
    <link href="/src/app.css" rel="stylesheet"/>
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
   </link>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
+  <script src="/src/supabaseClient.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const { data } = await window.supabaseClient.auth.getSession();
+      if (!data.session) {
+        alert("No hay sesión activa. Redirigiendo al login...");
+        window.location.href = "/html/login.html";
+      }
+    });
+  </script>
+
+
+
  </head>
  <body>
   <div class="wrapper">
@@ -330,78 +344,7 @@
     </footer>
    </div>
   </div>
-  <script src="/src/app.js">
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-			var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-			gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-			gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-			// Line chart
-			new Chart(document.getElementById("chartjs-dashboard-line"), {
-				type: "line",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "Sales ($)",
-						fill: true,
-						backgroundColor: gradient,
-						borderColor: window.theme.primary,
-						data: [
-							2115,
-							1562,
-							1584,
-							1892,
-							1587,
-							1923,
-							2566,
-							2448,
-							2805,
-							3438,
-							2917,
-							3327
-						]
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					tooltips: {
-						intersect: false
-					},
-					hover: {
-						intersect: true
-					},
-					plugins: {
-						filler: {
-							propagate: false
-						}
-					},
-					scales: {
-						xAxes: [{
-							reverse: true,
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}],
-						yAxes: [{
-							ticks: {
-								stepSize: 1000
-							},
-							display: true,
-							borderDash: [3, 3],
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}]
-					}
-				}
-			});
-		});
-  </script>
+  <script src="/src/app.js"></script>
   <script>
    document.addEventListener("DOMContentLoaded", function() {
 			// Pie chart
@@ -553,5 +496,62 @@
 			});
 		});
   </script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.querySelector("form");
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const empresa = document.getElementById("empresa").value.trim();
+      const tipo = document.getElementById("tipo-obra").value.trim();
+      const ciudad = document.getElementById("ciudad").value.trim();
+
+      // Obtener usuario actual
+      const {
+        data: { user },
+        error: userError
+      } = await window.supabaseClient.auth.getUser();
+
+      if (userError || !user) {
+        alert("No hay sesión activa. Redirigiendo...");
+        window.location.href = "/html/login.html";
+        return;
+      }
+
+      const { data, error } = await window.supabaseClient
+        .from("Obra")
+        .insert([
+          {
+            empresa,
+            tipo,
+            ciudad,
+            userId: user.id, // Asegurate que esta columna existe en tu tabla Obra
+            createdAt: new Date().toISOString() // Solo si usás este campo
+          }
+        ]);
+
+      if (error) {
+        console.error("Error al guardar obra:", error.message);
+        alert("Hubo un error al guardar la obra.");
+        return;
+      }
+
+      alert("Obra guardada correctamente.");
+      window.location.href = "/html/obras/obras.html";
+    });
+  });
+</script>
+<script>
+  // Solo para verificar que la sesión está activa:
+  supabase.auth.getSession().then(({ data: session }) => {
+    console.log("Sesión activa:", session);
+    if (!session.session) {
+      alert("No hay sesión activa. Redirigiendo al login...");
+      window.location.href = "/html/login.html";
+    }
+  });
+</script>
+
  </body>
 </html>
