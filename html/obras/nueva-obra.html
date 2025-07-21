@@ -17,25 +17,53 @@
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
   </link>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
-  <script src="/src/supabaseClient.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-      const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+  <script type="module" src="/src/supabaseClient.js"></script>
+  <script type="module">
+  import { supabase } from "/src/supabaseClient.js";
 
-      if (error || !session) {
-        alert("No hay sesión activa. Redirigiendo...");
-        window.location.href = "/login.html";
+  document.addEventListener("DOMContentLoaded", async () => {
+    const form = document.querySelector("form");
+
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError || !userData?.user) {
+      alert("No hay sesión activa. Redirigiendo...");
+      window.location.href = "/html/login.html";
+      return;
+    }
+
+    const user = userData.user;
+    console.log("🟢 Usuario autenticado:", user);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const empresa = document.getElementById("empresa").value.trim();
+      const tipo = document.getElementById("tipo-obra").value.trim();
+      const ciudad = document.getElementById("ciudad").value.trim();
+
+      const { error } = await supabase
+        .from("Obra")
+        .insert([
+          {
+            empresa,
+            tipo,
+            ciudad,
+            userid: user.id
+          }
+        ]);
+
+      if (error) {
+        console.error("❌ Error al guardar obra:", error);
+        alert("Hubo un error al guardar la obra.\n" + error.message);
         return;
       }
 
-      console.log("🟢 Sesión activa:", session);
-
-      const user = session.user;
-      console.log("🟢 Usuario:", user);
-
-      // Podés usar `user.id` como userId
+      alert("✅ Obra guardada correctamente.");
+      window.location.href = "/html/obras/obras.html";
     });
-  </script>
+  });
+</script>
 
  </head>
  <body>
@@ -352,61 +380,5 @@
    </div>
   </div>
 <script src="/src/app.js"></script>	
-<script>
-  document.addEventListener("DOMContentLoaded", async () => {
-    const form = document.querySelector("form");
-
-    // Validar sesión al cargar la página
-    const { data: userData, error: userError } = await window.supabaseClient.auth.getUser();
-
-    if (userError || !userData?.user) {
-      alert("No hay sesión activa. Redirigiendo...");
-      window.location.href = "/html/login.html";
-      return;
-    }
-
-    const user = userData.user;
-    console.log("🟢 Usuario autenticado:", user);
-
-    form.addEventListener("submit", async (event) => {
-      event.preventDefault();
-
-      const empresa = document.getElementById("empresa").value.trim();
-      const tipo = document.getElementById("tipo-obra").value.trim();
-      const ciudad = document.getElementById("ciudad").value.trim();
-
-      const { error } = await window.supabaseClient
-        .from("Obra")
-        .insert([
-          {
-            empresa,
-            tipo,
-            ciudad,
-            userId: user.id // importante: campo uuid
-          }
-        ]);
-
-      if (error) {
-        console.error("❌ Error al guardar obra:", error);
-        alert("Hubo un error al guardar la obra.\n" + error.message);
-        return;
-      }
-
-      alert("✅ Obra guardada correctamente.");
-      window.location.href = "/html/obras/obras.html";
-    });
-  });
-</script>
-
-<script>
-  // Solo para verificar que la sesión está activa:
-  supabase.auth.getSession().then(({ data: session }) => {
-    console.log("Sesión activa:", session);
-    if (!session.session) {
-      alert("No hay sesión activa. Redirigiendo al login...");
-      window.location.href = "/html/login.html";
-    }
-  });
-</script>
  </body>
 </html>
