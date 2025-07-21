@@ -1,21 +1,9 @@
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
 
-// supabaseClient.js
-// Inicializa el cliente Supabase correctamente
-const supabaseUrl = 'https://hvgyzhmqyunnquarpbhh.supabase.co';
-const supabaseAnonKey = 'tu-clave-anon-publica'; // NO uses el JWT largo de admin
+const supabaseUrl = "https://hvgyzhmqyunnquarpbhh.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE";
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Guardar el cliente en window si necesitás accederlo globalmente
-window.supabaseClient = supabase;
 
-// Esperar a que se cargue la sesión actual (usuario autenticado)
-supabase.auth.getSession().then(({ data: { session }, error }) => {
-  if (error) {
-    console.error('Error al obtener sesión:', error);
-  } else if (session) {
-    console.log('🟢 Usuario autenticado:', session.user);
-  } else {
-    console.warn('🟡 No hay sesión activa');
-  }
-});
+window.supabase = supabase;

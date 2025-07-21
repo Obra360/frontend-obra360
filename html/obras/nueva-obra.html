@@ -20,15 +20,22 @@
   <script src="/src/supabaseClient.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
-      const { data } = await window.supabaseClient.auth.getSession();
-      if (!data.session) {
-        alert("No hay sesión activa. Redirigiendo al login...");
-        window.location.href = "/html/login.html";
+      const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+
+      if (error || !session) {
+        alert("No hay sesión activa. Redirigiendo...");
+        window.location.href = "/login.html";
+        return;
       }
+
+      console.log("🟢 Sesión activa:", session);
+
+      const user = session.user;
+      console.log("🟢 Usuario:", user);
+
+      // Podés usar `user.id` como userId
     });
   </script>
-
-
 
  </head>
  <body>
@@ -277,7 +284,7 @@
           <div class="mb-3">
             <label class="form-label" for="tipo-obra">Tipo de obra</label>
             <select class="form-select" id="tipo-obra" required>
-              <option value="">Seleccionar tipo</option>
+              <option value="" disabled selected>Seleccionar tipo</option>
               <option>Obra pública</option>
               <option>Obra privada</option>
               <option>Infraestructura</option>
@@ -344,161 +351,22 @@
     </footer>
    </div>
   </div>
-  <script src="/src/app.js"></script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE"],
-					datasets: [{
-						data: [4306, 3801, 1689],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger
-						],
-						borderWidth: 5
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 75
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			// Bar chart
-			new Chart(document.getElementById("chartjs-dashboard-bar"), {
-				type: "bar",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "This year",
-						backgroundColor: window.theme.primary,
-						borderColor: window.theme.primary,
-						hoverBackgroundColor: window.theme.primary,
-						hoverBorderColor: window.theme.primary,
-						data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-						barPercentage: .75,
-						categoryPercentage: .5
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							gridLines: {
-								display: false
-							},
-							stacked: false,
-							ticks: {
-								stepSize: 20
-							}
-						}],
-						xAxes: [{
-							stacked: false,
-							gridLines: {
-								color: "transparent"
-							}
-						}]
-					}
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var markers = [{
-					coords: [31.230391, 121.473701],
-					name: "Shanghai"
-				},
-				{
-					coords: [28.704060, 77.102493],
-					name: "Delhi"
-				},
-				{
-					coords: [6.524379, 3.379206],
-					name: "Lagos"
-				},
-				{
-					coords: [35.689487, 139.691711],
-					name: "Tokyo"
-				},
-				{
-					coords: [23.129110, 113.264381],
-					name: "Guangzhou"
-				},
-				{
-					coords: [40.7127837, -74.0059413],
-					name: "New York"
-				},
-				{
-					coords: [34.052235, -118.243683],
-					name: "Los Angeles"
-				},
-				{
-					coords: [41.878113, -87.629799],
-					name: "Chicago"
-				},
-				{
-					coords: [51.507351, -0.127758],
-					name: "London"
-				},
-				{
-					coords: [40.416775, -3.703790],
-					name: "Madrid "
-				}
-			];
-			var map = new jsVectorMap({
-				map: "world",
-				selector: "#world_map",
-				zoomButtons: true,
-				markers: markers,
-				markerStyle: {
-					initial: {
-						r: 9,
-						strokeWidth: 7,
-						stokeOpacity: .4,
-						fill: window.theme.primary
-					},
-					hover: {
-						fill: window.theme.primary,
-						stroke: window.theme.primary
-					}
-				},
-				zoomOnScroll: false
-			});
-			window.addEventListener("resize", () => {
-				map.updateSize();
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-				nextArrow: "<span title=\"Next month\">&raquo;</span>",
-				defaultDate: defaultDate
-			});
-		});
-  </script>
+<script src="/src/app.js"></script>	
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector("form");
+
+    // Validar sesión al cargar la página
+    const { data: userData, error: userError } = await window.supabaseClient.auth.getUser();
+
+    if (userError || !userData?.user) {
+      alert("No hay sesión activa. Redirigiendo...");
+      window.location.href = "/html/login.html";
+      return;
+    }
+
+    const user = userData.user;
+    console.log("🟢 Usuario autenticado:", user);
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -507,41 +375,29 @@
       const tipo = document.getElementById("tipo-obra").value.trim();
       const ciudad = document.getElementById("ciudad").value.trim();
 
-      // Obtener usuario actual
-      const {
-        data: { user },
-        error: userError
-      } = await window.supabaseClient.auth.getUser();
-
-      if (userError || !user) {
-        alert("No hay sesión activa. Redirigiendo...");
-        window.location.href = "/html/login.html";
-        return;
-      }
-
-      const { data, error } = await window.supabaseClient
+      const { error } = await window.supabaseClient
         .from("Obra")
         .insert([
           {
             empresa,
             tipo,
             ciudad,
-            userId: user.id, // Asegurate que esta columna existe en tu tabla Obra
-            createdAt: new Date().toISOString() // Solo si usás este campo
+            userId: user.id // importante: campo uuid
           }
         ]);
 
       if (error) {
-        console.error("Error al guardar obra:", error.message);
-        alert("Hubo un error al guardar la obra.");
+        console.error("❌ Error al guardar obra:", error);
+        alert("Hubo un error al guardar la obra.\n" + error.message);
         return;
       }
 
-      alert("Obra guardada correctamente.");
+      alert("✅ Obra guardada correctamente.");
       window.location.href = "/html/obras/obras.html";
     });
   });
 </script>
+
 <script>
   // Solo para verificar que la sesión está activa:
   supabase.auth.getSession().then(({ data: session }) => {
@@ -552,6 +408,5 @@
     }
   });
 </script>
-
  </body>
 </html>
