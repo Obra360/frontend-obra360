@@ -16,18 +16,6 @@
    <link href="/src/app.css" rel="stylesheet"/>
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
   </link>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
-    <script src="/src/supabaseClient.js"></script>
-    <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        const { data } = await window.supabaseClient.auth.getSession();
-        if (!data.session) {
-        alert("No hay sesión activa. Redirigiendo al login...");
-        window.location.href = "/html/login.html";
-        }
-    });
-    </script>
-
 
  </head>
  <body>
@@ -266,68 +254,75 @@
     <main class="content">
      <main class="col-12 col-md-9 col-lg-10 p-4">
       <div class="d-flex justify-content-between align-items-center mb-4">
-       <h1 class="h4 mb-0">
-        Inicio
-       </h1>
-       <button class="btn btn-primary">
-        <i class="bi bi-plus-lg me-1">
-        </i>
-        Agregar Obras
-       </button>
-      </div>
-      <!-- Cards de obras -->
-     <script>
-    async function cargarObras() {
-        const { data, error: sessionError } = await window.supabaseClient.auth.getSession();
+        <h1 class="h4 mb-0">Inicio</h1>
+        <button class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i>
+            Agregar Obras
+        </button>
+        </div>
 
-        if (sessionError || !data.session) {
-        alert("No hay sesión activa. Redirigiendo al login...");
-        window.location.href = "/html/auth/login.html";
-        return;
-        }
+        <!-- Tarjetas de obras -->
+        <div id="lista-obras" class="row g-3 mb-4"></div>
+       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
+        <script type="module" src="/src/supabaseClient.js"></script>
+        <script type="module">
+        import { supabase } from "/src/supabaseClient.js";
 
-        const { data: obras, error } = await window.supabaseClient
-        .from("Obra")
-        .select("*")
-        .order("createdAt", { ascending: false });
+        document.addEventListener("DOMContentLoaded", async () => {
+            const { data: { session }, error } = await supabase.auth.getSession();
 
-        if (error) {
-        console.error("Error cargando obras:", error.message);
-        return;
-        }
+            if (error || !session) {
+                alert("No hay sesión activa. Redirigiendo a login...");
+                window.location.href = "/html/auth/login.html";
+                return;
+            }
 
-        const container = document.querySelector(".row.g-3.mb-4");
-        if (!container) {
-        console.warn("Contenedor no encontrado");
-        return;
-        }
+            console.log("🟢 Sesión activa:", session);
+            const user = session.user;
 
-        container.innerHTML = "";
+            // ❌ NO es necesario volver a hacer setSession si ya tenés sesión
+            // await supabase.auth.setSession({ ... });
 
-        obras.forEach((obra) => {
-        const card = document.createElement("div");
-        card.className = "col-md-4";
+            function renderizarObras(obras) {
+                const contenedor = document.getElementById("lista-obras");
+                contenedor.innerHTML = "";
 
-        card.innerHTML = `
-            <div class="card shadow-sm h-100">
-            <div class="card-body">
-                <h5 class="card-title">${obra.empresa}</h5>
-                <p class="card-text text-muted">En progreso</p>
-                <p><strong>${obra.tipo}</strong></p>
-                <p>${obra.ciudad}</p>
-            </div>
-            </div>
-        `;
+                obras.forEach((obra) => {
+                    const card = document.createElement("div");
+                    card.className = "col-md-4";
 
-        container.appendChild(card);
+                    card.innerHTML = `
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                        <h5 class="card-title">${obra.empresa}</h5>
+                        <p class="card-text text-muted">En progreso</p>
+                        <p>Tipo <strong>${obra.tipo}</strong></p>
+                        <p>Ciudad <strong>${obra.ciudad}</strong></p>
+                        <p>Fecha <strong>${new Date(obra.createdAt).toLocaleDateString()}</strong></p>
+                        </div>
+                    </div>
+                    `;
+
+                    contenedor.appendChild(card);
+                });
+                }
+
+
+            const { data, error: fetchError } = await supabase
+            .from("Obra")
+            .select("*")
+            .eq("userid", user.id)
+            .order("createdAt", { ascending: false });
+
+            if (fetchError) {
+            console.error("Error cargando obras:", fetchError.message);
+            } else {
+            console.log("📦 Obras:", data);
+            renderizarObras(data);
+            }
+
         });
-    }
-
-    document.addEventListener("DOMContentLoaded", cargarObras);
     </script>
-
-
-
       <!-- Acciones -->
       <div class="d-flex flex-wrap gap-3">
        <button class="btn btn-success">
@@ -392,46 +387,6 @@
    </div>
   </div>
   <script src="/src/app.js">
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE"],
-					datasets: [{
-						data: [4306, 3801, 1689],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger
-						],
-						borderWidth: 5
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 75
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-				nextArrow: "<span title=\"Next month\">&raquo;</span>",
-				defaultDate: defaultDate
-			});
-		});
   </script>
  </body>
 </html>
