@@ -1,0 +1,9 @@
+{
+  "name": "frontend-obra360",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {},
+  "dependencies": {
+    "react": "^19.1.0"
+  }
+}
