@@ -37,14 +37,14 @@
 						<div class="card">
 							<div class="card-body">
 								<div class="m-sm-3">
-									<form>
+									<form id="login-form">
 										<div class="mb-3">
 											<label class="form-label">Email</label>
-											<input class="form-control form-control-lg" type="email" name="email" placeholder="Enter your email" />
+											<input class="form-control form-control-lg" type="email" name="email" required placeholder="Enter your email" />
 										</div>
 										<div class="mb-3">
 											<label class="form-label">Password</label>
-											<input class="form-control form-control-lg" type="password" name="password" placeholder="Enter your password" />
+											<input class="form-control form-control-lg" type="password" name="password"  required placeholder="Enter your password" />
 										</div>
 										<div>
 											<div class="form-check align-items-center">
@@ -69,38 +69,44 @@
 	</main>
 
 	<script src="/src/app.js"></script>
-	<script type="module">
-	import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-	const client = createClient(
-		'https://hvgyzhmqyunnquarpbhh.supabase.co',
-		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE' // tu anon key
-	);
-
+	<script>
 	document.querySelector("form").addEventListener("submit", async function (e) {
-		e.preventDefault();
+	e.preventDefault();
 
-		const email = document.querySelector('input[name="email"]').value.trim();
-		const password = document.querySelector('input[name="password"]').value.trim();
+	const email = document.querySelector('input[name="email"]').value.trim();
+	const password = document.querySelector('input[name="password"]').value.trim();
 
-		if (!email || !password) {
-		alert("Por favor completa todos los campos.");
+	if (!email || !password) {
+		alert("Por favor completá todos los campos.");
 		return;
-		}
+	}
 
-		const { data, error } = await client.auth.signInWithPassword({ email, password });
+	try {
+		const res = await fetch("http://localhost:3000/api/login", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json"
+		},
+		body: JSON.stringify({ email, password })
+		});
 
-		if (error) {
-		alert("Error: " + error.message);
+		const data = await res.json();
+
+		if (!res.ok) {
+		alert("Error: " + (data.error || "Credenciales inválidas"));
 		} else {
-		sessionStorage.setItem("access_token", data.session.access_token);
-		// 🔁 Redirección absoluta asegurada:
-		window.location.href = window.location.origin + "/index.html";
+		sessionStorage.setItem("access_token", data.access_token);
+		alert("Login exitoso");
+		window.location.href = "/index.html"; // o la página protegida que quieras
 		}
+	} catch (err) {
+		console.error("Error al conectar con el backend:", err);
+		alert("Error de conexión");
+	}
 	});
 	</script>
 
-
+<script src="js/login.js"></script>
 </body>
 
 </html>
