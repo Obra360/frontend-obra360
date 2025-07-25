@@ -70,13 +70,6 @@
 
 	<script src="/src/app.js"></script>
 	<script type="module">
-	import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-	const client = createClient(
-			'https://hvgyzhmqyunnquarpbhh.supabase.co',
-			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE' // tu anon key
-		);
-
 		document.querySelector("form").addEventListener("submit", async function (e) {
 			e.preventDefault();
 
@@ -84,37 +77,35 @@
 			const password = document.querySelector('input[name="password"]').value.trim();
 
 			if (!email || !password) {
-			alert("Por favor completa todos los campos.");
-			return;
+				alert("Por favor completa todos los campos.");
+				return;
 			}
 
-			const response = await fetch("/auth/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ email, password }),
-			});
+			try {
+				const response = await fetch("https://backend-obra360.onrender.com/auth/login", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, password }),
+				});
 
-			const result = await response.json();
+				if (!response.ok) {
+					const text = await response.text();
+					alert("Error: " + text);
+					return;
+				}
 
-			if (!response.ok) {
-			alert("Error: " + result.error);
-			} else {
-			sessionStorage.setItem("access_token", result.token);
-			window.location.href = "/index.html";
+				const result = await response.json();
+				sessionStorage.setItem("access_token", result.token);
+				window.location.href = "/index.html";
+			} catch (error) {
+				console.error("Error inesperado:", error);
+				alert("Ocurrió un error al intentar iniciar sesión.");
 			}
-
-
-		if (error) {
-		alert("Error: " + error.message);
-		} else {
-		sessionStorage.setItem("access_token", data.session.access_token);
-		// 🔁 Redirección absoluta asegurada:
-		window.location.href = window.location.origin + "/index.html";
-		}
-	});
+		});
 	</script>
+
 
 
 </body>
