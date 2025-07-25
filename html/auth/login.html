@@ -73,22 +73,38 @@
 	import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 	const client = createClient(
-		'https://hvgyzhmqyunnquarpbhh.supabase.co',
-		'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE' // tu anon key
-	);
+			'https://hvgyzhmqyunnquarpbhh.supabase.co',
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh2Z3l6aG1xeXVubnF1YXJwYmhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI1Mzk0NjcsImV4cCI6MjA2ODExNTQ2N30.qdPl4YKFpVc_oDGYTk3LT3aoFwFWfUCJzt5VFgss9UE' // tu anon key
+		);
 
-	document.querySelector("form").addEventListener("submit", async function (e) {
-		e.preventDefault();
+		document.querySelector("form").addEventListener("submit", async function (e) {
+			e.preventDefault();
 
-		const email = document.querySelector('input[name="email"]').value.trim();
-		const password = document.querySelector('input[name="password"]').value.trim();
+			const email = document.querySelector('input[name="email"]').value.trim();
+			const password = document.querySelector('input[name="password"]').value.trim();
 
-		if (!email || !password) {
-		alert("Por favor completa todos los campos.");
-		return;
-		}
+			if (!email || !password) {
+			alert("Por favor completa todos los campos.");
+			return;
+			}
 
-		const { data, error } = await client.auth.signInWithPassword({ email, password });
+			const response = await fetch("/auth/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ email, password }),
+			});
+
+			const result = await response.json();
+
+			if (!response.ok) {
+			alert("Error: " + result.error);
+			} else {
+			sessionStorage.setItem("access_token", result.token);
+			window.location.href = "/index.html";
+			}
+
 
 		if (error) {
 		alert("Error: " + error.message);
