@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
+<head>
   <meta charset="utf-8"/>
   <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
@@ -9,384 +9,425 @@
   <meta content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web" name="keywords"/>
   <link href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="img/icons/icon-48x48.png" rel="shortcut icon">
-   <link href="https://demo-basic.adminkit.io/" rel="canonical"/>
-   <title>
-    Obra 360
-   </title>
-   <link href="/src/app.css" rel="stylesheet"/>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
-  </link>
-
- </head>
- <body>
+  <link href="https://demo-basic.adminkit.io/" rel="canonical"/>
+  <title>Obras - Obra 360</title>
+  <link href="/src/app.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+  <!-- Include authentication script FIRST -->
+  <script src="/src/js/auth.js"></script>
+  
   <div class="wrapper">
-   <nav class="sidebar js-sidebar" id="sidebar">
-    <div class="sidebar-content js-simplebar">
-     <a class="sidebar-brand" href="index.html">
-      <span class="align-middle">
-        Obra 360
-      </span>
-     </a>
-     <ul class="sidebar-nav">
-        <li class="sidebar-header">Secciones</li>
+    <nav class="sidebar js-sidebar" id="sidebar">
+      <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="index.html">
+          <span class="align-middle">Obra 360</span>
+        </a>
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Secciones</li>
 
-        <!-- Inicio -->
-        <li class="sidebar-item">
+          <!-- Inicio -->
+          <li class="sidebar-item">
             <a class="sidebar-link" href="/index.html">
-            <i class="align-middle" data-feather="sliders"></i>
-            <span class="align-middle">Inicio</span>
+              <i class="align-middle" data-feather="sliders"></i>
+              <span class="align-middle">Inicio</span>
             </a>
-        </li>
+          </li>
 
-        <!-- Obras -->
-        <li class="sidebar-item">
-            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="home"></i>
-            <span class="align-middle">Obras</span>
+          <!-- Obras -->
+          <li class="sidebar-item active">
+            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link">
+              <i class="align-middle" data-feather="home"></i>
+              <span class="align-middle">Obras</span>
             </a>
-            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
+            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+              <li class="sidebar-item active">
                 <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
-            </li>
-            <li class="sidebar-item">
+              </li>
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
-            </li>
+              </li>
             </ul>
-        </li>
+          </li>
 
-        <!-- Materiales -->
-        <li class="sidebar-item">
+          <!-- Materiales -->
+          <li class="sidebar-item">
             <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="box"></i>
-            <span class="align-middle">Materiales</span>
+              <i class="align-middle" data-feather="box"></i>
+              <span class="align-middle">Materiales</span>
             </a>
             <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
-            </li>
-            <li class="sidebar-item">
+              </li>
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
-            </li>
+              </li>
             </ul>
-        </li>
+          </li>
 
-        <!-- Certificaciones -->
-        <li class="sidebar-item">
+          <!-- Certificaciones -->
+          <li class="sidebar-item">
             <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="file-text"></i>
-            <span class="align-middle">Certificaciones</span>
+              <i class="align-middle" data-feather="file-text"></i>
+              <span class="align-middle">Certificaciones</span>
             </a>
             <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Alta de certificación</a>
-            </li>
-            <li class="sidebar-item">
+              </li>
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
-            </li>
+              </li>
             </ul>
-        </li>
+          </li>
 
-        <!-- Personal -->
-        <li class="sidebar-item">
+          <!-- Personal -->
+          <li class="sidebar-item">
             <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
-            <i class="align-middle" data-feather="users"></i>
-            <span class="align-middle">Personal</span>
+              <i class="align-middle" data-feather="users"></i>
+              <span class="align-middle">Personal</span>
             </a>
             <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-            <li class="sidebar-item">
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
-            </li>
-            <li class="sidebar-item">
+              </li>
+              <li class="sidebar-item">
                 <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
-            </li>
+              </li>
             </ul>
-        </li>
+          </li>
         </ul>
-    </div>
-   </nav>
-   <div class="main">
-    <nav class="navbar navbar-expand navbar-light navbar-bg">
-     <a class="sidebar-toggle js-sidebar-toggle">
-      <i class="hamburger align-self-center">
-      </i>
-     </a>
-     <div class="navbar-collapse collapse">
-      <ul class="navbar-nav navbar-align">
-       <li class="nav-item dropdown">
-        <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
-         <div class="position-relative">
-          <i class="align-middle" data-feather="bell">
-          </i>
-          <span class="indicator">
-           4
-          </span>
-         </div>
-        </a>
-        <div aria-labelledby="alertsDropdown" class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0">
-         <div class="dropdown-menu-header">
-          4 New Notifications
-         </div>
-         <div class="list-group">
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-danger" data-feather="alert-circle">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Actualizacion completa
-             </div>
-             <div class="text-muted small mt-1">
-              Restart server 12 to complete the update.
-             </div>
-             <div class="text-muted small mt-1">
-              30m ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-warning" data-feather="bell">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Lorem ipsum
-             </div>
-             <div class="text-muted small mt-1">
-              Aliquam ex eros, imperdiet vulputate hendrerit et.
-             </div>
-             <div class="text-muted small mt-1">
-              2h ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-primary" data-feather="home">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Ingreso desde 192.186.1.8
-             </div>
-             <div class="text-muted small mt-1">
-              5h ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-success" data-feather="user-plus">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Nueva conexión
-             </div>
-             <div class="text-muted small mt-1">
-              Tobias accepted your request.
-             </div>
-             <div class="text-muted small mt-1">
-              14h ago
-             </div>
-            </div>
-           </div>
-          </a>
-         </div>
-         <div class="dropdown-menu-footer">
-          <a class="text-muted" href="#">
-           Show all notifications
-          </a>
-         </div>
-        </div>
-       </li>
-       <li class="nav-item dropdown">
-        <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
-         <i class="align-middle" data-feather="settings">
-         </i>
-        </a>
-        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
-          <span class="text-dark">
-           MyM
-          </span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end">
-         <a class="dropdown-item" href="pages-profile.html">
-          <i class="align-middle me-1" data-feather="user">
-          </i>
-          Profile
-         </a>
-         <a class="dropdown-item" href="#">
-          <i class="align-middle me-1" data-feather="pie-chart">
-          </i>
-          Analytics
-         </a>
-         <div class="dropdown-divider">
-         </div>
-         <a class="dropdown-item" href="index.html">
-          <i class="align-middle me-1" data-feather="settings">
-          </i>
-          Settings &amp; Privacy
-         </a>
-         <a class="dropdown-item" href="#">
-          <i class="align-middle me-1" data-feather="help-circle">
-          </i>
-          Help Center
-         </a>
-         <div class="dropdown-divider">
-         </div>
-         <a class="dropdown-item" href="#">
-          Log out
-         </a>
-        </div>
-       </li>
-      </ul>
-     </div>
+      </div>
     </nav>
-    <main class="content">
-     <main class="col-12 col-md-9 col-lg-10 p-4">
-      <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h4 mb-0">Inicio</h1>
-        <a href="./nueva-obra.html" class="btn btn-primary">
-            <i class="bi bi-plus-lg me-1"></i> Agregar Obras
+    
+    <div class="main">
+      <nav class="navbar navbar-expand navbar-light navbar-bg">
+        <a class="sidebar-toggle js-sidebar-toggle">
+          <i class="hamburger align-self-center"></i>
         </a>
-
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav navbar-align">
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
+                <div class="position-relative">
+                  <i class="align-middle" data-feather="bell"></i>
+                  <span class="indicator">4</span>
+                </div>
+              </a>
+              <div aria-labelledby="alertsDropdown" class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0">
+                <div class="dropdown-menu-header">
+                  4 New Notifications
+                </div>
+                <div class="list-group">
+                  <!-- Notification items here -->
+                </div>
+                <div class="dropdown-menu-footer">
+                  <a class="text-muted" href="#">Show all notifications</a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
+                <i class="align-middle" data-feather="settings"></i>
+              </a>
+              <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
+                <span class="text-dark" id="userName">Usuario</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="pages-profile.html">
+                  <i class="align-middle me-1" data-feather="user"></i>
+                  Profile
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="align-middle me-1" data-feather="pie-chart"></i>
+                  Analytics
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="index.html">
+                  <i class="align-middle me-1" data-feather="settings"></i>
+                  Settings & Privacy
+                </a>
+                <a class="dropdown-item" href="#">
+                  <i class="align-middle me-1" data-feather="help-circle"></i>
+                  Help Center
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#" onclick="logout()">
+                  <i class="align-middle me-1" data-feather="log-out"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
         </div>
+      </nav>
+      
+      <main class="content">
+        <div class="col-12 col-md-9 col-lg-10 p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h4 mb-0">Listado de Obras</h1>
+            <a href="./nueva-obra.html" class="btn btn-primary">
+              <i class="bi bi-plus-lg me-1"></i> Agregar Obra
+            </a>
+          </div>
+          
+          <div id="alertContainer"></div>
 
-        <!-- Tarjetas de obras -->
-        <div id="lista-obras" class="row g-3 mb-4"></div>
-       <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.42.3/dist/umd/supabase.min.js"></script>
-        <script type="module" src="/src/supabaseClient.js"></script>
-        <script type="module">
-        import { supabase } from "/src/supabaseClient.js";
+          <!-- Loading spinner -->
+          <div id="loadingSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Cargando obras...</p>
+          </div>
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            const { data: { session }, error } = await supabase.auth.getSession();
+          <!-- Tarjetas de obras -->
+          <div id="lista-obras" class="row g-3 mb-4" style="display: none;"></div>
+          
+          <!-- Empty state -->
+          <div id="emptyState" class="text-center py-5" style="display: none;">
+            <i class="bi bi-building" style="font-size: 4rem; color: #ccc;"></i>
+            <h5 class="mt-3">No hay obras registradas</h5>
+            <p class="text-muted">Comienza agregando tu primera obra</p>
+            <a href="./nueva-obra.html" class="btn btn-primary">
+              <i class="bi bi-plus-lg me-1"></i> Agregar Primera Obra
+            </a>
+          </div>
 
-            if (error || !session) {
-                alert("No hay sesión activa. Redirigiendo a login...");
-                window.location.href = "/html/auth/login.html";
-                return;
-            }
-
-            console.log("🟢 Sesión activa:", session);
-            const user = session.user;
-
-            // ❌ NO es necesario volver a hacer setSession si ya tenés sesión
-            // await supabase.auth.setSession({ ... });
-
-            function renderizarObras(obras) {
-                const contenedor = document.getElementById("lista-obras");
-                contenedor.innerHTML = "";
-
-                obras.forEach((obra) => {
-                    const card = document.createElement("div");
-                    card.className = "col-md-4";
-
-                    card.innerHTML = `
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body">
-                        <h5 class="card-title">${obra.empresa}</h5>
-                        <p class="card-text text-muted">En progreso</p>
-                        <p>Tipo <strong>${obra.tipo}</strong></p>
-                        <p>Ciudad <strong>${obra.ciudad}</strong></p>
-                        <p>Fecha <strong>${new Date(obra.createdAt).toLocaleDateString()}</strong></p>
-                        </div>
-                    </div>
-                    `;
-
-                    contenedor.appendChild(card);
-                });
-                }
-
-
-            const { data, error: fetchError } = await supabase
-            .from("Obra")
-            .select("*")
-            .eq("userid", user.id)
-            .order("createdAt", { ascending: false });
-
-            if (fetchError) {
-            console.error("Error cargando obras:", fetchError.message);
-            } else {
-            console.log("📦 Obras:", data);
-            renderizarObras(data);
-            }
-
-        });
-    </script>
-      <!-- Acciones -->
-      <div class="d-flex flex-wrap gap-3">
-       <button class="btn btn-success">
-        <i class="bi bi-plus-circle me-1">
-        </i>
-        Agregar material
-       </button>
-       <button class="btn btn-outline-secondary">
-        <i class="bi bi-bar-chart me-1">
-        </i>
-        Ver reporte
-       </button>
-      </div>
-     </main>
-    </main>
-    <footer class="footer">
-     <div class="container-fluid">
-      <div class="row text-muted">
-       <div class="col-6 text-start">
-        <p class="mb-0">
-         <a class="text-muted" target="_blank">
-          <strong>
-           Obra 360
-          </strong>
-         </a>
-         -
-         <a class="text-muted" target="_blank">
-          <strong>
-           Admin Kit
-          </strong>
-         </a>
-         ©
-        </p>
-       </div>
-       <div class="col-6 text-end">
-        <ul class="list-inline">
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Soporte
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Centro de ayuda
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Privacidad
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Terminos
-          </a>
-         </li>
-        </ul>
-       </div>
-      </div>
-     </div>
-    </footer>
-   </div>
+          <!-- Acciones -->
+          <div class="d-flex flex-wrap gap-3 mt-4">
+            <button class="btn btn-success" onclick="agregarMaterial()">
+              <i class="bi bi-plus-circle me-1"></i>
+              Agregar material
+            </button>
+            <button class="btn btn-outline-secondary" onclick="verReporte()">
+              <i class="bi bi-bar-chart me-1"></i>
+              Ver reporte
+            </button>
+          </div>
+        </div>
+      </main>
+      
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row text-muted">
+            <div class="col-6 text-start">
+              <p class="mb-0">
+                <a class="text-muted" target="_blank">
+                  <strong>Obra 360</strong>
+                </a>
+                -
+                <a class="text-muted" target="_blank">
+                  <strong>Admin Kit</strong>
+                </a>
+                ©
+              </p>
+            </div>
+            <div class="col-6 text-end">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Soporte</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Centro de ayuda</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Privacidad</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Terminos</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   </div>
-  <script src="/src/app.js">
+
+  <script>
+    // Authentication check happens automatically via auth.js
+    
+    // Show user name
+    document.addEventListener('DOMContentLoaded', async function() {
+      const user = authUtils.getCurrentUser();
+      if (user) {
+        document.getElementById('userName').textContent = user.name || user.email;
+      }
+      
+      // Load obras
+      await cargarObras();
+    });
+    
+    // Logout function
+    function logout() {
+      authUtils.logout();
+    }
+    
+    // Show alert messages
+    function showAlert(message, type = 'danger') {
+      const alertContainer = document.getElementById('alertContainer');
+      alertContainer.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+          ${message}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      `;
+    }
+    
+    // Load obras from API
+    async function cargarObras() {
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const listaObras = document.getElementById('lista-obras');
+      const emptyState = document.getElementById('emptyState');
+      
+      try {
+        // Make authenticated API request
+        const result = await authUtils.apiRequest('/obras', {
+          method: 'GET'
+        });
+        
+        if (result.success) {
+          loadingSpinner.style.display = 'none';
+          
+          if (result.data && result.data.length > 0) {
+            renderizarObras(result.data);
+            listaObras.style.display = 'flex';
+            emptyState.style.display = 'none';
+          } else {
+            listaObras.style.display = 'none';
+            emptyState.style.display = 'block';
+          }
+        } else {
+          loadingSpinner.style.display = 'none';
+          showAlert(result.error || 'Error al cargar las obras');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        loadingSpinner.style.display = 'none';
+        showAlert('Error de conexión. Por favor intente nuevamente.');
+      }
+    }
+    
+    // Render obras cards
+    function renderizarObras(obras) {
+      const contenedor = document.getElementById("lista-obras");
+      contenedor.innerHTML = "";
+
+      obras.forEach((obra) => {
+        const card = document.createElement("div");
+        card.className = "col-md-4";
+        
+        // Estado badge color
+        const estadoColors = {
+          'planificacion': 'info',
+          'en_progreso': 'primary',
+          'completada': 'success',
+          'pausada': 'warning'
+        };
+        
+        const estadoLabels = {
+          'planificacion': 'Planificación',
+          'en_progreso': 'En Progreso',
+          'completada': 'Completada',
+          'pausada': 'Pausada'
+        };
+        
+        const badgeColor = estadoColors[obra.estado] || 'secondary';
+        const estadoLabel = estadoLabels[obra.estado] || obra.estado;
+
+        card.innerHTML = `
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <h5 class="card-title">${obra.nombre || obra.empresa}</h5>
+              <p class="card-text">
+                <span class="badge bg-${badgeColor}">${estadoLabel}</span>
+              </p>
+              <p class="mb-1"><i class="bi bi-building me-1"></i> <strong>${obra.tipo || 'N/A'}</strong></p>
+              <p class="mb-1"><i class="bi bi-geo-alt me-1"></i> <strong>${obra.direccion || obra.ciudad || 'N/A'}</strong></p>
+              <p class="mb-1"><i class="bi bi-person me-1"></i> <strong>${obra.cliente || 'N/A'}</strong></p>
+              <p class="mb-0"><i class="bi bi-calendar me-1"></i> <strong>${formatDate(obra.fechaInicio || obra.createdAt)}</strong></p>
+            </div>
+            <div class="card-footer bg-light">
+              <div class="d-flex justify-content-between">
+                <button class="btn btn-sm btn-outline-primary" onclick="editarObra(${obra.id})">
+                  <i class="bi bi-pencil"></i> Editar
+                </button>
+                <button class="btn btn-sm btn-outline-danger" onclick="eliminarObra(${obra.id})">
+                  <i class="bi bi-trash"></i> Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        contenedor.appendChild(card);
+      });
+    }
+    
+    // Format date
+    function formatDate(dateString) {
+      if (!dateString) return 'N/A';
+      const date = new Date(dateString);
+      return date.toLocaleDateString('es-AR', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+    
+    // Edit obra
+    function editarObra(id) {
+      authUtils.requireAuth(() => {
+        // Redirect to edit page or open modal
+        window.location.href = `/html/obras/editar-obra.html?id=${id}`;
+      });
+    }
+    
+    // Delete obra
+    async function eliminarObra(id) {
+      authUtils.requireAuth(async () => {
+        if (!confirm('¿Está seguro que desea eliminar esta obra?')) {
+          return;
+        }
+        
+        try {
+          const result = await authUtils.apiRequest(`/obras/${id}`, {
+            method: 'DELETE'
+          });
+          
+          if (result.success) {
+            showAlert('Obra eliminada correctamente', 'success');
+            // Reload obras
+            await cargarObras();
+          } else {
+            showAlert(result.error || 'Error al eliminar la obra');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          showAlert('Error de conexión. Por favor intente nuevamente.');
+        }
+      });
+    }
+    
+    // Add material function
+    function agregarMaterial() {
+      authUtils.requireAuth(() => {
+        window.location.href = '/html/materiales/nuevo-material.html';
+      });
+    }
+    
+    // View report function
+    function verReporte() {
+      authUtils.requireAuth(() => {
+        alert('Función de reportes en desarrollo');
+      });
+    }
   </script>
- </body>
+  
+  <script src="/src/app.js"></script>
+</body>
 </html>
