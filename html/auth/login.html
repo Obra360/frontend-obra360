@@ -179,7 +179,7 @@
                 showAlert('¡Login exitoso! Redirigiendo...', 'success');
                 
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = '/index.html';
                 }, 1000);
             } else {
                 showAlert(data.message || 'Email o contraseña incorrectos');
@@ -198,7 +198,7 @@
         const token = localStorage.getItem('obra360_token');
         if (token) {
             // Si ya tiene token, redirigir al dashboard
-            window.location.href = 'index.html';
+            window.location.href = '/index.html';
         }
     });
 </script>
