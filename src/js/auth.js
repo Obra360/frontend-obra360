@@ -116,7 +116,7 @@ class AuthManager {
     // Logout
     logout() {
         this.clearAuth();
-        window.location.href = '/login.html';
+        window.location.href = './login.html';
     }
 
     // Manejar errores de autenticación
@@ -129,10 +129,10 @@ class AuthManager {
     // Redireccionar al login si no está autenticado
     redirectToLogin() {
         const currentPath = window.location.pathname;
-        const publicPaths = ['/login.html', '/register.html', '/forgot-password.html'];
+        const publicPaths = ['./login.html', '/register.html', '/forgot-password.html'];
         
         if (!publicPaths.includes(currentPath)) {
-            window.location.href = '/login.html';
+            window.location.href = './login.html';
         }
     }
 
@@ -266,7 +266,7 @@ window.authUtils = {
 
 // Auto-inicializar en páginas protegidas
 document.addEventListener('DOMContentLoaded', function() {
-    const publicPages = ['login.html', 'register.html', 'forgot-password.html'];
+    const publicPages = ['./login.html', 'register.html', 'forgot-password.html'];
     const currentPage = window.location.pathname.split('/').pop();
     
     if (!publicPages.includes(currentPage) && !authManager.isAuthenticated()) {
