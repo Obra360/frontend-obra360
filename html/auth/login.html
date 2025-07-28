@@ -133,69 +133,49 @@
 
     <script>
         // Configuración de la API
-        const API_BASE_URL = 'mature-romona-obra360-e2712968.koyeb.app/'; // Ajusta según tu backend
-        
-        // Elementos del DOM
-        const loginForm = document.getElementById('loginForm');
-        const alertContainer = document.getElementById('alertContainer');
-        const loadingSpinner = document.querySelector('.loading-spinner');
-        const submitButton = loginForm.querySelector('button[type="submit"]');
-        
-        // Mostrar alerta
-        function showAlert(message, type = 'danger') {
-            alertContainer.innerHTML = `
-                <div class="alert alert-${type} alert-dismissible fade show" role="alert">
-                    ${message}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            `;
-        }
-        
-        // Manejar el envío del formulario
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            // Mostrar spinner y deshabilitar botón
-            loadingSpinner.style.display = 'block';
-            submitButton.disabled = true;
-            alertContainer.innerHTML = '';
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}./auth/login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.token) {
-                    // Guardar token y datos del usuario
-                    localStorage.setItem('obra360_token', data.token);
-                    localStorage.setItem('obra360_user', JSON.stringify(data.user));
-                    
-                    showAlert('¡Login exitoso! Redirigiendo...', 'success');
-                    
-                    // Redirigir al dashboard
-                    setTimeout(() => {
-                        window.location.href = './index.html';
-                    }, 1000);
-                } else {
-                    showAlert(data.message || 'Email o contraseña incorrectos');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showAlert('Error de conexión. Por favor, intenta nuevamente.');
-            } finally {
-                loadingSpinner.style.display = 'none';
-                submitButton.disabled = false;
-            }
+        const API_BASE_URL = 'https://mature-romona-obra360-e2712968.koyeb.app';
+
+loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    
+    loadingSpinner.style.display = 'block';
+    submitButton.disabled = true;
+    alertContainer.innerHTML = '';
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/login`, {  // Correct endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email, password })
         });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.token) {
+            localStorage.setItem('obra360_token', data.token);
+            localStorage.setItem('obra360_user', JSON.stringify(data.user));
+            
+            showAlert('¡Login exitoso! Redirigiendo...', 'success');
+            
+            setTimeout(() => {
+                window.location.href = './index.html';
+            }, 1000);
+        } else {
+            showAlert(data.message || 'Email o contraseña incorrectos');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showAlert('Error de conexión. Por favor, intenta nuevamente.');
+    } finally {
+        loadingSpinner.style.display = 'none';
+        submitButton.disabled = false;
+    }
+});
         
         // Verificar si ya está autenticado
         document.addEventListener('DOMContentLoaded', () => {
