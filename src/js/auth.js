@@ -128,13 +128,23 @@ class AuthManager {
 
     // Redireccionar al login si no está autenticado
     redirectToLogin() {
-        const currentPath = window.location.pathname;
-        const publicPaths = ['html/auth/login.html', '/register.html', '/forgot-password.html'];
-        
-        if (!publicPaths.includes(currentPath)) {
-            window.location.href = 'html/auth/login.html';
-        }
+    const currentPath = window.location.pathname.toLowerCase();
+    const publicPaths = [
+        '/login',
+        '/register',
+        '/forgot-password',
+        '/auth'  // Si todas las rutas de auth son públicas
+    ];
+    
+    // Verificar si la ruta actual contiene alguna ruta pública
+    const isPublicRoute = publicPaths.some(path => 
+        currentPath.includes(path)
+    );
+    
+    if (!isPublicRoute) {
+        window.location.replace('/html/auth/login.html'); // replace evita volver atrás
     }
+}
 
     // Fetch autenticado - wrapper para incluir token
     async authenticatedFetch(url, options = {}) {
@@ -266,10 +276,13 @@ window.authUtils = {
 
 // Auto-inicializar en páginas protegidas
 document.addEventListener('DOMContentLoaded', function() {
-    const publicPages = ['html/auth/login.html', 'register.html', 'forgot-password.html'];
-    const currentPage = window.location.pathname.split('/').pop();
+    // Patrón para identificar páginas de autenticación
+    const authPagesPattern = /\/(login|register|forgot-password)\.html$/i;
+    const currentPath = window.location.pathname;
     
-    if (!publicPages.includes(currentPage) && !authManager.isAuthenticated()) {
+    const isAuthPage = authPagesPattern.test(currentPath);
+    
+    if (!isAuthPage && !authManager.isAuthenticated()) {
         authManager.redirectToLogin();
     }
 });
