@@ -181,8 +181,8 @@ class AuthManager {
         window.fetch = function(...args) {
             let [url, options = {}] = args;
 
-            // Solo interceptar llamadas a la API
-            if (url.includes(API_BASE_URL)) {
+            // Interceptar llamadas a la API (URL completa o rutas /api/)
+            if (url.includes(API_BASE_URL) || url.startsWith('/api/')) {
                 // Agregar token si existe
                 if (authManager.token) {
                     options.headers = {
@@ -195,7 +195,7 @@ class AuthManager {
             return originalFetch.apply(this, [url, options])
                 .then(response => {
                     // Manejar respuestas 401
-                    if (response.status === 401 && url.includes(API_BASE_URL)) {
+                    if (response.status === 401) {
                         authManager.handleAuthError();
                     }
                     return response;
