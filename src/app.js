@@ -33,10 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+const user = authUtils?.getCurrentUser() || null;
+
 if (user?.role === "ADMIN") {
   document.getElementById("boton-alta-operador").style.display = "block";
 }
-
 
 
 
