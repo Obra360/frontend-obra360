@@ -37,7 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
 const user = authUtils?.getCurrentUser() || null;
 
 if (user?.role === "ADMIN") {
-  document.getElementById("boton-alta-operador").style.display = "block";
+  const botonAlta = document.getElementById("boton-alta-operador");
+    if (botonAlta) {
+        botonAlta.style.display = "block";
+    }
 }
 
 

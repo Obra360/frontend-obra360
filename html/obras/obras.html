@@ -286,7 +286,7 @@
       
       try {
         // Make authenticated API request
-        const result = await authUtils.apiRequest('/obras', {
+        const result = await authUtils.apiRequest('/api/obras', {
           method: 'GET'
         });
         
@@ -395,7 +395,7 @@
         }
         
         try {
-          const result = await authUtils.apiRequest(`/obras/${id}`, {
+          const result = await authUtils.apiRequest(`/api/obras/${id}`, {
             method: 'DELETE'
           });
           
