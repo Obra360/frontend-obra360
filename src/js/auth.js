@@ -238,30 +238,57 @@ window.authUtils = {
     },
 
     // Hacer peticiones autenticadas
-    apiRequest: async function(endpoint, options = {}) {
-        try {
-            const response = await authManager.authenticatedFetch(
-                `${API_BASE_URL}${endpoint}`, 
-                options
-            );
-            const data = await response.json();
-            
-            if (response.ok) {
-                return { success: true, data };
-            } else {
-                return { 
-                    success: false, 
-                    error: data.message || 'Error en la petición' 
-                };
+    // Hacer peticiones autenticadas
+apiRequest: async function(endpoint, options = {}) {
+    try {
+        console.log('apiRequest - endpoint:', endpoint);
+        console.log('apiRequest - options:', options);
+        console.log('apiRequest - full URL:', `${API_BASE_URL}${endpoint}`);
+        
+        const response = await authManager.authenticatedFetch(
+            `${API_BASE_URL}${endpoint}`, 
+            options
+        );
+        
+        console.log('apiRequest - response status:', response.status);
+        console.log('apiRequest - response ok:', response.ok);
+        
+        // Check content type
+        const contentType = response.headers.get('content-type');
+        console.log('apiRequest - content-type:', contentType);
+        
+        let data;
+        if (contentType && contentType.includes('application/json')) {
+            try {
+                const responseText = await response.text();
+                console.log('apiRequest - response text:', responseText);
+                data = JSON.parse(responseText);
+            } catch (parseError) {
+                console.error('apiRequest - JSON parse error:', parseError);
+                data = { error: 'Invalid JSON response' };
             }
-        } catch (error) {
-            console.error('Error en apiRequest:', error);
+        } else {
+            data = await response.text();
+            console.log('apiRequest - non-JSON response:', data);
+        }
+        
+        if (response.ok) {
+            return { success: true, data };
+        } else {
+            console.log('apiRequest - error data:', data);
             return { 
                 success: false, 
-                error: error.message || 'Error de conexión' 
+                error: data.message || data.error || `Error ${response.status}` 
             };
         }
-    },
+    } catch (error) {
+        console.error('Error en apiRequest:', error);
+        return { 
+            success: false, 
+            error: error.message || 'Error de conexión' 
+        };
+    }
+},
 
     // Verificar rol de administrador
     isAdmin: function() {
