@@ -285,18 +285,16 @@
     document.getElementById('nuevaObraForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       
-      // Get form data
+      // Get form data matching API expectations
       const formData = {
-        nombre: document.getElementById('empresa').value.trim(),
-        direccion: document.getElementById('ciudad').value.trim(), // Using ciudad as direccion
-        cliente: document.getElementById('empresa').value.trim(), // Using empresa as cliente for now
+        empresa: document.getElementById('empresa').value.trim(),
+        ciudad: document.getElementById('ciudad').value.trim(),
         tipo: document.getElementById('tipo-obra').value,
-        fechaInicio: document.getElementById('fechaInicio').value,
-        estado: 'planificacion' // Default status
+        fechaInicio: new Date(document.getElementById('fechaInicio').value).toISOString()
       };
       
       // Validate
-      if (!formData.nombre || !formData.direccion || !formData.tipo || !formData.fechaInicio) {
+      if (!formData.empresa || !formData.ciudad || !formData.tipo || !formData.fechaInicio) {
         showAlert('Por favor complete todos los campos requeridos');
         return;
       }
