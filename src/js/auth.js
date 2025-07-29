@@ -3,7 +3,7 @@ const AUTH_TOKEN_KEY = 'obra360_token';
 const AUTH_USER_KEY = 'obra360_user';
 
 // Configuración de la API
-const API_BASE_URL = 'mature-romona-obra360-e2712968.koyeb.app/'; // Ajusta según tu backend
+const API_BASE_URL = 'https://mature-romona-obra360-e2712968.koyeb.app'; // Ajusta según tu backend
 
 // Clase principal para manejar autenticación
 class AuthManager {
@@ -85,7 +85,7 @@ class AuthManager {
     // Login
     async login(email, password) {
         try {
-            const response = await fetch(`${API_BASE_URL}/auth/login`, {
+            const response = await fetch(`${API_BASE_URL}/users/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -116,7 +116,7 @@ class AuthManager {
     // Logout
     logout() {
         this.clearAuth();
-        window.location.href = 'html/auth/login.html';
+        window.location.href = '/html/auth/login.html';
     }
 
     // Manejar errores de autenticación
