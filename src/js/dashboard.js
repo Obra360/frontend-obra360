@@ -60,11 +60,15 @@ class DashboardManager {
   // Cargar datos principales del dashboard
   async loadDashboardData() {
     try {
-      // Cargar obras y estadísticas en paralelo
-      const [obrasData, statsData] = await Promise.all([
-        this.loadObras(),
-        this.loadStats()
-      ]);
+      console.log('Cargando datos del dashboard...');
+      
+      // Cargar obras
+      const obrasData = await this.loadObras();
+      console.log('Obras cargadas:', obrasData);
+
+      // Cargar estadísticas si está disponible
+      const statsData = await this.loadStats();
+      console.log('Stats cargadas:', statsData);
 
       this.updateKPIs(obrasData, statsData);
       this.displayRecentObras(obrasData);
@@ -80,7 +84,12 @@ class DashboardManager {
   async loadObras() {
     try {
       const result = await window.authUtils.apiRequest('/api/obras');
-      return result.success ? result.data : [];
+      if (result.success) {
+        return result.data || [];
+      } else {
+        console.error('Error en API obras:', result.error);
+        return [];
+      }
     } catch (error) {
       console.error('Error cargando obras:', error);
       return [];
@@ -91,25 +100,32 @@ class DashboardManager {
   async loadStats() {
     try {
       const result = await window.authUtils.apiRequest('/api/obras/stats/general');
-      return result.success ? result.data : null;
+      if (result.success) {
+        return result.data;
+      } else {
+        console.log('Stats no disponibles:', result.error);
+        return null;
+      }
     } catch (error) {
-      console.error('Error cargando estadísticas:', error);
+      console.log('Stats no disponibles (normal si no eres admin)');
       return null;
     }
   }
 
   // Actualizar KPIs principales
   updateKPIs(obras, stats) {
+    console.log('Actualizando KPIs con:', { obras: obras.length, stats });
+
     // Total de obras
     const totalObras = document.getElementById('totalObras');
     if (totalObras) {
       totalObras.textContent = obras.length;
     }
 
-    // Obras activas (simulado - puedes agregar campo 'estado' a tu modelo)
+    // Obras activas (por ahora todas están "activas")
     const obrasActivas = document.getElementById('obrasActivas');
     if (obrasActivas) {
-      obrasActivas.textContent = obras.length; // Por ahora todas están "activas"
+      obrasActivas.textContent = obras.length;
     }
 
     // Tendencia de obras
@@ -128,19 +144,21 @@ class DashboardManager {
     if (inversionTotal) {
       let total = 0;
       obras.forEach(obra => {
-        if (obra.articulos) {
+        if (obra.articulos && Array.isArray(obra.articulos)) {
           obra.articulos.forEach(articulo => {
-            total += articulo.precio * articulo.Cantidad;
+            if (articulo.precio && articulo.Cantidad) {
+              total += articulo.precio * articulo.Cantidad;
+            }
           });
         }
       });
       inversionTotal.textContent = `$${total.toLocaleString()}`;
     }
 
-    // Certificaciones (placeholder)
+    // Certificaciones (placeholder - puedes conectar con tu API de certificaciones)
     const totalCert = document.getElementById('totalCertificaciones');
     if (totalCert) {
-      totalCert.textContent = Math.floor(Math.random() * 20) + 5; // Simulado
+      totalCert.textContent = Math.floor(Math.random() * 20) + 5; // Simulado por ahora
     }
   }
 
@@ -194,14 +212,20 @@ class DashboardManager {
 
   // Configurar gráficos
   setupCharts() {
-    this.setupObrasMonthlyChart();
-    this.setupObrasTipoChart();
+    // Esperar un poco para que Chart.js se cargue
+    setTimeout(() => {
+      this.setupObrasMonthlyChart();
+      this.setupObrasTipoChart();
+    }, 500);
   }
 
   // Gráfico de obras por mes
   async setupObrasMonthlyChart() {
     const ctx = document.getElementById('chartObrasMonthly');
-    if (!ctx) return;
+    if (!ctx || !window.Chart) {
+      console.log('Chart.js no disponible o elemento no encontrado');
+      return;
+    }
 
     try {
       const obras = await this.loadObras();
@@ -219,6 +243,60 @@ class DashboardManager {
             backgroundColor: 'rgba(54, 162, 235, 0.8)',
             borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                stepSize: 1
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+    } catch (error) {
+      console.error('Error creando gráfico mensual:', error);
+    }
+  }
+
+  // Gráfico de distribución por tipo
+  async setupObrasTipoChart() {
+    const ctx = document.getElementById('chartObrasTipo');
+    if (!ctx || !window.Chart) {
+      console.log('Chart.js no disponible o elemento no encontrado');
+      return;
+    }
+
+    try {
+      const obras = await this.loadObras();
+      
+      const privadas = obras.filter(o => o.tipo === 'Obra privada').length;
+      const publicas = obras.filter(o => o.tipo === 'Obra pública').length;
+
+      this.charts.tipo = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Obra Privada', 'Obra Pública'],
+          datasets: [{
+            data: [privadas, publicas],
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)'
+            ],
+            borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 2
           }]
         },
         options: {
@@ -326,7 +404,7 @@ class DashboardManager {
       
       // Reinitialize feather icons
       if (window.feather) {
-        feather.replace();
+        window.feather.replace();
       }
     }
   }
@@ -454,59 +532,13 @@ function logout() {
 let dashboardManager;
 
 document.addEventListener('DOMContentLoaded', function() {
+  console.log('Iniciando dashboard...');
   // Esperar un poco para asegurar que auth.js se haya cargado
   setTimeout(() => {
-    dashboardManager = new DashboardManager();
-  }, 100);
-});atio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                stepSize: 1
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Error creando gráfico mensual:', error);
-    }
-  }
-
-  // Gráfico de distribución por tipo
-  async setupObrasTipoChart() {
-    const ctx = document.getElementById('chartObrasTipo');
-    if (!ctx) return;
-
     try {
-      const obras = await this.loadObras();
-      
-      const privadas = obras.filter(o => o.tipo === 'Obra privada').length;
-      const publicas = obras.filter(o => o.tipo === 'Obra pública').length;
-
-      this.charts.tipo = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Obra Privada', 'Obra Pública'],
-          datasets: [{
-            data: [privadas, publicas],
-            backgroundColor: [
-              'rgba(255, 99, 132, 0.8)',
-              'rgba(54, 162, 235, 0.8)'
-            ],
-            borderColor: [
-              'rgba(255, 99, 132, 1)',
-              'rgba(54, 162, 235, 1)'
-            ],
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectR
+      dashboardManager = new DashboardManager();
+    } catch (error) {
+      console.error('Error inicializando dashboard:', error);
+    }
+  }, 100);
+});
