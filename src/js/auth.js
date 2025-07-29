@@ -181,6 +181,10 @@ class AuthManager {
         window.fetch = function(...args) {
             let [url, options = {}] = args;
 
+            console.log('Interceptor - URL:', url);
+            console.log('Interceptor - Token:', authManager.token);
+
+
             // Interceptar llamadas a la API (URL completa o rutas /api/)
             if (url.includes(API_BASE_URL) || url.startsWith('/api/')) {
                 // Agregar token si existe
@@ -191,6 +195,7 @@ class AuthManager {
                     };
                 }
             }
+            console.log('Interceptor - Headers finales:', options.headers);
 
             return originalFetch.apply(this, [url, options])
                 .then(response => {
