@@ -312,7 +312,7 @@
       
       try {
         // Make authenticated API request
-        const result = await authUtils.apiRequest('/obras', {
+        const result = await authUtils.apiRequest('/api/obras', {
           method: 'POST',
           body: JSON.stringify(formData)
         });
