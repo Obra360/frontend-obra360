@@ -1,616 +1,704 @@
 <!DOCTYPE html>
-<html lang="en">
- <head>
+<html lang="es">
+<head>
   <meta charset="utf-8"/>
   <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
-  <meta content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5" name="description"/>
-  <meta content="AdminKit" name="author"/>
-  <meta content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web" name="keywords"/>
-  <link href="https://fonts.gstatic.com" rel="preconnect"/>
-  <link href="img/icons/icon-48x48.png" rel="shortcut icon"/>
-  <link href="https://demo-basic.adminkit.io/" rel="canonical">
-   <title>
-    Obra 360
-   </title>
-   <link href="/src/app.css" rel="stylesheet"/>
-   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&amp;display=swap" rel="stylesheet"/>
-  </link>
- </head>
+  <title>Nueva Certificación - Obra 360</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="/src/app.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
 
-
- <body>
-  
+<body>
   <script src="/src/js/auth.js"></script>
 
   <div class="wrapper">
-   <nav class="sidebar js-sidebar" id="sidebar">
-    <div class="sidebar-content js-simplebar">
-     <a class="sidebar-brand" href="index.html">
-      <span class="align-middle">
-       Obra 360
-      </span>
-     </a>
-     <ul class="sidebar-nav">
-    <li class="sidebar-header">Secciones</li>
-
-    <!-- Inicio -->
-    <li class="sidebar-item">
-        <a class="sidebar-link" href="/index.html">
-        <i class="align-middle" data-feather="sliders"></i>
-        <span class="align-middle">Inicio</span>
+    <nav class="sidebar js-sidebar" id="sidebar">
+      <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/index.html">
+          <span class="align-middle">Obra 360</span>
         </a>
-    </li>
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Secciones</li>
 
-    <!-- Obras -->
-    <li class="sidebar-item">
-        <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
-        <i class="align-middle" data-feather="home"></i>
-        <span class="align-middle">Obras</span>
-        </a>
-        <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
-        </li>
+          <!-- Inicio -->
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/index.html">
+              <i class="align-middle" data-feather="sliders"></i>
+              <span class="align-middle">Inicio</span>
+            </a>
+          </li>
+
+          <!-- Obras -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="home"></i>
+              <span class="align-middle">Obras</span>
+            </a>
+            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Materiales -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="box"></i>
+              <span class="align-middle">Materiales</span>
+            </a>
+            <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Certificaciones -->
+          <li class="sidebar-item active">
+            <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link">
+              <i class="align-middle" data-feather="file-text"></i>
+              <span class="align-middle">Certificaciones</span>
+            </a>
+            <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Certificaciones registradas</a>
+              </li>
+              <li class="sidebar-item active">
+                <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Personal -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="users"></i>
+              <span class="align-middle">Personal</span>
+            </a>
+            <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/control-horas.html">Control de horas</a>
+              </li>
+            </ul>
+          </li>
         </ul>
-    </li>
-
-    <!-- Materiales -->
-    <li class="sidebar-item">
-        <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
-        <i class="align-middle" data-feather="box"></i>
-        <span class="align-middle">Materiales</span>
-        </a>
-        <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
-        </li>
-        </ul>
-    </li>
-
-    <!-- Certificaciones -->
-    <li class="sidebar-item">
-        <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link collapsed">
-        <i class="align-middle" data-feather="file-text"></i>
-        <span class="align-middle">Certificaciones</span>
-        </a>
-        <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Alta de certificación</a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
-        </li>
-        </ul>
-    </li>
-
-    <!-- Personal -->
-    <li class="sidebar-item">
-        <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
-        <i class="align-middle" data-feather="users"></i>
-        <span class="align-middle">Personal</span>
-        </a>
-        <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
-        </li>
-        <li class="sidebar-item">
-            <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
-        </li>
-        </ul>
-    </li>
-    </ul>
-
-    </div>
-   </nav>
-   <div class="main">
-    <nav class="navbar navbar-expand navbar-light navbar-bg">
-     <a class="sidebar-toggle js-sidebar-toggle">
-      <i class="hamburger align-self-center">
-      </i>
-     </a>
-     <div class="navbar-collapse collapse">
-      <ul class="navbar-nav navbar-align">
-       <li class="nav-item dropdown">
-        <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
-         <div class="position-relative">
-          <i class="align-middle" data-feather="bell">
-          </i>
-          <span class="indicator">
-           4
-          </span>
-         </div>
-        </a>
-        <div aria-labelledby="alertsDropdown" class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0">
-         <div class="dropdown-menu-header">
-          4 New Notifications
-         </div>
-         <div class="list-group">
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-danger" data-feather="alert-circle">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Actualizacion completa
-             </div>
-             <div class="text-muted small mt-1">
-              Restart server 12 to complete the update.
-             </div>
-             <div class="text-muted small mt-1">
-              30m ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-warning" data-feather="bell">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Lorem ipsum
-             </div>
-             <div class="text-muted small mt-1">
-              Aliquam ex eros, imperdiet vulputate hendrerit et.
-             </div>
-             <div class="text-muted small mt-1">
-              2h ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-primary" data-feather="home">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Ingreso desde 192.186.1.8
-             </div>
-             <div class="text-muted small mt-1">
-              5h ago
-             </div>
-            </div>
-           </div>
-          </a>
-          <a class="list-group-item" href="#">
-           <div class="row g-0 align-items-center">
-            <div class="col-2">
-             <i class="text-success" data-feather="user-plus">
-             </i>
-            </div>
-            <div class="col-10">
-             <div class="text-dark">
-              Nueva conexión
-             </div>
-             <div class="text-muted small mt-1">
-              Tobias accepted your request.
-             </div>
-             <div class="text-muted small mt-1">
-              14h ago
-             </div>
-            </div>
-           </div>
-          </a>
-         </div>
-         <div class="dropdown-menu-footer">
-          <a class="text-muted" href="#">
-           Show all notifications
-          </a>
-         </div>
-        </div>
-       </li>
-       <li class="nav-item dropdown">
-        <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
-         <i class="align-middle" data-feather="settings">
-         </i>
-        </a>
-        <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
-         <span class="text-dark">
-          MyM
-         </span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end">
-         <a class="dropdown-item" href="pages-profile.html">
-          <i class="align-middle me-1" data-feather="user">
-          </i>
-          Profile
-         </a>
-         <a class="dropdown-item" href="#">
-          <i class="align-middle me-1" data-feather="pie-chart">
-          </i>
-          Analytics
-         </a>
-         <div class="dropdown-divider">
-         </div>
-         <a class="dropdown-item" href="index.html">
-          <i class="align-middle me-1" data-feather="settings">
-          </i>
-          Settings &amp; Privacy
-         </a>
-         <a class="dropdown-item" href="#">
-          <i class="align-middle me-1" data-feather="help-circle">
-          </i>
-          Help Center
-         </a>
-         <div class="dropdown-divider">
-         </div>
-         <a class="dropdown-item" href="#" onclick="logout()">
-            <i class="align-middle me-1" data-feather="log-out"></i>
-            Cerrar Sesión
-         </a>
-        </div>
-       </li>
-      </ul>
-     </div>
+      </div>
     </nav>
-    <main class="content">
-      <div class="p-4">
-        <h1 class="mb-4">
-          Agregar certificación
-        </h1>
-        <form>
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label class="form-label" for="obra">Obra</label>
-              <select class="form-select" id="obra" required>
-                <option value="">Seleccionar obra</option>
-                <option>Corrientes</option>
-                <option>Resistencia</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label" for="tipo">Tipo de certificación</label>
-              <input type="text" class="form-control" id="tipo" placeholder="Ej: Tendido OLT" required />
-            </div>
-            <div class="col-md-4">
-              <label class="form-label" for="fecha">Fecha</label>
-              <input type="date" class="form-control" id="fecha" required />
+
+    <div class="main">
+      <nav class="navbar navbar-expand navbar-light navbar-bg">
+        <a class="sidebar-toggle js-sidebar-toggle">
+          <i class="hamburger align-self-center"></i>
+        </a>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav navbar-align">
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
+                <div class="position-relative">
+                  <i class="align-middle" data-feather="bell"></i>
+                  <span class="indicator">0</span>
+                </div>
+              </a>
+              <div aria-labelledby="alertsDropdown" class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0">
+                <div class="dropdown-menu-header">Sin notificaciones</div>
+                <div class="dropdown-menu-footer">
+                  <a class="text-muted" href="#">Ver todas las notificaciones</a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
+                <i class="align-middle" data-feather="settings"></i>
+              </a>
+              <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
+                <span class="text-dark" id="userName">Usuario</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#" onclick="logout()">
+                  <i class="align-middle me-1" data-feather="log-out"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="content">
+        <div class="container-fluid p-0">
+          <!-- Header -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white">
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <h1 class="mb-2">
+                        <i class="bi bi-file-earmark-plus me-2"></i>Nueva Certificación Técnica
+                      </h1>
+                      <p class="mb-0 opacity-75">Registra los trabajos realizados para valoración económica</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <a href="/html/certificaciones/certificaciones.html" class="btn btn-light">
+                        <i class="bi bi-arrow-left me-1"></i>Volver al listado
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
-          <hr />
-          <div id="contenedor-items-certificados" class="mb-4">
-            <h4 class="mb-3">Items certificados</h4>
-            <div class="row mb-2 item-certificado">
-              <div class="col-md-2 mb-2">
-                <input type="text" class="form-control" placeholder="Código" />
+          <div class="row">
+            <!-- Formulario principal -->
+            <div class="col-lg-8">
+              <!-- Paso 1: Información general -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">
+                    <i class="bi bi-1-circle-fill text-primary me-2"></i>Información General
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <div id="alertContainer"></div>
+                  
+                  <form id="certificacionForm">
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="obra">
+                          <i class="bi bi-building me-1"></i>Obra *
+                        </label>
+                        <select class="form-select" id="obra" required>
+                          <option value="">Seleccionar obra</option>
+                          <option value="resistencia">Resistencia</option>
+                          <option value="corrientes">Corrientes</option>
+                          <option value="formosa">Formosa</option>
+                          <option value="posadas">Posadas</option>
+                        </select>
+                        <div class="invalid-feedback">Debe seleccionar una obra.</div>
+                      </div>
+                      
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="tipo">
+                          <i class="bi bi-tools me-1"></i>Tipo de certificación *
+                        </label>
+                        <input type="text" class="form-control" id="tipo" placeholder="Ej: Instalación NAP, Tendido fibra..." required />
+                        <div class="invalid-feedback">El tipo de certificación es requerido.</div>
+                      </div>
+                      
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="fecha">
+                          <i class="bi bi-calendar me-1"></i>Fecha *
+                        </label>
+                        <input type="date" class="form-control" id="fecha" required />
+                        <div class="invalid-feedback">La fecha es requerida.</div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label" for="responsable">
+                          <i class="bi bi-person-badge me-1"></i>Responsable
+                        </label>
+                        <select class="form-select" id="responsable">
+                          <option value="">Seleccionar responsable</option>
+                          <option value="maria-lopez">María López</option>
+                          <option value="carlos-garcia">Carlos García</option>
+                          <option value="ana-martinez">Ana Martínez</option>
+                        </select>
+                      </div>
+                      
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label" for="observaciones">
+                          <i class="bi bi-chat-text me-1"></i>Observaciones
+                        </label>
+                        <input type="text" class="form-control" id="observaciones" placeholder="Observaciones generales (opcional)" />
+                      </div>
+                    </div>
+                  </form>
+                </div>
               </div>
-              <div class="col-md-3 mb-2">
-                <input type="text" class="form-control" placeholder="Descripción" />
+
+              <!-- Paso 2: Items certificados -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h5 class="mb-0">
+                        <i class="bi bi-2-circle-fill text-primary me-2"></i>Items Certificados
+                      </h5>
+                    </div>
+                    <div class="col-auto">
+                      <button type="button" class="btn btn-primary" id="agregarItem">
+                        <i class="bi bi-plus-lg me-1"></i>Agregar Item
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Contenedor de items -->
+                  <div id="contenedor-items-certificados">
+                    <!-- Los items se agregarán dinámicamente aquí -->
+                  </div>
+
+                  <!-- Estado vacío -->
+                  <div id="estadoVacioItems" class="text-center py-5">
+                    <i class="bi bi-clipboard-x" style="font-size: 3rem; color: #6c757d;"></i>
+                    <h5 class="mt-3 text-muted">No hay items agregados</h5>
+                    <p class="text-muted">Haz clic en "Agregar Item" para comenzar a registrar los trabajos realizados.</p>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-2 mb-2">
-                <input type="text" class="form-control" placeholder="Unidad" />
+            </div>
+
+            <!-- Panel lateral con resumen -->
+            <div class="col-lg-4">
+              <!-- Resumen en tiempo real -->
+              <div class="card mb-4 position-sticky" style="top: 20px;">
+                <div class="card-header">
+                  <h5 class="mb-0">
+                    <i class="bi bi-calculator text-success me-2"></i>Resumen de Certificación
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <!-- Estadísticas -->
+                  <div class="row text-center mb-3">
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-primary" id="totalItems">0</div>
+                      <small class="text-muted">Items</small>
+                    </div>
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-info" id="totalUnidades">0</div>
+                      <small class="text-muted">Unidades</small>
+                    </div>
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-warning" id="promedioUnitario">$0</div>
+                      <small class="text-muted">Promedio</small>
+                    </div>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="text-center mb-3">
+                    <div class="h2 mb-0 text-success" id="totalGeneral">$0,00</div>
+                    <small class="text-muted">Total a Certificar</small>
+                  </div>
+
+                  <!-- Desglose -->
+                  <div class="border rounded p-3 bg-light">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Subtotal:</span>
+                      <span id="subtotalDisplay">$0,00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>IVA (21%):</span>
+                      <span id="ivaDisplay">$0,00</span>
+                    </div>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between fw-bold">
+                      <span>Total:</span>
+                      <span id="totalConIvaDisplay">$0,00</span>
+                    </div>
+                  </div>
+
+                  <!-- Validaciones -->
+                  <div class="mt-3">
+                    <div class="alert alert-info d-none" id="alertValidacion">
+                      <i class="bi bi-info-circle me-1"></i>
+                      <small id="mensajeValidacion"></small>
+                    </div>
+                  </div>
+
+                  <!-- Botones de acción -->
+                  <div class="d-grid gap-2 mt-3">
+                    <button type="button" class="btn btn-success" id="guardarCertificacion" disabled>
+                      <i class="bi bi-check-lg me-1"></i>Guardar Certificación
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="borrador">
+                      <i class="bi bi-cloud-arrow-up me-1"></i>Guardar Borrador
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="previsualizar">
+                      <i class="bi bi-eye me-1"></i>Previsualizar
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-2 mb-2">
-                <input type="number" class="form-control" placeholder="Cantidad" />
-              </div>
-              <div class="col-md-3 mb-2">
-                <input type="number" class="form-control" placeholder="Precio" />
+
+              <!-- Códigos frecuentes -->
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">
+                    <i class="bi bi-star text-warning me-2"></i>Códigos Frecuentes
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente" 
+                            data-codigo="5022224" data-descripcion="SONDEO D/CAÑ." data-precio="242.99" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022224</div>
+                          <div class="small text-muted">SONDEO D/CAÑ.</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$242,99</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
+                    
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5022314" data-descripcion="TEND.D/ FIB. OP. P/DUCT/SUBT/EXIST." data-precio="698.80" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022314</div>
+                          <div class="small text-muted">TEND. FIBRA ÓPTICA</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$698,80</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
+                    
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5023001" data-descripcion="INSTALACION NAP 8 PUERTOS" data-precio="750.00" data-unidad="U">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5023001</div>
+                          <div class="small text-muted">INSTALACIÓN NAP</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$750,00</div>
+                          <div class="small text-muted">por U</div>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </main>
 
-          <button type="button" id="agregar-item" class="btn btn-secondary mb-3">+ Agregar item</button>
-          <button type="submit" class="btn btn-secondary mb-3">Guardar certificación</button>
-        </form>
-      </div>
-    </main>
-
-    <footer class="footer">
-     <div class="container-fluid">
-      <div class="row text-muted">
-       <div class="col-6 text-start">
-        <p class="mb-0">
-         <a class="text-muted" target="_blank">
-          <strong>
-           Obra 360
-          </strong>
-         </a>
-         -
-         <a class="text-muted" target="_blank">
-          <strong>
-           Admin Kit
-          </strong>
-         </a>
-         ©
-        </p>
-       </div>
-       <div class="col-6 text-end">
-        <ul class="list-inline">
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Soporte
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Centro de ayuda
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Privacidad
-          </a>
-         </li>
-         <li class="list-inline-item">
-          <a class="text-muted" href="" target="_blank">
-           Terminos
-          </a>
-         </li>
-        </ul>
-       </div>
-      </div>
-     </div>
-    </footer>
-   </div>
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row text-muted">
+            <div class="col-6 text-start">
+              <p class="mb-0">
+                <a class="text-muted" target="_blank">
+                  <strong>Obra 360</strong>
+                </a>
+                -
+                <a class="text-muted" target="_blank">
+                  <strong>Admin Kit</strong>
+                </a>
+                ©
+              </p>
+            </div>
+            <div class="col-6 text-end">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Soporte</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Centro de ayuda</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Privacidad</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Términos</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
   </div>
 
-  <script src="/src/js/auth.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>feather.replace();</script>
   <script src="/src/app.js"></script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-			var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-			gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-			gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-			// Line chart
-			new Chart(document.getElementById("chartjs-dashboard-line"), {
-				type: "line",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "Sales ($)",
-						fill: true,
-						backgroundColor: gradient,
-						borderColor: window.theme.primary,
-						data: [
-							2115,
-							1562,
-							1584,
-							1892,
-							1587,
-							1923,
-							2566,
-							2448,
-							2805,
-							3438,
-							2917,
-							3327
-						]
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					tooltips: {
-						intersect: false
-					},
-					hover: {
-						intersect: true
-					},
-					plugins: {
-						filler: {
-							propagate: false
-						}
-					},
-					scales: {
-						xAxes: [{
-							reverse: true,
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}],
-						yAxes: [{
-							ticks: {
-								stepSize: 1000
-							},
-							display: true,
-							borderDash: [3, 3],
-							gridLines: {
-								color: "rgba(0,0,0,0.0)"
-							}
-						}]
-					}
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			// Pie chart
-			new Chart(document.getElementById("chartjs-dashboard-pie"), {
-				type: "pie",
-				data: {
-					labels: ["Chrome", "Firefox", "IE"],
-					datasets: [{
-						data: [4306, 3801, 1689],
-						backgroundColor: [
-							window.theme.primary,
-							window.theme.warning,
-							window.theme.danger
-						],
-						borderWidth: 5
-					}]
-				},
-				options: {
-					responsive: !window.MSInputMethodContext,
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					cutoutPercentage: 75
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			// Bar chart
-			new Chart(document.getElementById("chartjs-dashboard-bar"), {
-				type: "bar",
-				data: {
-					labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-					datasets: [{
-						label: "This year",
-						backgroundColor: window.theme.primary,
-						borderColor: window.theme.primary,
-						hoverBackgroundColor: window.theme.primary,
-						hoverBorderColor: window.theme.primary,
-						data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-						barPercentage: .75,
-						categoryPercentage: .5
-					}]
-				},
-				options: {
-					maintainAspectRatio: false,
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							gridLines: {
-								display: false
-							},
-							stacked: false,
-							ticks: {
-								stepSize: 20
-							}
-						}],
-						xAxes: [{
-							stacked: false,
-							gridLines: {
-								color: "transparent"
-							}
-						}]
-					}
-				}
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var markers = [{
-					coords: [31.230391, 121.473701],
-					name: "Shanghai"
-				},
-				{
-					coords: [28.704060, 77.102493],
-					name: "Delhi"
-				},
-				{
-					coords: [6.524379, 3.379206],
-					name: "Lagos"
-				},
-				{
-					coords: [35.689487, 139.691711],
-					name: "Tokyo"
-				},
-				{
-					coords: [23.129110, 113.264381],
-					name: "Guangzhou"
-				},
-				{
-					coords: [40.7127837, -74.0059413],
-					name: "New York"
-				},
-				{
-					coords: [34.052235, -118.243683],
-					name: "Los Angeles"
-				},
-				{
-					coords: [41.878113, -87.629799],
-					name: "Chicago"
-				},
-				{
-					coords: [51.507351, -0.127758],
-					name: "London"
-				},
-				{
-					coords: [40.416775, -3.703790],
-					name: "Madrid "
-				}
-			];
-			var map = new jsVectorMap({
-				map: "world",
-				selector: "#world_map",
-				zoomButtons: true,
-				markers: markers,
-				markerStyle: {
-					initial: {
-						r: 9,
-						strokeWidth: 7,
-						stokeOpacity: .4,
-						fill: window.theme.primary
-					},
-					hover: {
-						fill: window.theme.primary,
-						stroke: window.theme.primary
-					}
-				},
-				zoomOnScroll: false
-			});
-			window.addEventListener("resize", () => {
-				map.updateSize();
-			});
-		});
-  </script>
-  <script>
-   document.addEventListener("DOMContentLoaded", function() {
-			var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-			var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-			document.getElementById("datetimepicker-dashboard").flatpickr({
-				inline: true,
-				prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-				nextArrow: "<span title=\"Next month\">&raquo;</span>",
-				defaultDate: defaultDate
-			});
-		});
-  </script>
 
   <script>
-  document.getElementById("agregar-item").addEventListener("click", function () {
-    const contenedor = document.getElementById("contenedor-items-certificados");
-    
-    const row = document.createElement("div");
-    row.className = "row mb-2 item-certificado";
+    let itemsCount = 0;
+    let totalCertificacion = 0;
 
-    row.innerHTML = `
-      <div class="col-md-2 mb-2">
-        <input type="text" class="form-control" placeholder="Código" />
-      </div>
-      <div class="col-md-3 mb-2">
-        <input type="text" class="form-control" placeholder="Descripción" />
-      </div>
-      <div class="col-md-2 mb-2">
-        <input type="text" class="form-control" placeholder="Unidad" />
-      </div>
-      <div class="col-md-2 mb-2">
-        <input type="number" class="form-control" placeholder="Cantidad" />
-      </div>
-      <div class="col-md-3 mb-2">
-        <input type="number" class="form-control" placeholder="Precio" />
-      </div>
-    `;
-    
-    contenedor.appendChild(row);
-  });
-</script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Configurar fecha por defecto
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('fecha').value = today;
 
- </body>
+      // Event listeners
+      document.getElementById('agregarItem').addEventListener('click', agregarNuevoItem);
+      document.getElementById('guardarCertificacion').addEventListener('click', guardarCertificacion);
+      
+      // Códigos frecuentes
+      document.querySelectorAll('.codigo-frecuente').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const codigo = this.dataset.codigo;
+          const descripcion = this.dataset.descripcion;
+          const precio = this.dataset.precio;
+          const unidad = this.dataset.unidad;
+          
+          agregarNuevoItem(codigo, descripcion, unidad, 1, precio);
+        });
+      });
+
+      // Validación del formulario principal
+      document.querySelectorAll('#certificacionForm input, #certificacionForm select').forEach(input => {
+        input.addEventListener('change', validarFormulario);
+      });
+
+      // Actualizar estado inicial
+      actualizarResumen();
+      actualizarEstadoVacio();
+    });
+
+    function agregarNuevoItem(codigo = '', descripcion = '', unidad = '', cantidad = '', precio = '') {
+      itemsCount++;
+      
+      const contenedor = document.getElementById('contenedor-items-certificados');
+      
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'card mb-3 item-certificado';
+      itemDiv.dataset.itemId = itemsCount;
+
+      itemDiv.innerHTML = `
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">
+            <i class="bi bi-tag me-1"></i>Item ${itemsCount}
+          </h6>
+          <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarItem(${itemsCount})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Código *</label>
+              <input type="text" class="form-control item-codigo" placeholder="Ej: 5022224" value="${codigo}" required>
+              <div class="invalid-feedback">Código requerido</div>
+            </div>
+            <div class="col-md-6 mb-2">
+              <label class="form-label">Descripción *</label>
+              <input type="text" class="form-control item-descripcion" placeholder="Descripción del trabajo" value="${descripcion}" required>
+              <div class="invalid-feedback">Descripción requerida</div>
+            </div>
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Unidad *</label>
+              <select class="form-select item-unidad" required>
+                <option value="">Unidad</option>
+                <option value="M" ${unidad === 'M' ? 'selected' : ''}>M (Metro)</option>
+                <option value="U" ${unidad === 'U' ? 'selected' : ''}>U (Unidad)</option>
+                <option value="H" ${unidad === 'H' ? 'selected' : ''}>H (Hora)</option>
+                <option value="KG" ${unidad === 'KG' ? 'selected' : ''}>KG (Kilogramo)</option>
+              </select>
+              <div class="invalid-feedback">Seleccione unidad</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Cantidad *</label>
+              <input type="number" class="form-control item-cantidad" placeholder="1" min="0.01" step="0.01" value="${cantidad}" required>
+              <div class="invalid-feedback">Cantidad requerida</div>
+            </div>
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Precio Unitario *</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="number" class="form-control item-precio" placeholder="0,00" min="0" step="0.01" value="${precio}" required>
+              </div>
+              <div class="invalid-feedback">Precio requerido</div>
+            </div>
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Subtotal</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control item-subtotal" readonly>
+              </div>
+            </div>
+            <div class="col-md-3 mb-2">
+              <label class="form-label">Estado</label>
+              <div class="mt-2">
+                <span class="badge bg-warning">Pendiente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      contenedor.appendChild(itemDiv);
+
+      // Agregar event listeners para cálculos automáticos
+      const cantidadInput = itemDiv.querySelector('.item-cantidad');
+      const precioInput = itemDiv.querySelector('.item-precio');
+      
+      cantidadInput.addEventListener('input', () => calcularSubtotal(itemsCount));
+      precioInput.addEventListener('input', () => calcularSubtotal(itemsCount));
+      
+      // Calcular subtotal inicial
+      calcularSubtotal(itemsCount);
+      
+      // Actualizar estado
+      actualizarEstadoVacio();
+      actualizarResumen();
+      validarFormulario();
+    }
+
+    function eliminarItem(itemId) {
+      const item = document.querySelector(`[data-item-id="${itemId}"]`);
+      if (item) {
+        item.remove();
+        actualizarEstadoVacio();
+        actualizarResumen();
+        validarFormulario();
+      }
+    }
+
+    function calcularSubtotal(itemId) {
+      const item = document.querySelector(`[data-item-id="${itemId}"]`);
+      if (!item) return;
+
+      const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
+      const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
+      const subtotal = cantidad * precio;
+
+      item.querySelector('.item-subtotal').value = subtotal.toFixed(2);
+      
+      // Actualizar badge de estado
+      const badge = item.querySelector('.badge');
+      if (cantidad > 0 && precio > 0) {
+        badge.className = 'badge bg-success';
+        badge.textContent = 'Válido';
+      } else {
+        badge.className = 'badge bg-warning';
+        badge.textContent = 'Pendiente';
+      }
+
+      actualizarResumen();
+    }
+
+    function actualizarEstadoVacio() {
+      const contenedor = document.getElementById('contenedor-items-certificados');
+      const estadoVacio = document.getElementById('estadoVacioItems');
+      
+      if (contenedor.children.length === 0) {
+        estadoVacio.classList.remove('d-none');
+      } else {
+        estadoVacio.classList.add('d-none');
+      }
+    }
+
+    function actualizarResumen() {
+      const items = document.querySelectorAll('.item-certificado');
+      let totalItems = items.length;
+      let totalUnidades = 0;
+      let subtotalGeneral = 0;
+
+      items.forEach(item => {
+        const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
+        const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
+        const subtotal = cantidad * precio;
+
+        totalUnidades += cantidad;
+        subtotalGeneral += subtotal;
+      });
+
+      const iva = subtotalGeneral * 0.21;
+      const totalConIva = subtotalGeneral + iva;
+      const promedioUnitario = totalItems > 0 ? subtotalGeneral / totalItems : 0;
+
+      // Actualizar displays
+      document.getElementById('totalItems').textContent = totalItems;
+      document.getElementById('totalUnidades').textContent = totalUnidades.toFixed(0);
+      document.getElementById('promedioUnitario').textContent = `$${promedioUnitario.toFixed(0)}`;
+      document.getElementById('totalGeneral').textContent = `$${subtotalGeneral.toFixed(2)}`;
+      document.getElementById('subtotalDisplay').textContent = `$${subtotalGeneral.toFixed(2)}`;
+      document.getElementById('ivaDisplay').textContent = `$${iva.toFixed(2)}`;
+      document.getElementById('totalConIvaDisplay').textContent = `$${totalConIva.toFixed(2)}`;
+
+      totalCertificacion = totalConIva;
+    }
+
+    function validarFormulario() {
+      const obra = document.getElementById('obra').value;
+      const tipo = document.getElementById('tipo').value;
+      const fecha = document.getElementById('fecha').value;
+      const items = document.querySelectorAll('.item-certificado');
+      
+      let itemsValidos = 0;
+      items.forEach(item => {
+        const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
+        const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
+        const codigo = item.querySelector('.item-codigo').value.trim();
+        const descripcion = item.querySelector('.item-descripcion').value.trim();
+        
+        if (cantidad > 0 && precio > 0 && codigo && descripcion) {
+          itemsValidos++;
+        }
+      });
+
+      const formValido = obra && tipo && fecha && itemsValidos > 0;
+      
+      const btnGuardar = document.getElementById('guardarCertificacion');
+      const alertValidacion = document.getElementById('alertValidacion');
+      const mensajeValidacion = document.getElementById('mensajeValidacion');
+
+      btnGuardar.disabled = !formValido;
+
+      if (!formValido) {
+        alertValidacion.classList.remove('d-none');
+        if (!obra || !tipo || !fecha) {
+          mensajeValidacion.textContent = 'Complete la información general de la certificación.';
+        } else if (itemsValidos === 0) {
+          mensajeValidacion.textContent = 'Agregue al menos un item válido con cantidad y precio.';
+        }
+      } else {
+        alertValidacion.classList.add('d-none');
+      }
+    }
+
+    function guardarCertificacion() {
+      // Aquí iría la lógica para guardar en el backend
+      const confirmacion = confirm(`¿Confirma guardar la certificación por un total de $${totalCertificacion.toFixed(2)}?`);
+      
+      if (confirmacion) {
+        // Simular guardado
+        alert('Certificación guardada exitosamente');
+        window.location.href = '/html/certificaciones/certificaciones.html';
+      }
+    }
+
+    // Función global para logout
+    function logout() {
+      if (window.authManager) {
+        window.authManager.logout();
+      } else {
+        localStorage.clear();
+        sessionStorage.clear();
+        window.location.href = '/html/auth/login.html';
+      }
+    }
+  </script>
+</body>
 </html>
