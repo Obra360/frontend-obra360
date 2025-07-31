@@ -74,7 +74,7 @@
                 <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Certificaciones registradas</a>
               </li>
               <li class="sidebar-item">
-                <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
+                <a class="sidebar-link" href="/html/certificaciones/nueva-certificacion.html">Nueva certificación</a>
               </li>
             </ul>
           </li>
@@ -152,21 +152,25 @@
                       <h1 class="mb-2">
                         <i class="bi bi-file-earmark-check me-2"></i>Certificaciones Técnicas
                       </h1>
-                      <p class="mb-0 opacity-75">Valoraciones de trabajos realizados por las obreras</p>
+                      <p class="mb-0 opacity-75">Valoraciones de trabajos realizados por las obras</p>
                     </div>
                     <div class="col-md-6">
-                      <div class="row text-center">
-                        <div class="col-4">
-                          <div class="fs-2 fw-bold">3</div>
-                          <div class="small opacity-75">Certificaciones</div>
+                      <div class="row text-center" id="statsHeader">
+                        <div class="col-3">
+                          <div class="fs-2 fw-bold" id="totalCertificaciones">-</div>
+                          <div class="small opacity-75">Total</div>
                         </div>
-                        <div class="col-4">
-                          <div class="fs-2 fw-bold">$15.2K</div>
+                        <div class="col-3">
+                          <div class="fs-2 fw-bold" id="totalMonto">$0</div>
                           <div class="small opacity-75">Valor total</div>
                         </div>
-                        <div class="col-4">
-                          <div class="fs-2 fw-bold">2</div>
-                          <div class="small opacity-75">Obras activas</div>
+                        <div class="col-3">
+                          <div class="fs-2 fw-bold" id="certificacionesPendientes">-</div>
+                          <div class="small opacity-75">Pendientes</div>
+                        </div>
+                        <div class="col-3">
+                          <div class="fs-2 fw-bold" id="certificacionesAprobadas">-</div>
+                          <div class="small opacity-75">Aprobadas</div>
                         </div>
                       </div>
                     </div>
@@ -183,27 +187,44 @@
                 <div class="card-body">
                   <div class="row align-items-end">
                     <!-- Búsqueda -->
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                       <label class="form-label">
                         <i class="bi bi-search me-1"></i>Buscar certificación
                       </label>
-                      <input type="text" class="form-control" id="buscarCertificacion" placeholder="Buscar por obra, tipo o código...">
+                      <input type="text" class="form-control" id="buscarCertificacion" placeholder="Buscar por obra, tipo...">
                     </div>
                     
                     <!-- Filtro por obra -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <label class="form-label">
                         <i class="bi bi-building me-1"></i>Obra
                       </label>
                       <select class="form-select" id="filtroObra">
                         <option value="">Todas las obras</option>
-                        <option value="resistencia">Resistencia</option>
-                        <option value="corrientes">Corrientes</option>
+                        <option value="Resistencia">Resistencia</option>
+                        <option value="Corrientes">Corrientes</option>
+                        <option value="Formosa">Formosa</option>
+                        <option value="Posadas">Posadas</option>
+                      </select>
+                    </div>
+
+                    <!-- Filtro por estado -->
+                    <div class="col-md-2">
+                      <label class="form-label">
+                        <i class="bi bi-flag me-1"></i>Estado
+                      </label>
+                      <select class="form-select" id="filtroEstado">
+                        <option value="">Todos los estados</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="COMPLETA">Completa</option>
+                        <option value="APROBADA">Aprobada</option>
+                        <option value="RECHAZADA">Rechazada</option>
+                        <option value="PAGADA">Pagada</option>
                       </select>
                     </div>
 
                     <!-- Filtro por fecha -->
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                       <label class="form-label">
                         <i class="bi bi-calendar me-1"></i>Período
                       </label>
@@ -216,12 +237,15 @@
                     </div>
 
                     <!-- Botones de acción -->
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                       <div class="btn-group w-100" role="group">
-                        <button class="btn btn-success" onclick="exportarExcel()">
+                        <button class="btn btn-success" onclick="exportarExcel()" title="Exportar a Excel">
                           <i class="bi bi-file-earmark-excel me-1"></i>Excel
                         </button>
-                        <button class="btn btn-primary" onclick="window.location.href='/html/certificaciones/certificaciones-nueva.html'">
+                        <button class="btn btn-info" onclick="generarReporte()" title="Generar reporte">
+                          <i class="bi bi-file-earmark-pdf me-1"></i>Reporte
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='/html/certificaciones/nueva-certificacion.html'" title="Nueva certificación">
                           <i class="bi bi-plus-lg me-1"></i>Nueva
                         </button>
                       </div>
@@ -232,265 +256,53 @@
             </div>
           </div>
 
+          <!-- Loading -->
+          <div id="loadingSpinner" class="text-center py-5" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2 text-muted">Cargando certificaciones...</p>
+          </div>
+
           <!-- Lista de certificaciones -->
-          <div class="row">
+          <div class="row" id="certificacionesContainer">
+            <!-- Las certificaciones se cargarán aquí dinámicamente -->
+          </div>
+
+          <!-- Estado vacío -->
+          <div class="text-center py-5 d-none" id="estadoVacio">
+            <i class="bi bi-file-earmark-x" style="font-size: 4rem; color: #6c757d;"></i>
+            <h3 class="mt-3 text-muted">No hay certificaciones</h3>
+            <p class="text-muted">No se encontraron certificaciones que coincidan con los filtros seleccionados.</p>
+            <button class="btn btn-primary" onclick="window.location.href='/html/certificaciones/nueva-certificacion.html'">
+              <i class="bi bi-plus-lg me-1"></i>Crear Primera Certificación
+            </button>
+          </div>
+
+          <!-- Resumen por obra -->
+          <div class="row mt-4" id="resumenObras" style="display: none;">
             <div class="col-12">
-              <div id="certificacionesContainer">
-                
-                <!-- Certificación 1 -->
-                <div class="card mb-4 certificacion-card">
-                  <div class="card-header">
-                    <div class="row align-items-center">
-                      <div class="col-md-8">
-                        <h5 class="mb-1">
-                          <i class="bi bi-geo-alt text-primary me-2"></i>Resistencia
-                          <span class="badge bg-success ms-2">Completa</span>
-                        </h5>
-                        <div class="text-muted">
-                          <i class="bi bi-tools me-1"></i>TECNICAS DE CERTIFICACION 
-                          <span class="mx-2">•</span>
-                          <i class="bi bi-calendar me-1"></i>13/07/2025
-                        </div>
-                      </div>
-                      <div class="col-md-4 text-end">
-                        <h4 class="text-success mb-0">$3.765,03</h4>
-                        <small class="text-muted">Total certificado</small>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="card-body">
-                    <div class="row mb-3">
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-primary">3</div>
-                          <small class="text-muted">Items</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-info">10</div>
-                          <small class="text-muted">Unidades totales</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-warning">$376,50</div>
-                          <small class="text-muted">Precio promedio</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-secondary">5022xxx</div>
-                          <small class="text-muted">Códigos serie</small>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Tabla de items -->
-                    <div class="table-responsive">
-                      <table class="table table-sm align-middle">
-                        <thead class="table-dark">
-                          <tr>
-                            <th><i class="bi bi-hash me-1"></i>Código</th>
-                            <th><i class="bi bi-card-text me-1"></i>Descripción</th>
-                            <th class="text-center"><i class="bi bi-rulers me-1"></i>Unidad</th>
-                            <th class="text-center"><i class="bi bi-123 me-1"></i>Cantidad</th>
-                            <th class="text-center"><i class="bi bi-currency-dollar me-1"></i>Precio</th>
-                            <th class="text-center"><i class="bi bi-calculator me-1"></i>Subtotal</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><code>5022224</code></td>
-                            <td>SONDEO D/CAÑ.</td>
-                            <td class="text-center"><span class="badge bg-secondary">M</span></td>
-                            <td class="text-center"><strong>5</strong></td>
-                            <td class="text-center">$242,99</td>
-                            <td class="text-center"><strong class="text-success">$1.214,95</strong></td>
-                          </tr>
-                          <tr>
-                            <td><code>5022314</code></td>
-                            <td>TEND.D/ FIB. OP. P/DUCT/SUBT/EXIST.</td>
-                            <td class="text-center"><span class="badge bg-secondary">M</span></td>
-                            <td class="text-center"><strong>3</strong></td>
-                            <td class="text-center">$698,80</td>
-                            <td class="text-center"><strong class="text-success">$2.096,40</strong></td>
-                          </tr>
-                          <tr>
-                            <td><code>5022316</code></td>
-                            <td>TEND. D/LINGA 3MM P/PSTE.</td>
-                            <td class="text-center"><span class="badge bg-secondary">M</span></td>
-                            <td class="text-center"><strong>2</strong></td>
-                            <td class="text-center">$226,84</td>
-                            <td class="text-center"><strong class="text-success">$453,68</strong></td>
-                          </tr>
-                        </tbody>
-                        <tfoot>
-                          <tr class="table-success">
-                            <td colspan="5" class="text-end fw-bold">Total Certificación:</td>
-                            <td class="text-center"><h5 class="mb-0 text-success">$3.765,03</h5></td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-
-                    <!-- Acciones -->
-                    <div class="row mt-3">
-                      <div class="col-md-6">
-                        <small class="text-muted">
-                          <i class="bi bi-info-circle me-1"></i>
-                          Certificado por: Admin Papu • 13/07/2025 14:30
-                        </small>
-                      </div>
-                      <div class="col-md-6 text-end">
-                        <div class="btn-group btn-group-sm" role="group">
-                          <button class="btn btn-outline-primary" title="Ver detalles">
-                            <i class="bi bi-eye"></i>
-                          </button>
-                          <button class="btn btn-outline-warning" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                          </button>
-                          <button class="btn btn-outline-success" title="Exportar">
-                            <i class="bi bi-download"></i>
-                          </button>
-                          <button class="btn btn-outline-danger" title="Eliminar">
-                            <i class="bi bi-trash"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
+              <div class="card">
+                <div class="card-header bg-info text-white">
+                  <h5 class="mb-0">📊 Resumen por obra</h5>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Obra</th>
+                          <th>Cantidad de certificaciones</th>
+                          <th>Total certificado</th>
+                          <th>Porcentaje del total</th>
+                        </tr>
+                      </thead>
+                      <tbody id="resumenObrasTableBody">
+                        <!-- Se llena dinámicamente -->
+                      </tbody>
+                    </table>
                   </div>
                 </div>
-
-                <!-- Certificación 2 -->
-                <div class="card mb-4 certificacion-card">
-                  <div class="card-header">
-                    <div class="row align-items-center">
-                      <div class="col-md-8">
-                        <h5 class="mb-1">
-                          <i class="bi bi-geo-alt text-primary me-2"></i>Corrientes
-                          <span class="badge bg-warning ms-2">En proceso</span>
-                        </h5>
-                        <div class="text-muted">
-                          <i class="bi bi-tools me-1"></i>INSTALACION NAP 
-                          <span class="mx-2">•</span>
-                          <i class="bi bi-calendar me-1"></i>29/07/2025
-                        </div>
-                      </div>
-                      <div class="col-md-4 text-end">
-                        <h4 class="text-warning mb-0">$2.850,00</h4>
-                        <small class="text-muted">Pendiente aprobación</small>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="card-body">
-                    <div class="row mb-3">
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-primary">2</div>
-                          <small class="text-muted">Items</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-info">5</div>
-                          <small class="text-muted">Unidades totales</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-warning">$570,00</div>
-                          <small class="text-muted">Precio promedio</small>
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="text-center p-2 bg-light rounded">
-                          <div class="h5 mb-0 text-secondary">5023xxx</div>
-                          <small class="text-muted">Códigos serie</small>
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Tabla de items -->
-                    <div class="table-responsive">
-                      <table class="table table-sm align-middle">
-                        <thead class="table-dark">
-                          <tr>
-                            <th><i class="bi bi-hash me-1"></i>Código</th>
-                            <th><i class="bi bi-card-text me-1"></i>Descripción</th>
-                            <th class="text-center"><i class="bi bi-rulers me-1"></i>Unidad</th>
-                            <th class="text-center"><i class="bi bi-123 me-1"></i>Cantidad</th>
-                            <th class="text-center"><i class="bi bi-currency-dollar me-1"></i>Precio</th>
-                            <th class="text-center"><i class="bi bi-calculator me-1"></i>Subtotal</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td><code>5023001</code></td>
-                            <td>INSTALACION NAP 8 PUERTOS</td>
-                            <td class="text-center"><span class="badge bg-secondary">U</span></td>
-                            <td class="text-center"><strong>3</strong></td>
-                            <td class="text-center">$750,00</td>
-                            <td class="text-center"><strong class="text-warning">$2.250,00</strong></td>
-                          </tr>
-                          <tr>
-                            <td><code>5023002</code></td>
-                            <td>CONFIG. Y PRUEBAS NAP</td>
-                            <td class="text-center"><span class="badge bg-secondary">U</span></td>
-                            <td class="text-center"><strong>2</strong></td>
-                            <td class="text-center">$300,00</td>
-                            <td class="text-center"><strong class="text-warning">$600,00</strong></td>
-                          </tr>
-                        </tbody>
-                        <tfoot>
-                          <tr class="table-warning">
-                            <td colspan="5" class="text-end fw-bold">Total Certificación:</td>
-                            <td class="text-center"><h5 class="mb-0 text-warning">$2.850,00</h5></td>
-                          </tr>
-                        </tfoot>
-                      </table>
-                    </div>
-
-                    <!-- Acciones -->
-                    <div class="row mt-3">
-                      <div class="col-md-6">
-                        <small class="text-muted">
-                          <i class="bi bi-info-circle me-1"></i>
-                          Certificado por: María López • 29/07/2025 09:15
-                        </small>
-                      </div>
-                      <div class="col-md-6 text-end">
-                        <div class="btn-group btn-group-sm" role="group">
-                          <button class="btn btn-outline-primary" title="Ver detalles">
-                            <i class="bi bi-eye"></i>
-                          </button>
-                          <button class="btn btn-outline-warning" title="Editar">
-                            <i class="bi bi-pencil"></i>
-                          </button>
-                          <button class="btn btn-outline-success" title="Aprobar">
-                            <i class="bi bi-check-lg"></i>
-                          </button>
-                          <button class="btn btn-outline-danger" title="Rechazar">
-                            <i class="bi bi-x-lg"></i>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Estado vacío -->
-                <div class="text-center py-5 d-none" id="estadoVacio">
-                  <i class="bi bi-file-earmark-x" style="font-size: 4rem; color: #6c757d;"></i>
-                  <h3 class="mt-3 text-muted">No hay certificaciones</h3>
-                  <p class="text-muted">No se encontraron certificaciones que coincidan con los filtros seleccionados.</p>
-                  <button class="btn btn-primary" onclick="window.location.href='/html/certificaciones/certificaciones-nueva.html'">
-                    <i class="bi bi-plus-lg me-1"></i>Crear Primera Certificación
-                  </button>
-                </div>
-
               </div>
             </div>
           </div>
@@ -505,10 +317,6 @@
                 <a class="text-muted" target="_blank">
                   <strong>Obra 360</strong>
                 </a>
-                -
-                <a class="text-muted" target="_blank">
-                  <strong>Admin Kit</strong>
-                </a>
                 ©
               </p>
             </div>
@@ -519,12 +327,6 @@
                 </li>
                 <li class="list-inline-item">
                   <a class="text-muted" href="" target="_blank">Centro de ayuda</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="" target="_blank">Privacidad</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="" target="_blank">Términos</a>
                 </li>
               </ul>
             </div>
@@ -538,78 +340,6 @@
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
   <script>feather.replace();</script>
   <script src="/src/app.js"></script>
-
-  <script>
-    // Funcionalidad de búsqueda y filtros
-    document.addEventListener('DOMContentLoaded', function() {
-      const buscarInput = document.getElementById('buscarCertificacion');
-      const filtroObra = document.getElementById('filtroObra');
-      const filtroPeriodo = document.getElementById('filtroPeriodo');
-      const certificacionCards = document.querySelectorAll('.certificacion-card');
-
-      function filtrarCertificaciones() {
-        const busqueda = buscarInput.value.toLowerCase();
-        const obra = filtroObra.value.toLowerCase();
-        const periodo = filtroPeriodo.value;
-
-        let visibleCount = 0;
-
-        certificacionCards.forEach(card => {
-          const textoCard = card.textContent.toLowerCase();
-          const obraCard = card.querySelector('h5').textContent.toLowerCase();
-          
-          let mostrar = true;
-
-          // Filtro de búsqueda
-          if (busqueda && !textoCard.includes(busqueda)) {
-            mostrar = false;
-          }
-
-          // Filtro de obra
-          if (obra && !obraCard.includes(obra)) {
-            mostrar = false;
-          }
-
-          // Mostrar/ocultar card
-          if (mostrar) {
-            card.style.display = 'block';
-            visibleCount++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
-
-        // Mostrar estado vacío si no hay resultados
-        const estadoVacio = document.getElementById('estadoVacio');
-        if (visibleCount === 0) {
-          estadoVacio.classList.remove('d-none');
-        } else {
-          estadoVacio.classList.add('d-none');
-        }
-      }
-
-      // Event listeners
-      buscarInput.addEventListener('input', filtrarCertificaciones);
-      filtroObra.addEventListener('change', filtrarCertificaciones);
-      filtroPeriodo.addEventListener('change', filtrarCertificaciones);
-    });
-
-    // Función de exportar Excel
-    function exportarExcel() {
-      // Aquí iría la lógica de exportación
-      alert('Exportando a Excel...');
-    }
-
-    // Función global para logout
-    function logout() {
-      if (window.authManager) {
-        window.authManager.logout();
-      } else {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = '/html/auth/login.html';
-      }
-    }
-  </script>
+  <script src="/src/js/certificaciones.js"></script>
 </body>
 </html>

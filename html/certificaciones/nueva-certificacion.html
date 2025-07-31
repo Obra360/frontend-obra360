@@ -74,7 +74,7 @@
                 <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Certificaciones registradas</a>
               </li>
               <li class="sidebar-item active">
-                <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
+                <a class="sidebar-link" href="/html/certificaciones/nueva-certificacion.html">Nueva certificación</a>
               </li>
             </ul>
           </li>
@@ -165,6 +165,9 @@
             </div>
           </div>
 
+          <!-- Alertas -->
+          <div id="alertContainer"></div>
+
           <div class="row">
             <!-- Formulario principal -->
             <div class="col-lg-8">
@@ -176,8 +179,6 @@
                   </h5>
                 </div>
                 <div class="card-body">
-                  <div id="alertContainer"></div>
-                  
                   <form id="certificacionForm">
                     <div class="row">
                       <div class="col-md-4 mb-3">
@@ -186,19 +187,20 @@
                         </label>
                         <select class="form-select" id="obra" required>
                           <option value="">Seleccionar obra</option>
-                          <option value="resistencia">Resistencia</option>
-                          <option value="corrientes">Corrientes</option>
-                          <option value="formosa">Formosa</option>
-                          <option value="posadas">Posadas</option>
+                          <option value="Resistencia">Resistencia</option>
+                          <option value="Corrientes">Corrientes</option>
+                          <option value="Formosa">Formosa</option>
+                          <option value="Posadas">Posadas</option>
                         </select>
                         <div class="invalid-feedback">Debe seleccionar una obra.</div>
                       </div>
                       
                       <div class="col-md-4 mb-3">
-                        <label class="form-label" for="tipo">
+                        <label class="form-label" for="tipoCertificacion">
                           <i class="bi bi-tools me-1"></i>Tipo de certificación *
                         </label>
-                        <input type="text" class="form-control" id="tipo" placeholder="Ej: Instalación NAP, Tendido fibra..." required />
+                        <input type="text" class="form-control" id="tipoCertificacion" 
+                               placeholder="Ej: Instalación NAP, Tendido fibra..." required />
                         <div class="invalid-feedback">El tipo de certificación es requerido.</div>
                       </div>
                       
@@ -208,27 +210,6 @@
                         </label>
                         <input type="date" class="form-control" id="fecha" required />
                         <div class="invalid-feedback">La fecha es requerida.</div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label" for="responsable">
-                          <i class="bi bi-person-badge me-1"></i>Responsable
-                        </label>
-                        <select class="form-select" id="responsable">
-                          <option value="">Seleccionar responsable</option>
-                          <option value="maria-lopez">María López</option>
-                          <option value="carlos-garcia">Carlos García</option>
-                          <option value="ana-martinez">Ana Martínez</option>
-                        </select>
-                      </div>
-                      
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label" for="observaciones">
-                          <i class="bi bi-chat-text me-1"></i>Observaciones
-                        </label>
-                        <input type="text" class="form-control" id="observaciones" placeholder="Observaciones generales (opcional)" />
                       </div>
                     </div>
                   </form>
@@ -299,23 +280,6 @@
                     <small class="text-muted">Total a Certificar</small>
                   </div>
 
-                  <!-- Desglose -->
-                  <div class="border rounded p-3 bg-light">
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>Subtotal:</span>
-                      <span id="subtotalDisplay">$0,00</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                      <span>IVA (21%):</span>
-                      <span id="ivaDisplay">$0,00</span>
-                    </div>
-                    <hr class="my-2">
-                    <div class="d-flex justify-content-between fw-bold">
-                      <span>Total:</span>
-                      <span id="totalConIvaDisplay">$0,00</span>
-                    </div>
-                  </div>
-
                   <!-- Validaciones -->
                   <div class="mt-3">
                     <div class="alert alert-info d-none" id="alertValidacion">
@@ -329,8 +293,8 @@
                     <button type="button" class="btn btn-success" id="guardarCertificacion" disabled>
                       <i class="bi bi-check-lg me-1"></i>Guardar Certificación
                     </button>
-                    <button type="button" class="btn btn-outline-secondary" id="borrador">
-                      <i class="bi bi-cloud-arrow-up me-1"></i>Guardar Borrador
+                    <button type="button" class="btn btn-outline-secondary" id="limpiarFormulario">
+                      <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Formulario
                     </button>
                     <button type="button" class="btn btn-outline-primary" id="previsualizar">
                       <i class="bi bi-eye me-1"></i>Previsualizar
@@ -389,6 +353,20 @@
                         </div>
                       </div>
                     </button>
+
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5022316" data-descripcion="TEND. D/LINGA 3MM P/PSTE." data-precio="226.84" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022316</div>
+                          <div class="small text-muted">TEND. LINGA 3MM</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$226,84</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -405,10 +383,6 @@
                 <a class="text-muted" target="_blank">
                   <strong>Obra 360</strong>
                 </a>
-                -
-                <a class="text-muted" target="_blank">
-                  <strong>Admin Kit</strong>
-                </a>
                 ©
               </p>
             </div>
@@ -419,12 +393,6 @@
                 </li>
                 <li class="list-inline-item">
                   <a class="text-muted" href="" target="_blank">Centro de ayuda</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="" target="_blank">Privacidad</a>
-                </li>
-                <li class="list-inline-item">
-                  <a class="text-muted" href="" target="_blank">Términos</a>
                 </li>
               </ul>
             </div>
@@ -438,267 +406,6 @@
   <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
   <script>feather.replace();</script>
   <script src="/src/app.js"></script>
-
-  <script>
-    let itemsCount = 0;
-    let totalCertificacion = 0;
-
-    document.addEventListener('DOMContentLoaded', function() {
-      // Configurar fecha por defecto
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('fecha').value = today;
-
-      // Event listeners
-      document.getElementById('agregarItem').addEventListener('click', agregarNuevoItem);
-      document.getElementById('guardarCertificacion').addEventListener('click', guardarCertificacion);
-      
-      // Códigos frecuentes
-      document.querySelectorAll('.codigo-frecuente').forEach(btn => {
-        btn.addEventListener('click', function() {
-          const codigo = this.dataset.codigo;
-          const descripcion = this.dataset.descripcion;
-          const precio = this.dataset.precio;
-          const unidad = this.dataset.unidad;
-          
-          agregarNuevoItem(codigo, descripcion, unidad, 1, precio);
-        });
-      });
-
-      // Validación del formulario principal
-      document.querySelectorAll('#certificacionForm input, #certificacionForm select').forEach(input => {
-        input.addEventListener('change', validarFormulario);
-      });
-
-      // Actualizar estado inicial
-      actualizarResumen();
-      actualizarEstadoVacio();
-    });
-
-    function agregarNuevoItem(codigo = '', descripcion = '', unidad = '', cantidad = '', precio = '') {
-      itemsCount++;
-      
-      const contenedor = document.getElementById('contenedor-items-certificados');
-      
-      const itemDiv = document.createElement('div');
-      itemDiv.className = 'card mb-3 item-certificado';
-      itemDiv.dataset.itemId = itemsCount;
-
-      itemDiv.innerHTML = `
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h6 class="mb-0">
-            <i class="bi bi-tag me-1"></i>Item ${itemsCount}
-          </h6>
-          <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarItem(${itemsCount})">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Código *</label>
-              <input type="text" class="form-control item-codigo" placeholder="Ej: 5022224" value="${codigo}" required>
-              <div class="invalid-feedback">Código requerido</div>
-            </div>
-            <div class="col-md-6 mb-2">
-              <label class="form-label">Descripción *</label>
-              <input type="text" class="form-control item-descripcion" placeholder="Descripción del trabajo" value="${descripcion}" required>
-              <div class="invalid-feedback">Descripción requerida</div>
-            </div>
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Unidad *</label>
-              <select class="form-select item-unidad" required>
-                <option value="">Unidad</option>
-                <option value="M" ${unidad === 'M' ? 'selected' : ''}>M (Metro)</option>
-                <option value="U" ${unidad === 'U' ? 'selected' : ''}>U (Unidad)</option>
-                <option value="H" ${unidad === 'H' ? 'selected' : ''}>H (Hora)</option>
-                <option value="KG" ${unidad === 'KG' ? 'selected' : ''}>KG (Kilogramo)</option>
-              </select>
-              <div class="invalid-feedback">Seleccione unidad</div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Cantidad *</label>
-              <input type="number" class="form-control item-cantidad" placeholder="1" min="0.01" step="0.01" value="${cantidad}" required>
-              <div class="invalid-feedback">Cantidad requerida</div>
-            </div>
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Precio Unitario *</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="number" class="form-control item-precio" placeholder="0,00" min="0" step="0.01" value="${precio}" required>
-              </div>
-              <div class="invalid-feedback">Precio requerido</div>
-            </div>
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Subtotal</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control item-subtotal" readonly>
-              </div>
-            </div>
-            <div class="col-md-3 mb-2">
-              <label class="form-label">Estado</label>
-              <div class="mt-2">
-                <span class="badge bg-warning">Pendiente</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      contenedor.appendChild(itemDiv);
-
-      // Agregar event listeners para cálculos automáticos
-      const cantidadInput = itemDiv.querySelector('.item-cantidad');
-      const precioInput = itemDiv.querySelector('.item-precio');
-      
-      cantidadInput.addEventListener('input', () => calcularSubtotal(itemsCount));
-      precioInput.addEventListener('input', () => calcularSubtotal(itemsCount));
-      
-      // Calcular subtotal inicial
-      calcularSubtotal(itemsCount);
-      
-      // Actualizar estado
-      actualizarEstadoVacio();
-      actualizarResumen();
-      validarFormulario();
-    }
-
-    function eliminarItem(itemId) {
-      const item = document.querySelector(`[data-item-id="${itemId}"]`);
-      if (item) {
-        item.remove();
-        actualizarEstadoVacio();
-        actualizarResumen();
-        validarFormulario();
-      }
-    }
-
-    function calcularSubtotal(itemId) {
-      const item = document.querySelector(`[data-item-id="${itemId}"]`);
-      if (!item) return;
-
-      const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
-      const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
-      const subtotal = cantidad * precio;
-
-      item.querySelector('.item-subtotal').value = subtotal.toFixed(2);
-      
-      // Actualizar badge de estado
-      const badge = item.querySelector('.badge');
-      if (cantidad > 0 && precio > 0) {
-        badge.className = 'badge bg-success';
-        badge.textContent = 'Válido';
-      } else {
-        badge.className = 'badge bg-warning';
-        badge.textContent = 'Pendiente';
-      }
-
-      actualizarResumen();
-    }
-
-    function actualizarEstadoVacio() {
-      const contenedor = document.getElementById('contenedor-items-certificados');
-      const estadoVacio = document.getElementById('estadoVacioItems');
-      
-      if (contenedor.children.length === 0) {
-        estadoVacio.classList.remove('d-none');
-      } else {
-        estadoVacio.classList.add('d-none');
-      }
-    }
-
-    function actualizarResumen() {
-      const items = document.querySelectorAll('.item-certificado');
-      let totalItems = items.length;
-      let totalUnidades = 0;
-      let subtotalGeneral = 0;
-
-      items.forEach(item => {
-        const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
-        const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
-        const subtotal = cantidad * precio;
-
-        totalUnidades += cantidad;
-        subtotalGeneral += subtotal;
-      });
-
-      const iva = subtotalGeneral * 0.21;
-      const totalConIva = subtotalGeneral + iva;
-      const promedioUnitario = totalItems > 0 ? subtotalGeneral / totalItems : 0;
-
-      // Actualizar displays
-      document.getElementById('totalItems').textContent = totalItems;
-      document.getElementById('totalUnidades').textContent = totalUnidades.toFixed(0);
-      document.getElementById('promedioUnitario').textContent = `$${promedioUnitario.toFixed(0)}`;
-      document.getElementById('totalGeneral').textContent = `$${subtotalGeneral.toFixed(2)}`;
-      document.getElementById('subtotalDisplay').textContent = `$${subtotalGeneral.toFixed(2)}`;
-      document.getElementById('ivaDisplay').textContent = `$${iva.toFixed(2)}`;
-      document.getElementById('totalConIvaDisplay').textContent = `$${totalConIva.toFixed(2)}`;
-
-      totalCertificacion = totalConIva;
-    }
-
-    function validarFormulario() {
-      const obra = document.getElementById('obra').value;
-      const tipo = document.getElementById('tipo').value;
-      const fecha = document.getElementById('fecha').value;
-      const items = document.querySelectorAll('.item-certificado');
-      
-      let itemsValidos = 0;
-      items.forEach(item => {
-        const cantidad = parseFloat(item.querySelector('.item-cantidad').value) || 0;
-        const precio = parseFloat(item.querySelector('.item-precio').value) || 0;
-        const codigo = item.querySelector('.item-codigo').value.trim();
-        const descripcion = item.querySelector('.item-descripcion').value.trim();
-        
-        if (cantidad > 0 && precio > 0 && codigo && descripcion) {
-          itemsValidos++;
-        }
-      });
-
-      const formValido = obra && tipo && fecha && itemsValidos > 0;
-      
-      const btnGuardar = document.getElementById('guardarCertificacion');
-      const alertValidacion = document.getElementById('alertValidacion');
-      const mensajeValidacion = document.getElementById('mensajeValidacion');
-
-      btnGuardar.disabled = !formValido;
-
-      if (!formValido) {
-        alertValidacion.classList.remove('d-none');
-        if (!obra || !tipo || !fecha) {
-          mensajeValidacion.textContent = 'Complete la información general de la certificación.';
-        } else if (itemsValidos === 0) {
-          mensajeValidacion.textContent = 'Agregue al menos un item válido con cantidad y precio.';
-        }
-      } else {
-        alertValidacion.classList.add('d-none');
-      }
-    }
-
-    function guardarCertificacion() {
-      // Aquí iría la lógica para guardar en el backend
-      const confirmacion = confirm(`¿Confirma guardar la certificación por un total de $${totalCertificacion.toFixed(2)}?`);
-      
-      if (confirmacion) {
-        // Simular guardado
-        alert('Certificación guardada exitosamente');
-        window.location.href = '/html/certificaciones/certificaciones.html';
-      }
-    }
-
-    // Función global para logout
-    function logout() {
-      if (window.authManager) {
-        window.authManager.logout();
-      } else {
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = '/html/auth/login.html';
-      }
-    }
-  </script>
+  <script src="/src/js/nueva-certificacion.js"></script>
 </body>
 </html>
