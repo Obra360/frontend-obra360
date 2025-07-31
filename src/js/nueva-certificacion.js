@@ -26,8 +26,9 @@ class NuevaCertificacionManager {
         
         result.data.forEach(obra => {
           const option = document.createElement('option');
-          option.value = obra.id;
+          option.value = `${obra.empresa} - ${obra.ciudad}`; // ✅ El VALUE también es el nombre
           option.textContent = `${obra.empresa} - ${obra.ciudad}`;
+          option.dataset.obraId = obra.id; // 💡 Guardar el ID como data attribute si se necesita
           selectObra.appendChild(option);
         });
 
