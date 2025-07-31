@@ -7,6 +7,50 @@ class NuevaCertificacionManager {
     this.init();
   }
 
+  async cargarObras() {
+    const selectObra = document.getElementById('obra');
+    
+    try {
+      // Mostrar loading
+      selectObra.innerHTML = '<option value="">Cargando obras...</option>';
+      selectObra.disabled = true;
+
+      // Hacer petición usando tu sistema existente
+      const result = await window.authUtils.apiRequest('/api/obras', {
+        method: 'GET'
+      });
+
+      if (result.success && result.data) {
+        // Limpiar y llenar el dropdown
+        selectObra.innerHTML = '<option value="">Seleccionar obra</option>';
+        
+        result.data.forEach(obra => {
+          const option = document.createElement('option');
+          option.value = obra.id;
+          option.textContent = `${obra.empresa} - ${obra.ciudad}`;
+          selectObra.appendChild(option);
+        });
+
+        selectObra.disabled = false;
+        
+        // Mostrar mensaje si no hay obras
+        if (result.data.length === 0) {
+          selectObra.innerHTML = '<option value="">No hay obras disponibles</option>';
+          this.showAlert('No tienes obras disponibles para certificar', 'warning');
+        }
+
+      } else {
+        throw new Error(result.error || 'Error al cargar obras');
+      }
+
+    } catch (error) {
+      console.error('Error cargando obras:', error);
+      selectObra.innerHTML = '<option value="">Error al cargar obras</option>';
+      selectObra.disabled = true;
+      this.showAlert('Error al cargar las obras. Verifica tu conexión e intenta recargar la página.', 'danger');
+    }
+  }
+
   async init() {
     // Verificar autenticación
     if (!window.authManager || !window.authManager.isAuthenticated()) {
@@ -19,6 +63,7 @@ class NuevaCertificacionManager {
     this.setupDateDefault();
     this.actualizarResumen();
     this.actualizarEstadoVacio();
+    await this.cargarObras();
   }
 
   // Configurar información del usuario
