@@ -1,0 +1,458 @@
+/* /src/components/sidebar/sidebar.css */
+/* Estilos del Sidebar Modular para Obra 360 */
+
+/* ==================== LAYOUT WRAPPER ==================== */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ==================== SIDEBAR BASE ==================== */
+.sidebar {
+  width: 260px;
+  background: #343a46;
+  color: #adb8c8;
+  transition: all 0.3s ease;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #2c3440;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #495057;
+  border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: #6c757d;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* ==================== SIDEBAR BRAND ==================== */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.25rem;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid #495057;
+  transition: all 0.3s ease;
+}
+
+.sidebar-brand:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand:focus {
+  color: #fff;
+  outline: none;
+  box-shadow: inset 0 0 0 2px #0d6efd;
+}
+
+.sidebar-brand .brand-icon {
+  margin-right: 0.75rem;
+  font-size: 1.5rem;
+  color: #0d6efd;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .brand-text {
+  opacity: 0;
+  transform: translateX(-10px);
+  display: none;
+}
+
+.sidebar.collapsed .brand-icon {
+  margin-right: 0;
+}
+
+/* ==================== SIDEBAR NAVIGATION ==================== */
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-header {
+  padding: 1rem 1.25rem 0.5rem;
+  color: #6c757d;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-header {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ==================== SIDEBAR ITEMS ==================== */
+.sidebar-item {
+  position: relative;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  color: #adb8c8;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.sidebar-link:hover {
+  background: #495057;
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar-link:focus {
+  outline: none;
+  box-shadow: inset 3px 0 0 #0d6efd;
+  background: #495057;
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: #0d6efd;
+  color: #fff;
+  position: relative;
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+}
+
+.sidebar-link i {
+  width: 20px;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed .sidebar-link span {
+  opacity: 0;
+  transform: translateX(-10px);
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-link i {
+  margin-right: 0;
+}
+
+/* ==================== DROPDOWN FUNCTIONALITY ==================== */
+.sidebar-link .dropdown-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.sidebar-link[aria-expanded="true"] .dropdown-icon {
+  transform: rotate(90deg);
+}
+
+.sidebar.collapsed .dropdown-icon {
+  display: none;
+}
+
+.sidebar-dropdown {
+  background: #2c3440;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 2px solid #495057;
+  margin-left: 1rem;
+}
+
+.sidebar-dropdown .sidebar-link {
+  padding-left: 3.25rem;
+  font-size: 0.85rem;
+  background: #2c3440;
+}
+
+.sidebar-dropdown .sidebar-link:hover {
+  background: #495057;
+  padding-left: 3.5rem;
+}
+
+.sidebar-dropdown .sidebar-link.active {
+  background: #0d6efd;
+  border-left: 3px solid #fff;
+}
+
+.sidebar.collapsed .sidebar-dropdown {
+  display: none !important;
+}
+
+/* ==================== BADGES ==================== */
+.badge-notification {
+  background: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  margin-left: auto;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.sidebar.collapsed .badge-notification {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  transform: scale(0.8);
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.main {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease;
+  background: #f8f9fc;
+  min-height: 100vh;
+}
+
+.main.expanded {
+  margin-left: 70px;
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar-app {
+  background: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  padding: 1rem 1.5rem;
+  margin-bottom: 0;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: #6c757d;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-toggle:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.sidebar-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* ==================== HAMBURGER ANIMATION ==================== */
+.hamburger {
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  transition: all 0.3s ease;
+}
+
+.hamburger::before {
+  top: -6px;
+}
+
+.hamburger::after {
+  top: 6px;
+}
+
+.sidebar-toggle:hover .hamburger::before {
+  top: -8px;
+}
+
+.sidebar-toggle:hover .hamburger::after {
+  top: 8px;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .main.expanded {
+    margin-left: 0;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    width: 100%;
+  }
+  
+  .sidebar-brand {
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  .sidebar-link {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-link,
+  .sidebar-dropdown,
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after,
+  .main {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .sidebar {
+    border-right: 2px solid #000;
+  }
+  
+  .sidebar-link:focus {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+  }
+}
+
+/* ==================== DARK THEME VARIANT ==================== */
+.sidebar.theme-dark {
+  background: #1a1d29;
+  color: #9ca3af;
+}
+
+.sidebar.theme-dark .sidebar-brand {
+  border-bottom-color: #374151;
+}
+
+.sidebar.theme-dark .sidebar-link:hover {
+  background: #374151;
+}
+
+.sidebar.theme-dark .sidebar-dropdown {
+  background: #111827;
+}
+
+/* ==================== LOADING STATES ==================== */
+.sidebar-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.sidebar-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #0d6efd;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== UTILITIES ==================== */
+.sidebar-spacer {
+  margin-top: auto;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: #495057;
+  margin: 0.5rem 1.25rem;
+}
+
+.sidebar.collapsed .sidebar-divider {
+  margin: 0.5rem;
+}
