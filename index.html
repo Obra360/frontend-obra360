@@ -6,346 +6,137 @@
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
   <title>Dashboard - Obra 360</title>
   
-  <!-- Bootstrap CSS -->
+  <!-- Dependencias CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-  
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-  
   <style>
-    /* ==================== SIDEBAR STYLES ==================== */
-    .wrapper {
-      display: flex;
-      min-height: 100vh;
-    }
+  /* Estilos base mientras carga el sidebar */
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fc;
+  }
+  
+  .wrapper {
+    display: flex;
+    min-height: 100vh;
+  }
+  
+  .main {
+    flex: 1;
+    margin-left: 260px;
+    transition: margin-left 0.3s ease;
+    background: #f8f9fc;
+    min-height: 100vh;
+  }
+  
+  .main.expanded {
+    margin-left: 70px;
+  }
+  
+  .content {
+    padding: 2rem;
+  }
+  
+  .navbar-bg {
+    background: #fff;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    padding: 1rem 1.5rem;
+    margin-bottom: 0;
+  }
+  
+  .sidebar-toggle {
+    background: none;
+    border: none;
+    color: #6c757d;
+    font-size: 1.25rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    position: relative;
+    width: 40px;
+    height: 40px;
+  }
+  
+  .sidebar-toggle:hover {
+    background: #e9ecef;
+    color: #495057;
+  }
+  
+  .hamburger {
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    position: relative;
+    transition: all 0.3s ease;
+    margin: 0 auto;
+  }
+  
+  .hamburger::before,
+  .hamburger::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    transition: all 0.3s ease;
+  }
+  
+  .hamburger::before {
+    top: -6px;
+  }
+  
+  .hamburger::after {
+    top: 6px;
+  }
+  
+  /* KPI Cards */
+  .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .indicator {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: #e74a3b;
+    color: white;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+  }
 
-    .sidebar {
-      width: 260px;
-      background: #343a46;
-      color: #adb8c8;
-      transition: all 0.3s ease;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .sidebar.collapsed {
-      width: 70px;
-    }
-
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      padding: 1.5rem 1.25rem;
-      text-decoration: none;
-      color: #fff;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border-bottom: 1px solid #495057;
-    }
-
-    .sidebar-brand:hover {
-      color: #fff;
-    }
-
-    .sidebar-brand .brand-icon {
-      margin-right: 0.75rem;
-      font-size: 1.5rem;
-      color: #0d6efd;
-    }
-
-    .sidebar.collapsed .brand-text {
-      display: none;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar-header {
-      padding: 1rem 1.25rem 0.5rem;
-      color: #6c757d;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .sidebar.collapsed .sidebar-header {
-      display: none;
-    }
-
-    .sidebar-item {
-      position: relative;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      padding: 0.875rem 1.25rem;
-      color: #adb8c8;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .sidebar-link:hover {
-      background: #495057;
-      color: #fff;
-    }
-
-    .sidebar-link.active {
-      background: #0d6efd;
-      color: #fff;
-    }
-
-    .sidebar-link i {
-      width: 20px;
-      margin-right: 0.75rem;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-
-    .sidebar.collapsed .sidebar-link span {
-      display: none;
-    }
-
-    .sidebar-link .dropdown-icon {
-      margin-left: auto;
-      transition: transform 0.2s ease;
-    }
-
-    .sidebar-link[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(90deg);
-    }
-
-    .sidebar.collapsed .dropdown-icon {
-      display: none;
-    }
-
-    .sidebar-dropdown {
-      background: #2c3440;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-dropdown .sidebar-link {
-      padding-left: 3.25rem;
-      font-size: 0.9rem;
-    }
-
-    .sidebar.collapsed .sidebar-dropdown {
-      display: none !important;
-    }
-
-    .badge-notification {
-      background: #dc3545;
-      color: white;
-      font-size: 0.7rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 10px;
-      margin-left: auto;
-    }
-
-    /* ==================== MAIN CONTENT ==================== */
+  /* Overlay móvil */
+  @media (max-width: 768px) {
     .main {
-      flex: 1;
-      margin-left: 260px;
-      transition: margin-left 0.3s ease;
-      background: #f8f9fc;
-      min-height: 100vh;
+      margin-left: 0;
     }
-
-    .main.expanded {
-      margin-left: 70px;
-    }
-
-    .navbar-bg {
-      background: #fff;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-      padding: 1rem 1.5rem;
-      margin-bottom: 0;
-    }
-
-    .sidebar-toggle {
-      background: none;
-      border: none;
-      color: #6c757d;
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 0.375rem;
-      transition: all 0.2s ease;
-    }
-
-    .sidebar-toggle:hover {
-      background: #e9ecef;
-      color: #495057;
-    }
-
-    .hamburger {
-      width: 20px;
-      height: 20px;
-      position: relative;
-    }
-
-    .hamburger::before,
-    .hamburger::after,
-    .hamburger {
-      background: currentColor;
-    }
-
-    .hamburger::before,
-    .hamburger::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 20px;
-      height: 2px;
-      transition: all 0.3s ease;
-    }
-
-    .hamburger::before {
-      top: 6px;
-    }
-
-    .hamburger::after {
-      top: 14px;
-    }
-
-    .content {
-      padding: 2rem;
-    }
-
-    /* ==================== RESPONSIVE ==================== */
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.show {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-      }
-
-      .sidebar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        display: none;
-      }
-
-      .sidebar-overlay.show {
-        display: block;
-      }
-    }
-
-    /* ==================== DASHBOARD STYLES ==================== */
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9fc;
-    }
-    
-    .card {
-      border: none;
-      box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-      border-radius: 0.35rem;
-    }
-    
-    .nav-icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      color: #5a5c69;
-      text-decoration: none;
-    }
-    
-    .nav-icon:hover {
-      color: #5a5c69;
-      background-color: #eaecf4;
-    }
-    
-    .indicator {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      background-color: #e74a3b;
-      color: white;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      min-width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-    }
-
-    .icon-circle {
-      height: 2.5rem;
-      width: 2.5rem;
-      border-radius: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .font-weight-bold {
-      font-weight: 600 !important;
-    }
-    
-    .text-xs {
-      font-size: 0.75rem;
-    }
-    
-    .shadow {
-      box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
-    }
-
-    .footer {
-      background-color: #fff;
-      border-top: 1px solid #e3e6f0;
-      padding: 1rem 0;
-      margin-top: auto;
-    }
-  </style>
+  }
+</style>
+  
+  <!-- NOTA: El CSS del sidebar ahora se inyecta a través del bundle de JS -->
 </head>
 <body>
-  <!-- Auth script -->
+  <!-- Auth script (debe cargarse antes que la app de React) -->
   <script src="/src/js/auth.js"></script>
   
-  <!-- Mobile overlay -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   
   <div class="wrapper">
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-content">
-        <a href="/index.html" class="sidebar-brand">
-          <i class="bi bi-building brand-icon"></i>
-          <span class="brand-text">Obra 360</span>
-        </a>
-        <ul class="sidebar-nav" id="sidebarNav">
-          <!-- Se llena dinámicamente -->
-        </ul>
-      </div>
-    </nav>
+    <!-- Contenedor para la aplicación de React -->
+    <nav id="sidebar-container"></nav>
     
     <!-- Main content -->
     <div class="main" id="mainContent">
@@ -354,44 +145,31 @@
         <button class="sidebar-toggle" id="sidebarToggle">
           <div class="hamburger"></div>
         </button>
-        
         <div class="navbar-collapse collapse">
           <ul class="navbar-nav ms-auto">
-            <!-- Notificaciones -->
             <li class="nav-item dropdown">
               <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
                 <div class="position-relative">
                   <i class="bi bi-bell"></i>
-                  <span class="indicator" id="notificationCount">3</span>
+                  <span class="indicator" id="notificationCount">0</span>
                 </div>
               </a>
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown">
-                <h6 class="dropdown-header" id="notificationHeader">3 Notificaciones</h6>
-                <div id="notificationList">
-                  <!-- Notificaciones dinámicas -->
-                </div>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las notificaciones</a>
+                <h6 class="dropdown-header" id="notificationHeader">Sin notificaciones</h6>
+                <div id="notificationList"></div>
+                <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas</a>
               </div>
             </li>
-            
-            <!-- Usuario -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
-                <span class="me-2 d-none d-lg-inline text-gray-600 small" id="userName">Admin Papu</span>
+                <span class="me-2 d-none d-lg-inline text-gray-600 small" id="userName">Usuario</span>
                 <i class="bi bi-person-circle"></i>
               </a>
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#">
-                  <i class="bi bi-person me-2"></i>Perfil
-                </a>
-                <a class="dropdown-item" href="#">
-                  <i class="bi bi-gear me-2"></i>Configuración
-                </a>
+                <a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i>Perfil</a>
+                <a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i>Configuración</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" onclick="logout()">
-                  <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-                </a>
+                <a class="dropdown-item" href="#" onclick="logout()"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</a>
               </div>
             </li>
           </ul>
@@ -406,8 +184,8 @@
             <div class="col-12">
               <div class="d-flex justify-content-between align-items-center">
                 <div>
-                  <h1 class="h3 mb-1" id="welcomeMessage">¡Buenas noches, Admin!</h1>
-                  <p class="text-muted mb-0" id="dateMessage">Hoy es jueves, 31 de julio de 2025</p>
+                  <h1 class="h3 mb-1" id="welcomeMessage">¡Bienvenido de vuelta!</h1>
+                  <p class="text-muted mb-0" id="dateMessage">Hoy es...</p>
                 </div>
                 <div class="d-flex gap-2">
                   <button class="btn btn-primary" onclick="window.location.href='/html/obras/nueva-obra.html'">
@@ -463,7 +241,7 @@
                   <div class="d-flex justify-content-between align-items-center">
                     <div>
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Certificaciones</div>
-                      <div class="h5 mb-0" id="totalCertificaciones">5</div>
+                      <div class="h5 mb-0" id="totalCertificaciones">9</div>
                       <small class="opacity-75">Este mes</small>
                     </div>
                     <div class="col-auto">
@@ -473,7 +251,7 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="col-xl-3 col-md-6 mb-4">
               <div class="card bg-primary text-white h-100">
                 <div class="card-body">
@@ -481,7 +259,7 @@
                     <div>
                       <div class="text-xs font-weight-bold text-uppercase mb-1">Total Obras</div>
                       <div class="h5 mb-0" id="totalObras">6</div>
-                      <small class="opacity-75">+6 este mes</small>
+                      <small class="opacity-75" id="obrasTendencia">+6 este mes</small>
                     </div>
                     <div class="col-auto">
                       <i class="bi bi-building-fill" style="font-size: 2rem; opacity: 0.7;"></i>
@@ -503,78 +281,75 @@
                   </h6>
                   <a href="/html/obras/obras.html" class="btn btn-sm btn-outline-primary">Ver todas</a>
                 </div>
-                <div class="card-body" id="obrasRecientesContainer">
-                  <!-- Obras dinámicas desde tu API -->
-                  <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                    <div class="me-3">
-                      <div class="icon-circle bg-primary">
-                        <i class="bi bi-building text-white"></i>
+                <div class="card-body">
+                  <div id="obrasRecientesLoader" class="text-center py-3">
+                    <div class="spinner-border spinner-border-sm text-primary"></div>
+                    <span class="ms-2">Cargando obras...</span>
+                  </div>
+                  
+                  <div id="obrasRecientesList" style="display: none;">
+                    <!-- Obras de ejemplo -->
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                      <div class="me-3">
+                        <div class="icon-circle bg-primary">
+                          <i class="bi bi-building text-white"></i>
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="small text-gray-500">Hoy</div>
+                        <div class="fw-bold">Connecto</div>
+                        <div class="small">Chubut • Obra pública</div>
+                      </div>
+                      <div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-eye"></i>
+                        </a>
                       </div>
                     </div>
-                    <div class="flex-grow-1">
-                      <div class="small text-gray-500">Hoy</div>
-                      <div class="fw-bold">Connecto</div>
-                      <div class="small">Chubut • Obra pública</div>
+                    
+                    <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                      <div class="me-3">
+                        <div class="icon-circle bg-success">
+                          <i class="bi bi-building text-white"></i>
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="small text-gray-500">Hoy</div>
+                        <div class="fw-bold">Connecto</div>
+                        <div class="small">Resistencia • Obra privada</div>
+                      </div>
+                      <div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                      </div>
                     </div>
-                    <div>
-                      <a href="#" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </a>
+                    
+                    <div class="d-flex align-items-center">
+                      <div class="me-3">
+                        <div class="icon-circle bg-info">
+                          <i class="bi bi-building text-white"></i>
+                        </div>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="small text-gray-500">Hace 2 días</div>
+                        <div class="fw-bold">Municipio</div>
+                        <div class="small">Bariloche • Obra pública</div>
+                      </div>
+                      <div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                          <i class="bi bi-eye"></i>
+                        </a>
+                      </div>
                     </div>
                   </div>
                   
-                  <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                    <div class="me-3">
-                      <div class="icon-circle bg-success">
-                        <i class="bi bi-building text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="small text-gray-500">Hoy</div>
-                      <div class="fw-bold">Connecto</div>
-                      <div class="small">Resistencia • Obra privada</div>
-                    </div>
-                    <div>
-                      <a href="#" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                    <div class="me-3">
-                      <div class="icon-circle bg-info">
-                        <i class="bi bi-building text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="small text-gray-500">Hace 2 días</div>
-                      <div class="fw-bold">Municipio</div>
-                      <div class="small">Bariloche • Obra pública</div>
-                    </div>
-                    <div>
-                      <a href="#" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div class="d-flex align-items-center">
-                    <div class="me-3">
-                      <div class="icon-circle bg-warning">
-                        <i class="bi bi-building text-white"></i>
-                      </div>
-                    </div>
-                    <div class="flex-grow-1">
-                      <div class="small text-gray-500">Hace 6 días</div>
-                      <div class="fw-bold">Telecom</div>
-                      <div class="small">Fontana • Obra privada</div>
-                    </div>
-                    <div>
-                      <a href="#" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-eye"></i>
-                      </a>
-                    </div>
+                  <div id="obrasRecientesEmpty" class="text-center py-4" style="display: none;">
+                    <i class="bi bi-building text-muted" style="font-size: 3rem;"></i>
+                    <p class="text-muted mt-2">No hay obras registradas</p>
+                    <a href="/html/obras/nueva-obra.html" class="btn btn-primary btn-sm">
+                      <i class="bi bi-plus me-1"></i>Crear primera obra
+                    </a>
                   </div>
                 </div>
               </div>
@@ -631,12 +406,9 @@
       <footer class="footer mt-auto">
         <div class="container-fluid">
           <div class="d-sm-flex align-items-center justify-content-between">
-            <div>
-              <span class="text-muted">© 2025 <strong>Obra 360</strong></span>
-            </div>
+            <div><span class="text-muted">© 2025 <strong>Obra 360</strong></span></div>
             <div class="text-end">
               <a href="#" class="text-muted me-3">Soporte</a>
-              <a href="#" class="text-muted me-3">Centro de ayuda</a>
               <a href="#" class="text-muted">Privacidad</a>
             </div>
           </div>
@@ -645,367 +417,28 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   
-  <!-- Chart.js (opcional) -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Dashboard JS personalizado (opcional) -->
+  <!-- Script del bundle de Webpack con la app de React -->
+  <script src="/dist/sidebar-bundle.js"></script>
+
+  <!-- Scripts específicos de la página -->
   <script src="/src/js/dashboard.js"></script>
-
-  <!-- ✅ SIDEBAR EMBEBIDO - Todo en un solo archivo -->
   <script>
-    // ==================== CONFIGURACIÓN DEL SIDEBAR ====================
-    const SIDEBAR_CONFIG = {
-      menuItems: [
-        {
-          id: 'inicio',
-          label: 'Inicio',
-          icon: 'bi-house',
-          href: '/index.html',
-          type: 'link',
-          roles: ['ADMIN', 'SUPERVISOR', 'OPERARIO']
-        },
-        {
-          id: 'obras',
-          label: 'Obras',
-          icon: 'bi-building',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          children: [
-            {
-              id: 'listado-obras',
-              label: 'Listado de obras',
-              href: '/html/obras/obras.html'
-            },
-            {
-              id: 'nueva-obra',
-              label: 'Nueva obra',
-              href: '/html/obras/nueva-obra.html'
-            }
-          ]
-        },
-        {
-          id: 'materiales',
-          label: 'Materiales',
-          icon: 'bi-box-seam',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR', 'OPERARIO'],
-          children: [
-            {
-              id: 'listado-materiales',
-              label: 'Listado de materiales',
-              href: '/html/materiales/materiales.html'
-            },
-            {
-              id: 'nuevo-material',
-              label: 'Nuevo material',
-              href: '/html/materiales/nuevo-material.html',
-              roles: ['ADMIN', 'SUPERVISOR']
-            }
-          ]
-        },
-        {
-          id: 'certificaciones',
-          label: 'Certificaciones',
-          icon: 'bi-file-earmark-check',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          badge: '5',
-          children: [
-            {
-              id: 'certificaciones-registradas',
-              label: 'Certificaciones registradas',
-              href: '/html/certificaciones/certificaciones.html'
-            },
-            {
-              id: 'nueva-certificacion',
-              label: 'Nueva certificación',
-              href: '/html/certificaciones/nueva-certificacion.html'
-            }
-          ]
-        },
-        {
-          id: 'personal',
-          label: 'Personal',
-          icon: 'bi-people',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          children: [
-            {
-              id: 'listado-personal',
-              label: 'Listado de personal',
-              href: '/html/personal/personal.html'
-            },
-            {
-              id: 'nuevo-personal',
-              label: 'Nuevo ingreso',
-              href: '/html/personal/nuevo-personal.html'
-            },
-            {
-              id: 'control-horas',
-              label: 'Control de horas',
-              href: '/html/personal/control-horas.html'
-            }
-          ]
-        }
-      ]
-    };
-
-    // ==================== SIDEBAR MANAGER ====================
-    class SidebarManager {
-      constructor(config, userRole = 'ADMIN') {
-        this.config = config;
-        this.userRole = userRole;
-        this.currentPath = window.location.pathname;
-        this.isCollapsed = false;
-        this.isMobile = window.innerWidth <= 768;
-        
-        this.sidebar = document.getElementById('sidebar');
-        this.sidebarNav = document.getElementById('sidebarNav');
-        this.sidebarToggle = document.getElementById('sidebarToggle');
-        this.sidebarOverlay = document.getElementById('sidebarOverlay');
-        this.mainContent = document.getElementById('mainContent');
-      }
-
-      init() {
-        console.log('🚀 Inicializando Sidebar Manager...');
-        this.renderMenu();
-        this.bindEvents();
-        this.setActiveMenu();
-        this.handleResize();
-        console.log('✅ Sidebar inicializado correctamente');
-      }
-
-      renderMenu() {
-        const filteredItems = this.config.menuItems.filter(item => 
-          !item.roles || item.roles.includes(this.userRole)
-        );
-
-        const menuHTML = filteredItems.map(item => {
-          if (item.type === 'link') {
-            return this.renderMenuItem(item);
-          } else if (item.type === 'dropdown') {
-            return this.renderDropdownItem(item);
-          }
-          return '';
-        }).join('');
-
-        this.sidebarNav.innerHTML = `
-          <li class="sidebar-header">Secciones</li>
-          ${menuHTML}
-        `;
-      }
-
-      renderMenuItem(item) {
-        const isActive = this.isActiveRoute(item.href, item.id);
-        
-        return `
-          <li class="sidebar-item">
-            <a href="${item.href}" 
-               class="sidebar-link ${isActive ? 'active' : ''}" 
-               data-page="${item.id}">
-              <i class="${item.icon}"></i>
-              <span>${item.label}</span>
-              ${item.badge ? `<span class="badge-notification">${item.badge}</span>` : ''}
-            </a>
-          </li>
-        `;
-      }
-
-      renderDropdownItem(item) {
-        const filteredChildren = item.children?.filter(child => 
-          !child.roles || child.roles.includes(this.userRole)
-        ) || [];
-
-        const childrenHTML = filteredChildren.map(child => {
-          const isActive = this.isActiveRoute(child.href, child.id);
-          return `
-            <li class="sidebar-item">
-              <a href="${child.href}" 
-                 class="sidebar-link ${isActive ? 'active' : ''}" 
-                 data-page="${child.id}">
-                <span>${child.label}</span>
-              </a>
-            </li>
-          `;
-        }).join('');
-
-        const dropdownId = `dropdown-${item.id}`;
-        const hasActiveChild = filteredChildren.some(child => 
-          this.isActiveRoute(child.href, child.id)
-        );
-        
-        return `
-          <li class="sidebar-item">
-            <a class="sidebar-link ${hasActiveChild ? 'active' : ''}" 
-               data-bs-toggle="collapse" 
-               data-bs-target="#${dropdownId}" 
-               aria-expanded="${hasActiveChild}"
-               data-page="${item.id}">
-              <i class="${item.icon}"></i>
-              <span>${item.label}</span>
-              ${item.badge ? `<span class="badge-notification">${item.badge}</span>` : ''}
-              <i class="bi bi-chevron-right dropdown-icon"></i>
-            </a>
-            <ul class="sidebar-dropdown list-unstyled collapse ${hasActiveChild ? 'show' : ''}" 
-                id="${dropdownId}">
-              ${childrenHTML}
-            </ul>
-          </li>
-        `;
-      }
-
-      isActiveRoute(href, pageId) {
-        if (!href) return false;
-        return this.currentPath === href || this.currentPath.includes(pageId);
-      }
-
-      bindEvents() {
-        if (this.sidebarToggle) {
-          this.sidebarToggle.addEventListener('click', () => this.toggleSidebar());
-        }
-        
-        if (this.sidebarOverlay) {
-          this.sidebarOverlay.addEventListener('click', () => this.closeMobileSidebar());
-        }
-        
-        window.addEventListener('resize', () => this.handleResize());
-      }
-
-      toggleSidebar() {
-        if (this.isMobile) {
-          this.sidebar.classList.toggle('show');
-          if (this.sidebarOverlay) {
-            this.sidebarOverlay.classList.toggle('show');
-          }
-        } else {
-          this.isCollapsed = !this.isCollapsed;
-          this.sidebar.classList.toggle('collapsed', this.isCollapsed);
-          if (this.mainContent) {
-            this.mainContent.classList.toggle('expanded', this.isCollapsed);
-          }
-        }
-      }
-
-      closeMobileSidebar() {
-        this.sidebar.classList.remove('show');
-        if (this.sidebarOverlay) {
-          this.sidebarOverlay.classList.remove('show');
-        }
-      }
-
-      handleResize() {
-        this.isMobile = window.innerWidth <= 768;
-        
-        if (!this.isMobile) {
-          this.sidebar.classList.remove('show');
-          if (this.sidebarOverlay) {
-            this.sidebarOverlay.classList.remove('show');
-          }
-        }
-      }
-
-      setActiveMenu() {
-        const allLinks = this.sidebarNav.querySelectorAll('.sidebar-link[data-page]');
-        let activeFound = false;
-        
-        allLinks.forEach(link => {
-          link.classList.remove('active');
-        });
-        
-        for (const link of allLinks) {
-          const href = link.getAttribute('href');
-          const page = link.getAttribute('data-page');
-          
-          if (this.isActiveRoute(href, page)) {
-            this.setActiveLink(link);
-            activeFound = true;
-            break;
-          }
-        }
-
-        if (!activeFound) {
-          const inicioLink = this.sidebarNav.querySelector('[data-page="inicio"]');
-          if (inicioLink) {
-            this.setActiveLink(inicioLink);
-          }
-        }
-      }
-
-      setActiveLink(link) {
-        this.sidebarNav.querySelectorAll('.sidebar-link').forEach(l => {
-          l.classList.remove('active');
-        });
-
-        link.classList.add('active');
-
-        const parentDropdown = link.closest('.sidebar-dropdown');
-        if (parentDropdown) {
-          const parentLink = parentDropdown.previousElementSibling;
-          if (parentLink) {
-            parentLink.classList.add('active');
-            parentLink.setAttribute('aria-expanded', 'true');
-          }
-          parentDropdown.classList.add('show');
-        }
-      }
-
-      updateBadge(menuId, badgeText) {
-        const menuItem = this.config.menuItems.find(item => item.id === menuId);
-        if (menuItem) {
-          menuItem.badge = badgeText;
-          this.renderMenu();
-          this.setActiveMenu();
-        }
-      }
-    }
-
-    // ==================== INICIALIZACIÓN ====================
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Iniciando Dashboard con Sidebar embebido...');
-      
-      // Obtener rol del usuario
-      const userRole = window.authManager?.getUser()?.role || 'ADMIN';
-      
-      // Inicializar sidebar
-      try {
-        window.sidebarManager = new SidebarManager(SIDEBAR_CONFIG, userRole);
-        window.sidebarManager.init();
-        
-        console.log('✅ Dashboard completamente funcional');
-        
-      } catch (error) {
-        console.error('❌ Error inicializando sidebar:', error);
-      }
-    });
-
-    // ==================== FUNCIONES DEL DASHBOARD ====================
     function logout() {
-      if (window.authManager) {
-        window.authManager.logout();
-      } else {
-        alert('Cerrando sesión...');
-        window.location.href = '/html/auth/login.html';
-      }
+      window.authManager?.logout();
     }
-
-    function generarReporte() {
-      alert('Generando reporte general...');
-    }
-
-    function generarReporteObras() {
-      alert('Generando reporte de obras...');
-    }
-
-    function generarReporteMateriales() {
-      alert('Generando reporte de materiales...');
-    }
-
-    function generarReporteFinanciero() {
-      alert('Generando reporte financiero...');
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const user = window.authManager?.getUser();
+        if (user) {
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+            document.getElementById('welcomeMessage').textContent = `¡Bienvenido de vuelta, ${user.firstName}!`;
+        }
+        const dateElement = document.getElementById('dateMessage');
+        if(dateElement) {
+            dateElement.textContent = `Hoy es ${new Date().toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+        }
+    });
   </script>
 </body>
 </html>

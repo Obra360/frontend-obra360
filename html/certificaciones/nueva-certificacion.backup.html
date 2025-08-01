@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <title>Nueva Certificación - Obra 360</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="/src/app.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <script src="/src/js/auth.js"></script>
+
+  <div class="wrapper">
+    <nav class="sidebar js-sidebar" id="sidebar">
+      <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/index.html">
+          <span class="align-middle">Obra 360</span>
+        </a>
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Secciones</li>
+
+          <!-- Inicio -->
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/index.html">
+              <i class="align-middle" data-feather="sliders"></i>
+              <span class="align-middle">Inicio</span>
+            </a>
+          </li>
+
+          <!-- Obras -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="home"></i>
+              <span class="align-middle">Obras</span>
+            </a>
+            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Materiales -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="box"></i>
+              <span class="align-middle">Materiales</span>
+            </a>
+            <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Certificaciones -->
+          <li class="sidebar-item active">
+            <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link">
+              <i class="align-middle" data-feather="file-text"></i>
+              <span class="align-middle">Certificaciones</span>
+            </a>
+            <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Certificaciones registradas</a>
+              </li>
+              <li class="sidebar-item active">
+                <a class="sidebar-link" href="/html/certificaciones/nueva-certificacion.html">Nueva certificación</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Personal -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="users"></i>
+              <span class="align-middle">Personal</span>
+            </a>
+            <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/control-horas.html">Control de horas</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="main">
+      <nav class="navbar navbar-expand navbar-light navbar-bg">
+        <a class="sidebar-toggle js-sidebar-toggle">
+          <i class="hamburger align-self-center"></i>
+        </a>
+        <div class="navbar-collapse collapse">
+          <ul class="navbar-nav navbar-align">
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
+                <div class="position-relative">
+                  <i class="align-middle" data-feather="bell"></i>
+                  <span class="indicator">0</span>
+                </div>
+              </a>
+              <div aria-labelledby="alertsDropdown" class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0">
+                <div class="dropdown-menu-header">Sin notificaciones</div>
+                <div class="dropdown-menu-footer">
+                  <a class="text-muted" href="#">Ver todas las notificaciones</a>
+                </div>
+              </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
+                <i class="align-middle" data-feather="settings"></i>
+              </a>
+              <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
+                <span class="text-dark" id="userName">Usuario</span>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a class="dropdown-item" href="#" onclick="logout()">
+                  <i class="align-middle me-1" data-feather="log-out"></i>
+                  Cerrar Sesión
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <main class="content">
+        <div class="container-fluid p-0">
+          <!-- Header -->
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="card-body text-white">
+                  <div class="row align-items-center">
+                    <div class="col-md-8">
+                      <h1 class="mb-2">
+                        <i class="bi bi-file-earmark-plus me-2"></i>Nueva Certificación Técnica
+                      </h1>
+                      <p class="mb-0 opacity-75">Registra los trabajos realizados para valoración económica</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                      <a href="/html/certificaciones/certificaciones.html" class="btn btn-light">
+                        <i class="bi bi-arrow-left me-1"></i>Volver al listado
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Alertas -->
+          <div id="alertContainer"></div>
+
+          <div class="row">
+            <!-- Formulario principal -->
+            <div class="col-lg-8">
+              <!-- Paso 1: Información general -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <h5 class="mb-0">
+                    <i class="bi bi-1-circle-fill text-primary me-2"></i>Información General
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <form id="certificacionForm">
+                    <div class="row">
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="obra">
+                          <i class="bi bi-building me-1"></i>Obra *
+                        </label>
+                        <select class="form-select" id="obra" required>
+                          <option value="">Seleccionar obra</option>
+                          <!-- Las opciones se cargarán dinámicamente -->
+                        </select>
+                        <div class="invalid-feedback">Debe seleccionar una obra.</div>
+                      </div>
+                      
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="tipoCertificacion">
+                          <i class="bi bi-tools me-1"></i>Tipo de certificación *
+                        </label>
+                        <input type="text" class="form-control" id="tipoCertificacion" 
+                               placeholder="Ej: Instalación NAP, Tendido fibra..." required />
+                        <div class="invalid-feedback">El tipo de certificación es requerido.</div>
+                      </div>
+                      
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label" for="fecha">
+                          <i class="bi bi-calendar me-1"></i>Fecha *
+                        </label>
+                        <input type="date" class="form-control" id="fecha" required />
+                        <div class="invalid-feedback">La fecha es requerida.</div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Paso 2: Items certificados -->
+              <div class="card mb-4">
+                <div class="card-header">
+                  <div class="row align-items-center">
+                    <div class="col">
+                      <h5 class="mb-0">
+                        <i class="bi bi-2-circle-fill text-primary me-2"></i>Items Certificados
+                      </h5>
+                    </div>
+                    <div class="col-auto">
+                      <button type="button" class="btn btn-primary" id="agregarItem">
+                        <i class="bi bi-plus-lg me-1"></i>Agregar Item
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <!-- Contenedor de items -->
+                  <div id="contenedor-items-certificados">
+                    <!-- Los items se agregarán dinámicamente aquí -->
+                  </div>
+
+                  <!-- Estado vacío -->
+                  <div id="estadoVacioItems" class="text-center py-5">
+                    <i class="bi bi-clipboard-x" style="font-size: 3rem; color: #6c757d;"></i>
+                    <h5 class="mt-3 text-muted">No hay items agregados</h5>
+                    <p class="text-muted">Haz clic en "Agregar Item" para comenzar a registrar los trabajos realizados.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Panel lateral con resumen -->
+            <div class="col-lg-4">
+              <!-- Resumen en tiempo real -->
+              <div class="card mb-4 position-sticky" style="top: 20px;">
+                <div class="card-header">
+                  <h5 class="mb-0">
+                    <i class="bi bi-calculator text-success me-2"></i>Resumen de Certificación
+                  </h5>
+                </div>
+                <div class="card-body">
+                  <!-- Estadísticas -->
+                  <div class="row text-center mb-3">
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-primary" id="totalItems">0</div>
+                      <small class="text-muted">Items</small>
+                    </div>
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-info" id="totalUnidades">0</div>
+                      <small class="text-muted">Unidades</small>
+                    </div>
+                    <div class="col-4">
+                      <div class="fs-4 fw-bold text-warning" id="promedioUnitario">$0</div>
+                      <small class="text-muted">Promedio</small>
+                    </div>
+                  </div>
+
+                  <!-- Total -->
+                  <div class="text-center mb-3">
+                    <div class="h2 mb-0 text-success" id="totalGeneral">$0,00</div>
+                    <small class="text-muted">Total a Certificar</small>
+                  </div>
+
+                  <!-- Validaciones -->
+                  <div class="mt-3">
+                    <div class="alert alert-info d-none" id="alertValidacion">
+                      <i class="bi bi-info-circle me-1"></i>
+                      <small id="mensajeValidacion"></small>
+                    </div>
+                  </div>
+
+                  <!-- Botones de acción -->
+                  <div class="d-grid gap-2 mt-3">
+                    <button type="button" class="btn btn-success" id="guardarCertificacion" disabled>
+                      <i class="bi bi-check-lg me-1"></i>Guardar Certificación
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" id="limpiarFormulario">
+                      <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Formulario
+                    </button>
+                    <button type="button" class="btn btn-outline-primary" id="previsualizar">
+                      <i class="bi bi-eye me-1"></i>Previsualizar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Códigos frecuentes -->
+              <div class="card">
+                <div class="card-header">
+                  <h6 class="mb-0">
+                    <i class="bi bi-star text-warning me-2"></i>Códigos Frecuentes
+                  </h6>
+                </div>
+                <div class="card-body">
+                  <div class="list-group list-group-flush">
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente" 
+                            data-codigo="5022224" data-descripcion="SONDEO D/CAÑ." data-precio="242.99" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022224</div>
+                          <div class="small text-muted">SONDEO D/CAÑ.</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$242,99</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
+                    
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5022314" data-descripcion="TEND.D/ FIB. OP. P/DUCT/SUBT/EXIST." data-precio="698.80" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022314</div>
+                          <div class="small text-muted">TEND. FIBRA ÓPTICA</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$698,80</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
+                    
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5023001" data-descripcion="INSTALACION NAP 8 PUERTOS" data-precio="750.00" data-unidad="U">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5023001</div>
+                          <div class="small text-muted">INSTALACIÓN NAP</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$750,00</div>
+                          <div class="small text-muted">por U</div>
+                        </div>
+                      </div>
+                    </button>
+
+                    <button class="list-group-item list-group-item-action p-2 codigo-frecuente"
+                            data-codigo="5022316" data-descripcion="TEND. D/LINGA 3MM P/PSTE." data-precio="226.84" data-unidad="M">
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <div class="small fw-bold">5022316</div>
+                          <div class="small text-muted">TEND. LINGA 3MM</div>
+                        </div>
+                        <div class="text-end">
+                          <div class="small fw-bold">$226,84</div>
+                          <div class="small text-muted">por M</div>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="container-fluid">
+          <div class="row text-muted">
+            <div class="col-6 text-start">
+              <p class="mb-0">
+                <a class="text-muted" target="_blank">
+                  <strong>Obra 360</strong>
+                </a>
+                ©
+              </p>
+            </div>
+            <div class="col-6 text-end">
+              <ul class="list-inline">
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Soporte</a>
+                </li>
+                <li class="list-inline-item">
+                  <a class="text-muted" href="" target="_blank">Centro de ayuda</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>feather.replace();</script>
+  <script src="/src/app.js"></script>
+  <script src="/src/js/nueva-certificacion.js"></script>
+</body>
+</html>

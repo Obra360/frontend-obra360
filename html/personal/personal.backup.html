@@ -6,320 +6,97 @@
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
   <title>Listado de Personal - Obra 360</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
-  
+  <link href="/src/app.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
-  <style>
-    /* ==================== SIDEBAR STYLES ==================== */
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8f9fc;
-    }
-
-    .wrapper {
-      display: flex;
-      min-height: 100vh;
-    }
-
-    .sidebar {
-      width: 260px;
-      background: #343a46;
-      color: #adb8c8;
-      transition: all 0.3s ease;
-      position: fixed;
-      height: 100vh;
-      overflow-y: auto;
-      z-index: 1000;
-    }
-
-    .sidebar.collapsed {
-      width: 70px;
-    }
-
-    .sidebar-brand {
-      display: flex;
-      align-items: center;
-      padding: 1.5rem 1.25rem;
-      text-decoration: none;
-      color: #fff;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border-bottom: 1px solid #495057;
-    }
-
-    .sidebar-brand:hover {
-      color: #fff;
-    }
-
-    .sidebar-brand .brand-icon {
-      margin-right: 0.75rem;
-      font-size: 1.5rem;
-      color: #0d6efd;
-    }
-
-    .sidebar.collapsed .brand-text {
-      display: none;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar-header {
-      padding: 1rem 1.25rem 0.5rem;
-      color: #6c757d;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .sidebar.collapsed .sidebar-header {
-      display: none;
-    }
-
-    .sidebar-item {
-      position: relative;
-    }
-
-    .sidebar-link {
-      display: flex;
-      align-items: center;
-      padding: 0.875rem 1.25rem;
-      color: #adb8c8;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
-
-    .sidebar-link:hover {
-      background: #495057;
-      color: #fff;
-    }
-
-    .sidebar-link.active {
-      background: #0d6efd;
-      color: #fff;
-    }
-
-    .sidebar-link i {
-      width: 20px;
-      margin-right: 0.75rem;
-      font-size: 1.1rem;
-      text-align: center;
-    }
-
-    .sidebar.collapsed .sidebar-link span {
-      display: none;
-    }
-
-    .sidebar-link .dropdown-icon {
-      margin-left: auto;
-      transition: transform 0.2s ease;
-    }
-
-    .sidebar-link[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(90deg);
-    }
-
-    .sidebar.collapsed .dropdown-icon {
-      display: none;
-    }
-
-    .sidebar-dropdown {
-      background: #2c3440;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-dropdown .sidebar-link {
-      padding-left: 3.25rem;
-      font-size: 0.9rem;
-    }
-
-    .sidebar.collapsed .sidebar-dropdown {
-      display: none !important;
-    }
-
-    .badge-notification {
-      background: #dc3545;
-      color: white;
-      font-size: 0.7rem;
-      padding: 0.2rem 0.5rem;
-      border-radius: 10px;
-      margin-left: auto;
-    }
-
-    /* ==================== MAIN CONTENT ==================== */
-    .main {
-      flex: 1;
-      margin-left: 260px;
-      transition: margin-left 0.3s ease;
-      background: #f8f9fc;
-      min-height: 100vh;
-    }
-
-    .main.expanded {
-      margin-left: 70px;
-    }
-
-    .navbar-bg {
-      background: #fff;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-      padding: 1rem 1.5rem;
-      margin-bottom: 0;
-    }
-
-    .sidebar-toggle {
-      background: none;
-      border: none;
-      color: #6c757d;
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 0.5rem;
-      border-radius: 0.375rem;
-      transition: all 0.2s ease;
-    }
-
-    .sidebar-toggle:hover {
-      background: #e9ecef;
-      color: #495057;
-    }
-
-    .hamburger {
-      width: 20px;
-      height: 20px;
-      position: relative;
-    }
-
-    .hamburger::before,
-    .hamburger::after,
-    .hamburger {
-      background: currentColor;
-    }
-
-    .hamburger::before,
-    .hamburger::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      width: 20px;
-      height: 2px;
-      transition: all 0.3s ease;
-    }
-
-    .hamburger::before {
-      top: 6px;
-    }
-
-    .hamburger::after {
-      top: 14px;
-    }
-
-    .content {
-      padding: 2rem;
-    }
-
-    /* ==================== RESPONSIVE ==================== */
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.show {
-        transform: translateX(0);
-      }
-
-      .main {
-        margin-left: 0;
-      }
-
-      .sidebar-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        z-index: 999;
-        display: none;
-      }
-
-      .sidebar-overlay.show {
-        display: block;
-      }
-    }
-
-    /* ==================== ADDITIONAL STYLES ==================== */
-    .card {
-      border: none;
-      box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-      border-radius: 0.35rem;
-    }
-    
-    .nav-icon {
-      width: 2.5rem;
-      height: 2.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      color: #5a5c69;
-      text-decoration: none;
-    }
-    
-    .nav-icon:hover {
-      color: #5a5c69;
-      background-color: #eaecf4;
-    }
-    
-    .indicator {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      background-color: #e74a3b;
-      color: white;
-      border-radius: 50%;
-      font-size: 0.7rem;
-      min-width: 18px;
-      height: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 1;
-    }
-
-    .footer {
-      background-color: #fff;
-      border-top: 1px solid #e3e6f0;
-      padding: 1rem 0;
-      margin-top: auto;
-    }
-  </style>
-
 </head>
 
 <body>
   <script src="/src/js/auth.js"></script>
 
   <div class="wrapper">
-    
-    <!-- Sidebar -->
-    <nav class="sidebar" id="sidebar">
-      <div class="sidebar-content">
-        <a href="/index.html" class="sidebar-brand">
-          <i class="bi bi-building brand-icon"></i>
-          <span class="brand-text">Obra 360</span>
+    <nav class="sidebar js-sidebar" id="sidebar">
+      <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/index.html">
+          <span class="align-middle">Obra 360</span>
         </a>
-        <ul class="sidebar-nav" id="sidebarNav">
-          <!-- Se llena dinámicamente -->
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Secciones</li>
+
+          <!-- Inicio -->
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="/index.html">
+              <i class="align-middle" data-feather="sliders"></i>
+              <span class="align-middle">Inicio</span>
+            </a>
+          </li>
+
+          <!-- Obras -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-obras" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="home"></i>
+              <span class="align-middle">Obras</span>
+            </a>
+            <ul id="submenu-obras" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/obras.html">Listado de obras</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/obras/nueva-obra.html">Nueva obra</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Materiales -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-materiales" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="box"></i>
+              <span class="align-middle">Materiales</span>
+            </a>
+            <ul id="submenu-materiales" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/materiales.html">Listado de materiales</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/materiales/nuevo-material.html">Nuevo material</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Certificaciones -->
+          <li class="sidebar-item">
+            <a data-bs-target="#submenu-certificaciones" data-bs-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="file-text"></i>
+              <span class="align-middle">Certificaciones</span>
+            </a>
+            <ul id="submenu-certificaciones" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/certificaciones/certificaciones.html">Alta de certificación</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/certificaciones/certificaciones-nueva.html">Nueva certificación</a>
+              </li>
+            </ul>
+          </li>
+
+          <!-- Personal -->
+          <li class="sidebar-item active">
+            <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" class="sidebar-link">
+              <i class="align-middle" data-feather="users"></i>
+              <span class="align-middle">Personal</span>
+            </a>
+            <ul id="submenu-personal" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+              <li class="sidebar-item active">
+                <a class="sidebar-link" href="/html/personal/personal.html">Listado de personal</a>
+              </li>
+              <li class="sidebar-item">
+                <a class="sidebar-link" href="/html/personal/nuevo-personal.html">Nuevo ingreso</a>
+              </li>
+            </ul>
+          </li>
         </ul>
       </div>
     </nav>
-    
 
     <div class="main">
       <nav class="navbar navbar-expand navbar-light navbar-bg">
@@ -331,7 +108,7 @@
             <li class="nav-item dropdown">
               <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
                 <div class="position-relative">
-                  <i class="align-middle" class="bi-bell"></i>
+                  <i class="align-middle" data-feather="bell"></i>
                   <span class="indicator">0</span>
                 </div>
               </a>
@@ -344,32 +121,32 @@
             </li>
             <li class="nav-item dropdown">
               <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" data-bs-toggle="dropdown" href="#">
-                <i class="align-middle" class="bi-gear"></i>
+                <i class="align-middle" data-feather="settings"></i>
               </a>
               <a class="nav-link dropdown-toggle d-none d-sm-inline-block" data-bs-toggle="dropdown" href="#">
                 <span class="text-dark" id="userName">Usuario</span>
               </a>
               <div class="dropdown-menu dropdown-menu-end">
                 <a class="dropdown-item" href="pages-profile.html">
-                  <i class="align-middle me-1" class="bi-person"></i>
+                  <i class="align-middle me-1" data-feather="user"></i>
                   Profile
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="align-middle me-1" class="bi-pie-chart"></i>
+                  <i class="align-middle me-1" data-feather="pie-chart"></i>
                   Analytics
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/index.html">
-                  <i class="align-middle me-1" class="bi-gear"></i>
+                  <i class="align-middle me-1" data-feather="settings"></i>
                   Settings &amp; Privacy
                 </a>
                 <a class="dropdown-item" href="#">
-                  <i class="align-middle me-1" class="bi-question-circle"></i>
+                  <i class="align-middle me-1" data-feather="help-circle"></i>
                   Help Center
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" onclick="logout()">
-                  <i class="align-middle me-1" class="bi-box-arrow-right"></i>
+                  <i class="align-middle me-1" data-feather="log-out"></i>
                   Cerrar Sesión
                 </a>
               </div>
@@ -668,8 +445,8 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-  
+  <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+  <script>feather.replace();</script>
   <script src="/src/app.js"></script>
 
   <script>
@@ -1526,344 +1303,5 @@
       }
     }
   </script>
-
-  <!-- SIDEBAR EMBEBIDO - Todo en un solo archivo -->
-  <script>
-    // ==================== CONFIGURACIÓN DEL SIDEBAR ====================
-    const SIDEBAR_CONFIG = {
-      menuItems: [
-        {
-          id: 'inicio',
-          label: 'Inicio',
-          icon: 'bi-house',
-          href: '/index.html',
-          type: 'link',
-          roles: ['ADMIN', 'SUPERVISOR', 'OPERARIO']
-        },
-        {
-          id: 'obras',
-          label: 'Obras',
-          icon: 'bi-building',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          children: [
-            {
-              id: 'listado-obras',
-              label: 'Listado de obras',
-              href: '/html/obras/obras.html'
-            },
-            {
-              id: 'nueva-obra',
-              label: 'Nueva obra',
-              href: '/html/obras/nueva-obra.html'
-            }
-          ]
-        },
-        {
-          id: 'materiales',
-          label: 'Materiales',
-          icon: 'bi-box-seam',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR', 'OPERARIO'],
-          children: [
-            {
-              id: 'listado-materiales',
-              label: 'Listado de materiales',
-              href: '/html/materiales/materiales.html'
-            },
-            {
-              id: 'nuevo-material',
-              label: 'Nuevo material',
-              href: '/html/materiales/nuevo-material.html',
-              roles: ['ADMIN', 'SUPERVISOR']
-            }
-          ]
-        },
-        {
-          id: 'certificaciones',
-          label: 'Certificaciones',
-          icon: 'bi-file-earmark-check',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          badge: '5',
-          children: [
-            {
-              id: 'certificaciones-registradas',
-              label: 'Certificaciones registradas',
-              href: '/html/certificaciones/certificaciones.html'
-            },
-            {
-              id: 'nueva-certificacion',
-              label: 'Nueva certificación',
-              href: '/html/certificaciones/nueva-certificacion.html'
-            }
-          ]
-        },
-        {
-          id: 'personal',
-          label: 'Personal',
-          icon: 'bi-people',
-          type: 'dropdown',
-          roles: ['ADMIN', 'SUPERVISOR'],
-          children: [
-            {
-              id: 'listado-personal',
-              label: 'Listado de personal',
-              href: '/html/personal/personal.html'
-            },
-            {
-              id: 'nuevo-personal',
-              label: 'Nuevo ingreso',
-              href: '/html/personal/nuevo-personal.html'
-            },
-            {
-              id: 'control-horas',
-              label: 'Control de horas',
-              href: '/html/personal/control-horas.html'
-            }
-          ]
-        }
-      ]
-    };
-
-    // ==================== SIDEBAR MANAGER ====================
-    class SidebarManager {
-      constructor(config, userRole = 'ADMIN') {
-        this.config = config;
-        this.userRole = userRole;
-        this.currentPath = window.location.pathname;
-        this.isCollapsed = false;
-        this.isMobile = window.innerWidth <= 768;
-        
-        this.sidebar = document.getElementById('sidebar');
-        this.sidebarNav = document.getElementById('sidebarNav');
-        this.sidebarToggle = document.getElementById('sidebarToggle');
-        this.sidebarOverlay = document.getElementById('sidebarOverlay');
-        this.mainContent = document.getElementById('mainContent');
-      }
-
-      init() {
-        console.log('🚀 Inicializando Sidebar Manager...');
-        this.renderMenu();
-        this.bindEvents();
-        this.setActiveMenu();
-        this.handleResize();
-        console.log('✅ Sidebar inicializado correctamente');
-      }
-
-      renderMenu() {
-        const filteredItems = this.config.menuItems.filter(item => 
-          !item.roles || item.roles.includes(this.userRole)
-        );
-
-        const menuHTML = filteredItems.map(item => {
-          if (item.type === 'link') {
-            return this.renderMenuItem(item);
-          } else if (item.type === 'dropdown') {
-            return this.renderDropdownItem(item);
-          }
-          return '';
-        }).join('');
-
-        this.sidebarNav.innerHTML = `
-          <li class="sidebar-header">Secciones</li>
-          ${menuHTML}
-        `;
-      }
-
-      renderMenuItem(item) {
-        const isActive = this.isActiveRoute(item.href, item.id);
-        
-        return `
-          <li class="sidebar-item">
-            <a href="${item.href}" 
-               class="sidebar-link ${isActive ? 'active' : ''}" 
-               data-page="${item.id}">
-              <i class="${item.icon}"></i>
-              <span>${item.label}</span>
-              ${item.badge ? `<span class="badge-notification">${item.badge}</span>` : ''}
-            </a>
-          </li>
-        `;
-      }
-
-      renderDropdownItem(item) {
-        const filteredChildren = item.children?.filter(child => 
-          !child.roles || child.roles.includes(this.userRole)
-        ) || [];
-
-        const childrenHTML = filteredChildren.map(child => {
-          const isActive = this.isActiveRoute(child.href, child.id);
-          return `
-            <li class="sidebar-item">
-              <a href="${child.href}" 
-                 class="sidebar-link ${isActive ? 'active' : ''}" 
-                 data-page="${child.id}">
-                <span>${child.label}</span>
-              </a>
-            </li>
-          `;
-        }).join('');
-
-        const dropdownId = `dropdown-${item.id}`;
-        const hasActiveChild = filteredChildren.some(child => 
-          this.isActiveRoute(child.href, child.id)
-        );
-        
-        return `
-          <li class="sidebar-item">
-            <a class="sidebar-link ${hasActiveChild ? 'active' : ''}" 
-               data-bs-toggle="collapse" 
-               data-bs-target="#${dropdownId}" 
-               aria-expanded="${hasActiveChild}"
-               data-page="${item.id}">
-              <i class="${item.icon}"></i>
-              <span>${item.label}</span>
-              ${item.badge ? `<span class="badge-notification">${item.badge}</span>` : ''}
-              <i class="bi bi-chevron-right dropdown-icon"></i>
-            </a>
-            <ul class="sidebar-dropdown list-unstyled collapse ${hasActiveChild ? 'show' : ''}" 
-                id="${dropdownId}">
-              ${childrenHTML}
-            </ul>
-          </li>
-        `;
-      }
-
-      isActiveRoute(href, pageId) {
-        if (!href) return false;
-        return this.currentPath === href || this.currentPath.includes(pageId);
-      }
-
-      bindEvents() {
-        if (this.sidebarToggle) {
-          this.sidebarToggle.addEventListener('click', () => this.toggleSidebar());
-        }
-        
-        if (this.sidebarOverlay) {
-          this.sidebarOverlay.addEventListener('click', () => this.closeMobileSidebar());
-        }
-        
-        window.addEventListener('resize', () => this.handleResize());
-      }
-
-      toggleSidebar() {
-        if (this.isMobile) {
-          this.sidebar.classList.toggle('show');
-          if (this.sidebarOverlay) {
-            this.sidebarOverlay.classList.toggle('show');
-          }
-        } else {
-          this.isCollapsed = !this.isCollapsed;
-          this.sidebar.classList.toggle('collapsed', this.isCollapsed);
-          if (this.mainContent) {
-            this.mainContent.classList.toggle('expanded', this.isCollapsed);
-          }
-        }
-      }
-
-      closeMobileSidebar() {
-        this.sidebar.classList.remove('show');
-        if (this.sidebarOverlay) {
-          this.sidebarOverlay.classList.remove('show');
-        }
-      }
-
-      handleResize() {
-        this.isMobile = window.innerWidth <= 768;
-        
-        if (!this.isMobile) {
-          this.sidebar.classList.remove('show');
-          if (this.sidebarOverlay) {
-            this.sidebarOverlay.classList.remove('show');
-          }
-        }
-      }
-
-      setActiveMenu() {
-        const allLinks = this.sidebarNav.querySelectorAll('.sidebar-link[data-page]');
-        let activeFound = false;
-        
-        allLinks.forEach(link => {
-          link.classList.remove('active');
-        });
-        
-        for (const link of allLinks) {
-          const href = link.getAttribute('href');
-          const page = link.getAttribute('data-page');
-          
-          if (this.isActiveRoute(href, page)) {
-            this.setActiveLink(link);
-            activeFound = true;
-            break;
-          }
-        }
-
-        if (!activeFound) {
-          const inicioLink = this.sidebarNav.querySelector('[data-page="inicio"]');
-          if (inicioLink) {
-            this.setActiveLink(inicioLink);
-          }
-        }
-      }
-
-      setActiveLink(link) {
-        this.sidebarNav.querySelectorAll('.sidebar-link').forEach(l => {
-          l.classList.remove('active');
-        });
-
-        link.classList.add('active');
-
-        const parentDropdown = link.closest('.sidebar-dropdown');
-        if (parentDropdown) {
-          const parentLink = parentDropdown.previousElementSibling;
-          if (parentLink) {
-            parentLink.classList.add('active');
-            parentLink.setAttribute('aria-expanded', 'true');
-          }
-          parentDropdown.classList.add('show');
-        }
-      }
-
-      updateBadge(menuId, badgeText) {
-        const menuItem = this.config.menuItems.find(item => item.id === menuId);
-        if (menuItem) {
-          menuItem.badge = badgeText;
-          this.renderMenu();
-          this.setActiveMenu();
-        }
-      }
-    }
-
-    // ==================== INICIALIZACIÓN ====================
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🚀 Iniciando página con Sidebar embebido...');
-      
-      // Obtener rol del usuario
-      const userRole = window.authManager?.getUser()?.role || 'ADMIN';
-      
-      // Inicializar sidebar
-      try {
-        window.sidebarManager = new SidebarManager(SIDEBAR_CONFIG, userRole);
-        window.sidebarManager.init();
-        
-        console.log('✅ Página completamente funcional');
-        
-      } catch (error) {
-        console.error('❌ Error inicializando sidebar:', error);
-      }
-    });
-
-    // ==================== FUNCIONES GLOBALES ====================
-    function logout() {
-      if (window.authManager) {
-        window.authManager.logout();
-      } else {
-        alert('Cerrando sesión...');
-        window.location.href = '/html/auth/login.html';
-      }
-    }
-  </script>
-
 </body>
 </html>

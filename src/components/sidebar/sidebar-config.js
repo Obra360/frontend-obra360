@@ -1,10 +1,5 @@
-// /src/components/sidebar/sidebar-config.js
-// Configuración mínima del sidebar para Obra 360
-
-console.log('📋 Cargando configuración del sidebar...');
-
-// ✅ CONFIGURACIÓN PRINCIPAL
-window.SIDEBAR_CONFIG = {
+// src/components/Sidebar/sidebar.config.js
+export const SIDEBAR_CONFIG = {
   brand: {
     name: 'Obra 360',
     icon: 'bi-building',
@@ -65,7 +60,7 @@ window.SIDEBAR_CONFIG = {
       icon: 'bi-file-earmark-check',
       type: 'dropdown',
       roles: ['ADMIN', 'SUPERVISOR'],
-      badge: '',
+      badge: '5',
       children: [
         {
           id: 'certificaciones-registradas',
@@ -103,14 +98,5 @@ window.SIDEBAR_CONFIG = {
         }
       ]
     }
-  ],
-
-  settings: {
-    autoCollapseMobile: true,
-    rememberCollapsedState: true,
-    animationsEnabled: true,
-    autoCloseMobile: true
-  }
+  ]
 };
-
-console.log('✅ Configuración del sidebar cargada:', window.SIDEBAR_CONFIG);
