@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport"/>
+  <title><%= title %></title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  
+  <!-- CSS personalizado -->
+  <link rel="stylesheet" href="/static/css/main.css">
+  
+  <style>
+    .error-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .error-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .error-number {
+      font-size: 8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+    
+    .error-icon {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .btn-home {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      border: none;
+      border-radius: 25px;
+      padding: 12px 30px;
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-home:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+    
+    .suggestions {
+      background: rgba(102, 126, 234, 0.1);
+      border-radius: 15px;
+      border: 1px solid rgba(102, 126, 234, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <div class="error-container">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+          <div class="error-card p-5 text-center">
+            <!-- Icono animado -->
+            <div class="error-icon mb-4">
+              <i class="bi bi-exclamation-triangle text-warning" style="font-size: 5rem;"></i>
+            </div>
+            
+            <!-- Número de error -->
+            <h1 class="error-number mb-0">404</h1>
+            
+            <!-- Mensaje principal -->
+            <h2 class="h4 text-dark mb-3">¡Oops! Página no encontrada</h2>
+            <p class="text-muted mb-4 lead">
+              La página que buscas no existe o ha sido movida. 
+              Pero no te preocupes, podemos ayudarte a encontrar lo que necesitas.
+            </p>
+            
+            <!-- URL solicitada -->
+            <div class="mb-4">
+              <small class="text-muted">
+                <i class="bi bi-link-45deg me-1"></i>
+                URL solicitada: <code><%= typeof currentPath !== 'undefined' ? currentPath : 'Desconocida' %></code>
+              </small>
+            </div>
+            
+            <!-- Botón principal -->
+            <div class="mb-4">
+              <a href="/" class="btn-home me-3">
+                <i class="bi bi-house-door me-2"></i>Ir al Inicio
+              </a>
+              <button onclick="window.history.back()" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-2"></i>Volver Atrás
+              </button>
+            </div>
+            
+            <!-- Sugerencias -->
+            <div class="suggestions p-4 mt-4">
+              <h6 class="text-primary mb-3">
+                <i class="bi bi-lightbulb me-2"></i>¿Qué puedes hacer?
+              </h6>
+              <div class="row text-start">
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-start">
+                    <i class="bi bi-check-circle text-success me-2 mt-1"></i>
+                    <div>
+                      <strong>Revisar la URL</strong>
+                      <br><small class="text-muted">Verifica que esté escrita correctamente</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-start">
+                    <i class="bi bi-search text-info me-2 mt-1"></i>
+                    <div>
+                      <strong>Buscar en el sitio</strong>
+                      <br><small class="text-muted">Usa el menú de navegación</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-start">
+                    <i class="bi bi-arrow-clockwise text-warning me-2 mt-1"></i>
+                    <div>
+                      <strong>Actualizar la página</strong>
+                      <br><small class="text-muted">Podría ser un error temporal</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <div class="d-flex align-items-start">
+                    <i class="bi bi-headset text-primary me-2 mt-1"></i>
+                    <div>
+                      <strong>Contactar soporte</strong>
+                      <br><small class="text-muted">Si el problema persiste</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Enlaces rápidos -->
+            <div class="mt-4">
+              <h6 class="text-muted mb-3">Enlaces útiles:</h6>
+              <div class="d-flex flex-wrap justify-content-center gap-2">
+                <a href="/" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-house me-1"></i>Dashboard
+                </a>
+                <a href="/obras" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-building me-1"></i>Obras
+                </a>
+                <a href="/materiales" class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-box-seam me-1"></i>Materiales
+                </a>
+                <a href="#" onclick="contactarSoporte()" class="btn btn-sm btn-outline-secondary">
+                  <i class="bi bi-question-circle me-1"></i>Ayuda
+                </a>
+              </div>
+            </div>
+            
+            <!-- Footer de la página de error -->
+            <div class="mt-5 pt-4 border-top">
+              <small class="text-muted">
+                <i class="bi bi-building me-1"></i>
+                <%= typeof appName !== 'undefined' ? appName : 'Obra 360' %> © <%= new Date().getFullYear() %>
+                <span class="mx-2">•</span>
+                <i class="bi bi-clock me-1"></i>
+                <%= new Date().toLocaleString('es-AR') %>
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // Funciones de la página 404
+    function contactarSoporte() {
+      alert('Funcionalidad de soporte en desarrollo.\n\nPor ahora puedes:\n• Revisar la documentación\n• Contactar al administrador\n• Reportar el problema');
+    }
+    
+    // Auto-redirect después de cierto tiempo (opcional)
+    function iniciarAutoRedirect() {
+      let countdown = 30;
+      const countdownElement = document.createElement('div');
+      countdownElement.className = 'alert alert-info mt-3';
+      countdownElement.innerHTML = `
+        <i class="bi bi-info-circle me-2"></i>
+        Serás redirigido al inicio en <strong id="countdown">${countdown}</strong> segundos.
+        <button type="button" class="btn btn-sm btn-outline-info ms-2" onclick="detenerRedirect()">
+          Cancelar
+        </button>
+      `;
+      
+      // Solo mostrar si el usuario ha estado aquí por más de 10 segundos
+      setTimeout(() => {
+        document.querySelector('.error-card').appendChild(countdownElement);
+        
+        const interval = setInterval(() => {
+          countdown--;
+          const countdownEl = document.getElementById('countdown');
+          if (countdownEl) {
+            countdownEl.textContent = countdown;
+          }
+          
+          if (countdown <= 0) {
+            window.location.href = '/';
+          }
+        }, 1000);
+        
+        // Guardar interval para poder cancelarlo
+        window.redirectInterval = interval;
+      }, 10000);
+    }
+    
+    function detenerRedirect() {
+      if (window.redirectInterval) {
+        clearInterval(window.redirectInterval);
+      }
+      const alert = document.querySelector('.alert-info');
+      if (alert) {
+        alert.remove();
+      }
+    }
+    
+    // Inicializar
+    document.addEventListener('DOMContentLoaded', function() {
+      // Opcional: iniciar auto-redirect
+      // iniciarAutoRedirect();
+      
+      // Log para debugging
+      console.log('📄 Página 404 cargada');
+      console.log('Path solicitado:', '<%= typeof currentPath !== "undefined" ? currentPath : "Desconocido" %>');
+    });
+    
+    // Enviar analytics del error 404 (opcional)
+    if (typeof gtag !== 'undefined') {
+      gtag('event', '404_error', {
+        'page_path': window.location.pathname,
+        'referrer': document.referrer
+      });
+    }
+  </script>
+</body>
+</html>

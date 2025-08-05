@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones: [] }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <h1 class="h3 mb-3">Agregar Nuevo Usuario</h1>
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <form method="POST" action="/personal/nuevo">
+                                <h5 class="mb-3"><i class="bi bi-person-badge me-2"></i>Información Personal</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label class="form-label">Nombre *</label><input type="text" class="form-control" name="firstName" required></div>
+                                    <div class="col-md-6 mb-3"><label class="form-label">Apellido *</label><input type="text" class="form-control" name="lastName" required></div>
+                                </div>
+                                <hr class="my-3">
+                                <h5 class="mb-3"><i class="bi bi-key me-2"></i>Información de Cuenta</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3"><label class="form-label">Correo Electrónico *</label><input type="email" class="form-control" name="email" required></div>
+                                    <div class="col-md-6 mb-3"><label class="form-label">Contraseña *</label><input type="password" class="form-control" name="password" minlength="8" required></div>
+                                </div>
+                                <hr class="my-3">
+                                <h5 class="mb-3"><i class="bi bi-shield-check me-2"></i>Rol y Permisos</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Rol del Usuario *</label>
+                                        <select class="form-select" name="role" id="role" required>
+                                            <option value="">Seleccionar rol</option>
+                                            <% if (rolesDisponibles && rolesDisponibles.length > 0) { %>
+                                                <% rolesDisponibles.forEach(rol => { %>
+                                                    <option value="<%= rol.value %>" 
+                                                            <%= typeof formData !== 'undefined' && formData.role === rol.value ? 'selected' : '' %>>
+                                                        <%= rol.name %>
+                                                    </option>
+                                                <% }); %>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Descripción del Rol</label>
+                                        <div class="p-3 bg-light rounded text-muted">Seleccione un rol para ver sus permisos.</div>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                                <a href="/personal" class="btn btn-outline-secondary">Cancelar</a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

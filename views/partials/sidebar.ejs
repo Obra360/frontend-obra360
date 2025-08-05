@@ -1,0 +1,132 @@
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-content">
+    <!-- Brand -->
+    <a href="/" class="sidebar-brand">
+      <i class="bi bi-building brand-icon"></i>
+      <span class="brand-text"><%= appName %></span>
+    </a>
+    
+    <!-- Navigation -->
+    <ul class="sidebar-nav" id="sidebarNav">
+      <li class="sidebar-header">Secciones</li>
+      
+      <!-- Inicio -->
+      <li class="sidebar-item">
+        <a href="/" class="sidebar-link <%= currentPage === 'dashboard' ? 'active' : '' %>" data-page="inicio">
+          <i class="bi bi-house"></i>
+          <span>Inicio</span>
+        </a>
+      </li>
+      
+      <!-- Obras (Dropdown) -->
+      <% if (user.role === 'ADMIN' || user.role === 'SUPERVISOR') { %>
+        <li class="sidebar-item">
+          <a class="sidebar-link <%= ['obras', 'nueva-obra'].includes(currentPage) ? 'active' : '' %>" 
+             data-bs-toggle="collapse" 
+             data-bs-target="#dropdown-obras" 
+             aria-expanded="<%= ['obras', 'nueva-obra'].includes(currentPage) %>"
+             data-page="obras">
+            <i class="bi bi-building"></i>
+            <span>Obras</span>
+            <i class="bi bi-chevron-right dropdown-icon"></i>
+          </a>
+          <ul class="sidebar-dropdown list-unstyled collapse <%= ['obras', 'nueva-obra'].includes(currentPage) ? 'show' : '' %>" 
+              id="dropdown-obras">
+            <li class="sidebar-item">
+              <a href="/obras" class="sidebar-link <%= currentPage === 'obras' ? 'active' : '' %>" data-page="listado-obras">
+                <span>Listado de obras</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="/obras/nueva" class="sidebar-link <%= currentPage === 'nueva-obra' ? 'active' : '' %>" data-page="nueva-obra">
+                <span>Nueva obra</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      <% } %>
+      
+      <!-- Materiales (Dropdown) -->
+      <li class="sidebar-item">
+        <a class="sidebar-link <%= ['materiales', 'nuevo-material'].includes(currentPage) ? 'active' : '' %>" 
+           data-bs-toggle="collapse" 
+           data-bs-target="#dropdown-materiales" 
+           aria-expanded="<%= ['materiales', 'nuevo-material'].includes(currentPage) %>"
+           data-page="materiales">
+          <i class="bi bi-box-seam"></i>
+          <span>Materiales</span>
+          <i class="bi bi-chevron-right dropdown-icon"></i>
+        </a>
+        <ul class="sidebar-dropdown list-unstyled collapse <%= ['materiales', 'nuevo-material'].includes(currentPage) ? 'show' : '' %>" 
+            id="dropdown-materiales">
+          <li class="sidebar-item">
+            <a href="/materiales" class="sidebar-link <%= currentPage === 'materiales' ? 'active' : '' %>" data-page="listado-materiales">
+              <span>Listado de materiales</span>
+            </a>
+          </li>
+          <% if (user.role === 'ADMIN' || user.role === 'SUPERVISOR') { %>
+            <li class="sidebar-item">
+              <a href="/materiales/nuevo" class="sidebar-link <%= currentPage === 'nuevo-material' ? 'active' : '' %>" data-page="nuevo-material">
+                <span>Nuevo material</span>
+              </a>
+            </li>
+          <% } %>
+        </ul>
+      </li>
+      
+      <!-- Certificaciones (Solo para ADMIN y SUPERVISOR) -->
+      <% if (user.role === 'ADMIN' || user.role === 'SUPERVISOR') { %>
+        <li class="sidebar-item">
+          <a class="sidebar-link <%= ['certificaciones', 'nueva-certificacion'].includes(currentPage) ? 'active' : '' %>" 
+             data-bs-toggle="collapse" 
+             data-bs-target="#dropdown-certificaciones" 
+             aria-expanded="<%= ['certificaciones', 'nueva-certificacion'].includes(currentPage) %>"
+             data-page="certificaciones">
+            <i class="bi bi-file-earmark-check"></i>
+            <span>Certificaciones</span>
+            <span class="badge-notification">5</span>
+            <i class="bi bi-chevron-right dropdown-icon"></i>
+          </a>
+          <ul class="sidebar-dropdown list-unstyled collapse <%= ['certificaciones', 'nueva-certificacion'].includes(currentPage) ? 'show' : '' %>" 
+              id="dropdown-certificaciones">
+            <li class="sidebar-item">
+              <a href="/certificaciones" class="sidebar-link <%= currentPage === 'certificaciones' ? 'active' : '' %>" data-page="certificaciones-registradas">
+                <span>Certificaciones registradas</span>
+              </a>
+            </li>
+            <li class="sidebar-item">
+              <a href="/certificaciones/nueva" class="sidebar-link <%= currentPage === 'nueva-certificacion' ? 'active' : '' %>" data-page="nueva-certificacion">
+                <span>Nueva certificación</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      <% } %>
+      
+      <!-- Personal (Solo para ADMIN y SUPERVISOR) -->
+      <% if (user && (user.role === 'ADMIN' || user.role === 'SUPERVISOR')) { %>
+        <li class="sidebar-item <%= currentPage.includes('personal') ? 'active' : '' %>">
+            <a data-bs-target="#submenu-personal" data-bs-toggle="collapse" 
+              class="sidebar-link <%= currentPage.includes('personal') ? '' : 'collapsed' %>">
+                <i class="align-middle" data-feather="users"></i>
+                <span class="align-middle">Personal</span>
+            </a>
+            <ul id="submenu-personal" 
+                class="sidebar-dropdown list-unstyled collapse <%= currentPage.includes('personal') ? 'show' : '' %>" 
+                data-bs-parent="#sidebar">
+                <li class="sidebar-item <%= currentPage === 'personal' ? 'active' : '' %>">
+                    <a class="sidebar-link" href="/personal">Listado de personal</a>
+                </li>
+                <li class="sidebar-item <%= currentPage === 'nuevo-personal' ? 'active' : '' %>">
+                    <a class="sidebar-link" href="/personal/nuevo">Nuevo ingreso</a>
+                </li>
+                <li class="sidebar-item <%= currentPage === 'control-horas' ? 'active' : '' %>">
+                    <a class="sidebar-link" href="/personal/control-horas">Control de horas</a>
+                </li>
+            </ul>
+        </li>
+    <% } %>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,85 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand navbar-light navbar-bg">
+  <!-- Botón toggle del sidebar -->
+  <button class="sidebar-toggle" id="sidebarToggle">
+    <div class="hamburger"></div>
+  </button>
+  
+  <div class="navbar-collapse collapse">
+    <ul class="navbar-nav ms-auto">
+      <!-- Notificaciones -->
+      <li class="nav-item dropdown">
+        <a class="nav-icon dropdown-toggle" data-bs-toggle="dropdown" href="#" id="alertsDropdown">
+          <div class="position-relative">
+            <i class="bi bi-bell"></i>
+            <span class="indicator" id="notificationCount">
+              <%= typeof notificaciones !== 'undefined' ? notificaciones.length : 0 %>
+            </span>
+          </div>
+        </a>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown">
+          <h6 class="dropdown-header" id="notificationHeader">
+            <%= typeof notificaciones !== 'undefined' && notificaciones.length > 0 ? 
+                notificaciones.length + ' Notificaciones' : 'Sin notificaciones' %>
+          </h6>
+          <div id="notificationList">
+            <% if (typeof notificaciones !== 'undefined' && notificaciones.length > 0) { %>
+              <% notificaciones.forEach(notif => { %>
+                <a class="dropdown-item d-flex align-items-center" href="#">
+                  <div class="me-3">
+                    <div class="icon-circle bg-<%= notif.tipo %>">
+                      <i class="bi bi-<%= notif.tipo === 'warning' ? 'exclamation-triangle' : 'info-circle' %> text-white"></i>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="small text-gray-500"><%= moment(notif.fecha).fromNow() %></div>
+                    <span class="font-weight-bold"><%= notif.mensaje %></span>
+                  </div>
+                </a>
+                <div class="dropdown-divider"></div>
+              <% }); %>
+            <% } else { %>
+              <a class="dropdown-item text-center text-muted" href="#">
+                <i class="bi bi-inbox"></i>
+                <div>No hay notificaciones</div>
+              </a>
+            <% } %>
+          </div>
+          <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las notificaciones</a>
+        </div>
+      </li>
+      
+      <!-- Usuario -->
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+          <span class="me-2 d-none d-lg-inline text-gray-600 small" id="userName">
+            <%= user.firstName %> <%= user.lastName %>
+          </span>
+          <i class="bi bi-person-circle"></i>
+        </a>
+        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <div class="dropdown-header">
+            <strong><%= user.firstName %> <%= user.lastName %></strong>
+            <div class="small text-muted"><%= user.email %></div>
+            <div class="small">
+              <span class="badge bg-<%= user.role === 'ADMIN' ? 'danger' : user.role === 'SUPERVISOR' ? 'warning' : 'secondary' %>">
+                <%= user.role %>
+              </span>
+            </div>
+          </div>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/perfil">
+            <i class="bi bi-person me-2"></i>Perfil
+          </a>
+          <a class="dropdown-item" href="/configuracion">
+            <i class="bi bi-gear me-2"></i>Configuración
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#" onclick="authManager.logout()">
+            <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

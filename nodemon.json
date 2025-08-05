@@ -1,0 +1,33 @@
+{
+  "watch": [
+    "server.js",
+    "helpers/",
+    "routes/",
+    "views/",
+    "src/js/",
+    ".env"
+  ],
+  "ignore": [
+    "node_modules/",
+    "dist/",
+    "public/",
+    "logs/",
+    "uploads/",
+    "reports/",
+    "backups/",
+    "*.test.js",
+    "*.spec.js"
+  ],
+  "ext": "js,ejs,json,css",
+  "delay": "1000",
+  "verbose": true,
+  "env": {
+    "NODE_ENV": "development",
+    "DEBUG": "obra360:*"
+  },
+  "events": {
+    "start": "echo '🚀 Obra 360 server starting...'",
+    "restart": "echo '🔄 Obra 360 server restarting due to file changes...'",
+    "crash": "echo '💥 Obra 360 server crashed - waiting for changes...'"
+  }
+}

@@ -1,0 +1,620 @@
+/* ==================== VARIABLES CSS ==================== */
+:root {
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 70px;
+  --sidebar-bg: #343a46;
+  --sidebar-text: #adb8c8;
+  --sidebar-active: #0d6efd;
+  --sidebar-hover: #495057;
+  --sidebar-dropdown: #2c3440;
+  --main-bg: #f8f9fc;
+  --navbar-bg: #fff;
+  --border-color: #e9ecef;
+  --text-muted: #6c757d;
+  --shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+/* ==================== BASE STYLES ==================== */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--main-bg);
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Evita el scroll en el body */
+}
+
+/* ==================== LAYOUT WRAPPER ==================== */
+.wrapper {
+  /* Ya no necesita ser flex, el posicionamiento lo manejan sus hijos */
+  min-height: 100vh;
+}
+
+/* ==================== SIDEBAR STYLES ==================== */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  transition: width 0.3s ease; /* Transición solo en el ancho */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1000;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+.sidebar::-webkit-scrollbar-track {
+  background: var(--sidebar-dropdown);
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--sidebar-hover);
+  border-radius: 2px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.sidebar.collapsed {
+  width: var(--sidebar-collapsed-width);
+}
+
+/* ==================== SIDEBAR BRAND ==================== */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 1.25rem;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--sidebar-hover);
+  transition: all 0.3s ease;
+}
+
+.sidebar-brand:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-brand:focus {
+  color: #fff;
+  outline: none;
+  box-shadow: inset 0 0 0 2px var(--sidebar-active);
+}
+
+.sidebar-brand .brand-icon {
+  margin-right: 0.75rem;
+  font-size: 1.5rem;
+  color: var(--sidebar-active);
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .brand-text {
+  opacity: 0;
+  transform: translateX(-10px);
+  display: none;
+}
+
+.sidebar.collapsed .brand-icon {
+  margin-right: 0;
+}
+
+/* ==================== SIDEBAR NAVIGATION ==================== */
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-header {
+  padding: 1rem 1.25rem 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.sidebar.collapsed .sidebar-header {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ==================== SIDEBAR ITEMS ==================== */
+.sidebar-item {
+  position: relative;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.25rem;
+  color: var(--sidebar-text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.sidebar-link:hover {
+  background: var(--sidebar-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
+.sidebar-link:focus {
+  outline: none;
+  box-shadow: inset 3px 0 0 var(--sidebar-active);
+  background: var(--sidebar-hover);
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: var(--sidebar-active);
+  color: #fff;
+  position: relative;
+}
+
+.sidebar-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #fff;
+}
+
+.sidebar-link i {
+  width: 20px;
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed .sidebar-link span {
+  opacity: 0;
+  transform: translateX(-10px);
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-link i {
+  margin-right: 0;
+}
+
+/* ==================== DROPDOWN FUNCTIONALITY ==================== */
+.sidebar-link .dropdown-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.sidebar-link[aria-expanded="true"] .dropdown-icon {
+  transform: rotate(90deg);
+}
+
+.sidebar.collapsed .dropdown-icon {
+  display: none;
+}
+
+.sidebar-dropdown {
+  background: var(--sidebar-dropdown);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border-left: 2px solid var(--sidebar-hover);
+  margin-left: 1rem;
+}
+
+.sidebar-dropdown .sidebar-link {
+  padding-left: 3.25rem;
+  font-size: 0.85rem;
+  background: var(--sidebar-dropdown);
+}
+
+.sidebar-dropdown .sidebar-link:hover {
+  background: var(--sidebar-hover);
+  padding-left: 3.5rem;
+}
+
+.sidebar-dropdown .sidebar-link.active {
+  background: var(--sidebar-active);
+  border-left: 3px solid #fff;
+}
+
+.sidebar.collapsed .sidebar-dropdown {
+  display: none !important;
+}
+
+/* ==================== BADGES ==================== */
+.badge-notification {
+  background: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  margin-left: auto;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.sidebar.collapsed .badge-notification {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  transform: scale(0.8);
+}
+/* ==================== MAIN CONTENT ==================== */
+.main {
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s ease;
+  background: var(--main-bg);
+  height: 100vh; /* Fija la altura a la de la ventana */
+  display: flex;
+  flex-direction: column;
+}
+
+.main.expanded {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+/* ==================== NAVBAR ==================== */
+.navbar-bg {
+  background: var(--navbar-bg);
+  box-shadow: var(--shadow);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0; /* Evita que la navbar se encoja */
+}
+
+.sidebar-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.sidebar-toggle:hover {
+  background: var(--border-color);
+  color: #495057;
+}
+
+.sidebar-toggle:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+}
+
+/* ==================== HAMBURGER ANIMATION ==================== */
+.hamburger {
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  position: relative;
+  transition: all 0.3s ease;
+  margin: 0 auto;
+}
+
+.hamburger::before,
+.hamburger::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  transition: all 0.3s ease;
+}
+
+.hamburger::before {
+  top: -6px;
+}
+
+.hamburger::after {
+  top: 6px;
+}
+
+.sidebar-toggle:hover .hamburger::before {
+  top: -8px;
+}
+
+.sidebar-toggle:hover .hamburger::after {
+  top: 8px;
+}
+
+.content {
+  padding: 2rem;
+  flex: 1; /* Ocupa el espacio vertical restante */
+  overflow-y: auto; /* ESTA ES EL ÁREA QUE TENDRÁ SCROLL */
+}
+
+/* ==================== CARDS ==================== */
+.card {
+  border: none;
+  box-shadow: var(--shadow);
+  border-radius: 0.35rem;
+}
+
+.card-header {
+  background: var(--navbar-bg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* ==================== ICONS ==================== */
+.nav-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #5a5c69;
+  text-decoration: none;
+  position: relative;
+}
+
+.nav-icon:hover {
+  color: #5a5c69;
+  background-color: #eaecf4;
+}
+
+.indicator {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #e74a3b;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.icon-circle {
+  height: 2.5rem;
+  width: 2.5rem;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==================== UTILITIES ==================== */
+.font-weight-bold {
+  font-weight: 600 !important;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.shadow {
+  box-shadow: var(--shadow) !important;
+}
+
+/* ==================== FOOTER ==================== */
+.footer {
+  background-color: var(--navbar-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 1rem 0;
+  flex-shrink: 0; /* Evita que el footer se encoja */
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .main.expanded {
+    margin-left: 0;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .sidebar-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    width: 100%;
+  }
+  
+  .sidebar-brand {
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+  
+  .sidebar-link {
+    padding: 0.75rem 1rem;
+  }
+
+  .content {
+    padding: 0.75rem;
+  }
+}
+
+/* ==================== ACCESSIBILITY ==================== */
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-link,
+  .sidebar-dropdown,
+  .hamburger,
+  .hamburger::before,
+  .hamburger::after,
+  .main {
+    transition: none !important;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .sidebar {
+    border-right: 2px solid #000;
+  }
+  
+  .sidebar-link:focus {
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+  }
+}
+
+/* ==================== DARK THEME VARIANT ==================== */
+.sidebar.theme-dark {
+  background: #1a1d29;
+  color: #9ca3af;
+}
+
+.sidebar.theme-dark .sidebar-brand {
+  border-bottom-color: #374151;
+}
+
+.sidebar.theme-dark .sidebar-link:hover {
+  background: #374151;
+}
+
+.sidebar.theme-dark .sidebar-dropdown {
+  background: #111827;
+}
+
+/* ==================== LOADING STATES ==================== */
+.sidebar-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.sidebar-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid var(--sidebar-active);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==================== UTILITIES ==================== */
+.sidebar-spacer {
+  margin-top: auto;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background: var(--sidebar-hover);
+  margin: 0.5rem 1.25rem;
+}
+
+.sidebar.collapsed .sidebar-divider {
+  margin: 0.5rem;
+}
+
+/* ==================== CUSTOM BUTTON STYLES ==================== */
+.btn-outline-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.25rem 0.5rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+  box-shadow: 0 0.125rem 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0.375rem 0.75rem rgba(13, 110, 253, 0.35);
+}
+
+/* ==================== ANIMATIONS ==================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ==================== CUSTOM SCROLLBAR ==================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #495057;
+}

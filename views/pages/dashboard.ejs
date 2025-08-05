@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="row mb-4 align-items-center">
+                        <div class="col">
+                            <h1 class="h3 mb-1">
+                                <%
+                                  const hour = new Date().getHours();
+                                  let greeting = '¡Buenas noches';
+                                  if (hour >= 5 && hour < 12) greeting = '¡Buen día';
+                                  if (hour >= 12 && hour < 20) greeting = '¡Buenas tardes';
+                                %>
+                                <%= greeting %>, <%= user.firstName %>!
+                            </h1>
+                            <p class="text-muted mb-0">Hoy es <%= moment().format('dddd, D [de] MMMM [de] YYYY') %></p>
+                        </div>
+                        <div class="col-auto d-flex gap-2">
+                             <a href="/obras/nueva" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Nueva Obra</a>
+                             <button class="btn btn-outline-secondary"><i class="bi bi-download me-1"></i>Exportar</button>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100"><div class="card-body d-flex justify-content-between align-items-center"><div><h6 class="text-muted text-uppercase fs-7">Total Obras</h6><span class="h4"><%= kpis.totalObras %></span> <small class="text-muted"><%= kpis.obrasTendencia %></small></div><i class="bi bi-building-fill fs-2 text-primary opacity-50"></i></div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100 bg-success text-white"><div class="card-body d-flex justify-content-between align-items-center"><div><h6 class="text-uppercase fs-7">Obras Activas</h6><span class="h4"><%= kpis.obrasActivas %></span><p class="mb-0 small opacity-75">En progreso</p></div><i class="bi bi-play-circle-fill fs-2 opacity-50"></i></div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100 bg-warning text-white"><div class="card-body d-flex justify-content-between align-items-center"><div><h6 class="text-uppercase fs-7">Inversión Total</h6><span class="h4">$<%= kpis.inversionTotal.toLocaleString('es-AR') %></span><p class="mb-0 small opacity-75">En materiales</p></div><i class="bi bi-currency-dollar fs-2 opacity-50"></i></div></div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="card shadow-sm h-100 bg-info text-white"><div class="card-body d-flex justify-content-between align-items-center"><div><h6 class="text-uppercase fs-7">Certificaciones</h6><span class="h4"><%= kpis.certificaciones %></span><p class="mb-0 small opacity-75">Este mes</p></div><i class="bi bi-award-fill fs-2 opacity-50"></i></div></div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header"><h5 class="card-title mb-0">Obras por Mes</h5></div>
+                                <div class="card-body"><canvas id="chartObrasPorMes"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header"><h5 class="card-title mb-0">Distribución por Tipo</h5></div>
+                                <div class="card-body"><canvas id="chartDistribucionTipo"></canvas></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-7 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="card-title mb-0">Obras Recientes</h5>
+                                    <a href="/obras" class="btn btn-sm btn-outline-primary">Ver Todas</a>
+                                </div>
+                                <div class="card-body">
+                                    <% if (obrasRecientes && obrasRecientes.length > 0) { %>
+                                        <% obrasRecientes.forEach(obra => { %>
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="icon-circle bg-primary me-3"><i class="bi bi-building text-white"></i></div>
+                                                <div class="flex-grow-1">
+                                                    <div class="fw-bold"><%= obra.nombre %> <span class="badge bg-light text-dark ms-2"><%= obra.tipo %></span></div>
+                                                    <small class="text-muted"><%= obra.ubicacion %></small>
+                                                </div>
+                                                <small class="text-muted me-3"><%= obra.fecha %></small>
+                                                <a href="/obras/<%= obra.id %>" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a>
+                                            </div>
+                                        <% }); %>
+                                    <% } else { %>
+                                        <p class="text-muted">No hay obras recientes.</p>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 mb-4">
+                            <div class="card shadow-sm h-100">
+                                <div class="card-header"><h5 class="card-title mb-0">Alertas del Sistema</h5></div>
+                                <div class="card-body">
+                                    <div class="alert alert-warning d-flex align-items-center"><i class="bi bi-exclamation-triangle-fill me-2"></i><div><strong>Obras sin materiales:</strong> <%= alertas.obrasSinMateriales %> obra(s) no tienen materiales asignados.</div></div>
+                                    <div class="alert alert-info d-flex align-items-center mb-0"><i class="bi bi-info-circle-fill me-2"></i><div><strong>Actividad reciente:</strong> <%= alertas.actividadReciente %> obra(s) agregada(s) en los últimos 7 días.</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Datos para los gráficos (pasados desde el servidor)
+            const obrasPorMesData = <%- JSON.stringify(graficos.obrasPorMes) %>;
+            const distribucionTipoData = <%- JSON.stringify(graficos.distribucionTipo) %>;
+
+            // Gráfico 1: Obras por Mes
+            new Chart(document.getElementById('chartObrasPorMes'), {
+                type: 'bar',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Nuevas Obras',
+                        data: obrasPorMesData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+            // Gráfico 2: Distribución por Tipo
+            new Chart(document.getElementById('chartDistribucionTipo'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Obra Privada', 'Obra Pública'],
+                    datasets: [{
+                        data: distribucionTipoData,
+                        backgroundColor: ['rgba(255, 99, 132, 0.8)', 'rgba(54, 162, 235, 0.8)'],
+                    }]
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones: [] }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="row mb-4 align-items-center">
+                        <div class="col"><h1 class="h3 mb-1"><i class="bi bi-building me-2"></i>Gestión de Obras</h1></div>
+                        <div class="col-auto"><a href="/obras/nueva" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Nueva Obra</a></div>
+                    </div>
+
+                    <div class="row">
+                        <% if (obras && obras.length > 0) { %>
+                            <% obras.forEach(obra => { %>
+                                <div class="col-md-6 col-lg-4 mb-4">
+                                    <div class="card h-100 shadow-sm">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                                <h5 class="card-title mb-0"><%= obra.nombre %></h5>
+                                                <span class="badge bg-dark">ID: ...<%= obra.id.slice(-6) %></span>
+                                            </div>
+                                            <div class="mb-3">
+                                                <p class="mb-1"><i class="bi bi-tag me-2 text-muted"></i><%= obra.tipo %></p>
+                                                <p class="mb-1"><i class="bi bi-geo-alt me-2 text-muted"></i><%= obra.ubicacion %></p>
+                                                <p class="mb-1"><i class="bi bi-person me-2 text-muted"></i><%= obra.cliente %></p>
+                                                <p class="mb-0"><i class="bi bi-calendar-check me-2 text-muted"></i><%= moment(obra.fechaInicio).format('DD [de] MMMM [de] YYYY') %></p>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-light">
+                                            <div class="d-flex justify-content-between gap-2">
+                                                <button onclick="editarObra('<%= obra.id %>')" class="btn btn-sm btn-outline-warning flex-fill"><i class="bi bi-pencil me-1"></i>Editar</button>
+                                                <button onclick="eliminarObra('<%= obra.id %>', '<%= obra.nombre %>')" class="btn btn-sm btn-outline-danger flex-fill"><i class="bi bi-trash me-1"></i>Eliminar</button>
+                                            </div>
+                                            <button onclick="verDetalles('<%= obra.id %>')" class="btn btn-sm btn-info w-100 mt-2 text-white"><i class="bi bi-eye me-1"></i>Ver Detalles</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } else { %>
+                            <div class="col-12 text-center py-5"><p>No hay obras para mostrar.</p></div>
+                        <% } %>
+                    </div>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/page-obras.js"></script>
+</body>
+</html>

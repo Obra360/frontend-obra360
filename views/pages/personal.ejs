@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones: [] }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h1 class="h3 mb-0"><i class="bi bi-people me-2"></i>Listado de Personal</h1>
+                            <p class="text-muted mb-0">Gestión de usuarios y roles del sistema</p>
+                        </div>
+                        <% if (permisos.puedeCrear) { %>
+                            <a href="/personal/nuevo" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-1"></i>Agregar Usuario
+                            </a>
+                        <% } %>
+                    </div>
+
+                    <!-- Mostrar mensajes de éxito/error -->
+                    <% if (typeof error !== 'undefined' && error) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <%= error %>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <% } %>
+
+                    <!-- Filtros y búsqueda -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-6">
+                                    <label for="buscarInput" class="form-label">
+                                        <i class="bi bi-search"></i> Buscar Usuario
+                                    </label>
+                                    <input type="text" id="buscarInput" class="form-control" 
+                                           placeholder="Buscar por nombre, email o rol...">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="filtroRol" class="form-label">
+                                        <i class="bi bi-shield"></i> Filtrar por Rol
+                                    </label>
+                                    <select id="filtroRol" class="form-select">
+                                        <option value="">Todos los roles</option>
+                                        <option value="ADMIN">Administradores</option>
+                                        <option value="SUPERVISOR">Supervisores</option>
+                                        <option value="OPERARIO">Operarios</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-outline-secondary w-100" onclick="refreshUserList()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Actualizar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de personal -->
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><i class="bi bi-person me-1"></i>Usuario</th>
+                                            <th><i class="bi bi-envelope me-1"></i>Email</th>
+                                            <th><i class="bi bi-shield me-1"></i>Rol</th>
+                                            <th><i class="bi bi-calendar me-1"></i>Registro</th>
+                                            <th class="text-center"><i class="bi bi-gear me-1"></i>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="personalTableBody">
+                                        <% if (personal && personal.length > 0) { %>
+                                            <% personal.forEach(persona => { %>
+                                                <tr class="personal-row" 
+                                                    data-texto-busqueda="<%= persona.nombreCompleto.toLowerCase() %> <%= persona.email.toLowerCase() %> <%= persona.rol.toLowerCase() %>"
+                                                    data-rol="<%= persona.rol %>">
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+                                                            <div class="avatar bg-<%= persona.rol === 'ADMIN' ? 'danger' : persona.rol === 'SUPERVISOR' ? 'warning' : 'secondary' %> text-white rounded-circle me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                                <i class="bi <%= persona.rol === 'ADMIN' ? 'bi-shield-fill' : persona.rol === 'SUPERVISOR' ? 'bi-eye-fill' : 'bi-person-fill' %>"></i>
+                                                            </div>
+                                                            <div>
+                                                                <div class="fw-bold"><%= persona.nombreCompleto %></div>
+                                                                <small class="text-muted">ID: ...<%= persona.id.toString().slice(-6) %></small>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <a href="mailto:<%= persona.email %>" class="text-decoration-none">
+                                                            <%= persona.email %>
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-<%= persona.rol === 'ADMIN' ? 'danger' : persona.rol === 'SUPERVISOR' ? 'warning' : 'secondary' %>">
+                                                            <%= persona.rol === 'ADMIN' ? 'Administrador' : persona.rol === 'SUPERVISOR' ? 'Supervisor' : 'Operario' %>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <span class="text-muted">
+                                                            <%= moment(persona.registro).format('DD MMM YYYY') %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="btn-group btn-group-sm" role="group">
+                                                            <% 
+                                                            // Lógica de permisos para mostrar botones
+                                                            let puedeEditar = false;
+                                                            let puedeEliminar = false;
+                                                            
+                                                            if (user.role === 'ADMIN') {
+                                                                puedeEditar = true;
+                                                                puedeEliminar = persona.id !== user.id; // No puede eliminarse a sí mismo
+                                                            } else if (user.role === 'SUPERVISOR') {
+                                                                puedeEditar = persona.rol === 'OPERARIO' || persona.id === user.id;
+                                                                puedeEliminar = persona.rol === 'OPERARIO' && persona.id !== user.id;
+                                                            }
+                                                            %>
+                                                            
+                                                            <% if (puedeEditar) { %>
+                                                                <button class="btn btn-outline-primary" 
+                                                                        onclick="editarUsuario('<%= persona.id %>')" 
+                                                                        title="Editar">
+                                                                    <i class="bi bi-pencil"></i>
+                                                                </button>
+                                                            <% } %>
+                                                            
+                                                            <% if (puedeEliminar) { %>
+                                                                <button class="btn btn-outline-danger" 
+                                                                        onclick="confirmarEliminar('<%= persona.id %>', '<%= persona.nombreCompleto %>')" 
+                                                                        title="Eliminar">
+                                                                    <i class="bi bi-trash"></i>
+                                                                </button>
+                                                            <% } else if (persona.id === user.id) { %>
+                                                                <button class="btn btn-outline-secondary" disabled title="No puedes eliminarte a ti mismo">
+                                                                    <i class="bi bi-shield-check"></i>
+                                                                </button>
+                                                            <% } %>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="5" class="text-center py-4">
+                                                    <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
+                                                    <p class="mt-3 text-muted">No hay personal registrado.</p>
+                                                </td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estado de "no encontrado" -->
+                    <div class="text-center py-5 card card-body" id="empty-state" style="display: none;">
+                        <i class="bi bi-search fs-1 text-muted"></i>
+                        <h5 class="mt-3 text-muted">No se encontraron usuarios</h5>
+                        <p class="text-muted">Intenta cambiar los filtros de búsqueda.</p>
+                    </div>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+
+    <!-- Modal para editar usuario -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-pencil text-primary me-2"></i>Editar Usuario
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="editAlertContainer"></div>
+                    <form id="editUserForm">
+                        <input type="hidden" id="editUserId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editFirstName" class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="editFirstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editLastName" class="form-label">Apellido *</label>
+                                <input type="text" class="form-control" id="editLastName" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="editEmail" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="editEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="editRole" class="form-label">Rol *</label>
+                                <select class="form-select" id="editRole" required>
+                                    <option value="">Seleccionar rol</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="changePassword">
+                            <label class="form-check-label" for="changePassword">
+                                Cambiar contraseña
+                            </label>
+                        </div>
+                        <div id="passwordSection" style="display: none;">
+                            <div class="mb-3">
+                                <label for="editPassword" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="editPassword" minlength="8">
+                                <div class="form-text">Mínimo 8 caracteres</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="saveUserBtn">
+                        <i class="bi bi-check-lg me-1"></i>Guardar Cambios
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para confirmar eliminación -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Está seguro que desea eliminar al usuario <strong id="deleteUserName"></strong>?</p>
+                    <p class="text-muted small">Esta acción no se puede deshacer.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <i class="bi bi-trash me-1"></i>Eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/personal.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones: [] }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <div class="card mb-4 border-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class.card-body text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 class="mb-2"><i class="bi bi-file-earmark-plus me-2"></i>Nueva Certificación Técnica</h1>
+                                    <p class="mb-0 opacity-75">Registra los trabajos realizados para valoración económica.</p>
+                                </div>
+                                <a href="/certificaciones" class="btn btn-light"><i class="bi bi-arrow-left me-1"></i>Volver al listado</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="certificacionForm" method="POST" action="/certificaciones/nueva">
+                        <input type="hidden" name="itemsJson" id="itemsJsonInput">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="card shadow-sm mb-4">
+                                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Información General</h5></div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4 mb-3">
+                                                <label for="obraId" class="form-label">Obra *</label>
+                                                <select class="form-select" id="obraId" name="obraId" required>
+                                                    <option value="">Seleccionar obra</option>
+                                                    <% if (obras && obras.length > 0) { %>
+                                                        <% obras.forEach(obra => { %>
+                                                            <option value="<%= obra.id %>"><%= obra.empresa %> - <%= obra.ciudad %></option>
+                                                        <% }); %>
+                                                    <% } else { %>
+                                                        <option value="" disabled>No hay obras disponibles</option>
+                                                    <% } %>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-4 mb-3"><label for="tipo" class="form-label">Tipo de certificación *</label><input type="text" class="form-control" id="tipo" name="tipo" required></div>
+                                            <div class="col-md-4 mb-3"><label for="fecha" class="form-label">Fecha *</label><input type="date" class="form-control" id="fecha" name="fecha" required></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card shadow-sm">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="mb-0"><i class="bi bi-list-ul me-2"></i>Items Certificados</h5>
+                                        <button type="button" class="btn btn-primary" id="agregarItemBtn"><i class="bi bi-plus-lg me-1"></i>Agregar Item</button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="items-container"></div>
+                                        <div id="items-empty-state" class="text-center py-4 text-muted">No hay items agregados.</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="card shadow-sm position-sticky" style="top: 20px;">
+                                    <div class="card-header"><h5 class="mb-0"><i class="bi bi-calculator me-2"></i>Resumen de Certificación</h5></div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">Items:<span id="resumenItems">0</span></li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">Unidades:<span id="resumenUnidades">0</span></li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center fs-5 fw-bold">Total:<span id="resumenTotal" class="text-success fw-bold fs-5">$0.00</span></li>
+                                        </ul>
+                                        <div class="d-grid gap-2 mt-3">
+                                            <button type="submit" class="btn btn-success"><i class="bi bi-check-circle me-1"></i>Guardar Certificación</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/auth.js"></script>
+    <script src="/static/js/page-nueva-certificacion.js"></script>
+</body>
+</html>

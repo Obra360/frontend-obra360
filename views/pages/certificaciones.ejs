@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <title><%= title %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/es.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <%- include('../partials/sidebar', { user, currentPage }) %>
+        <div class="main" id="mainContent">
+            <%- include('../partials/navbar', { user, notificaciones: [] }) %>
+            <main class="content">
+                <div class="container-fluid p-0">
+
+                    <div class="card mb-4 border-0" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <div class="card-body text-white">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h1 class="mb-2"><i class="bi bi-file-earmark-check me-2"></i>Certificaciones Técnicas</h1>
+                                    <p class="mb-0 opacity-75">Valoraciones de trabajos realizados por las obras</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row text-center">
+                                        <div class="col-4"><div class="fs-2 fw-bold"><%= stats.total %></div><small>Total</small></div>
+                                        <div class="col-4"><div class="fs-2 fw-bold"><%= formatCurrency(stats.montoTotal) %></div><small>Valor Total</small></div>
+                                        <div class="col-4"><div class="fs-2 fw-bold"><%= stats.pendientes %></div><small>Pendientes</small></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-md-4"><label for="buscarInput" class="form-label"><i class="bi bi-search"></i> Buscar</label><input type="text" id="buscarInput" class="form-control" placeholder="Buscar por obra, tipo..."></div>
+                                <div class="col-md-3">
+                                    <label for="filtroObra" class="form-label"><i class="bi bi-building"></i> Obra</label>
+                                    <select id="filtroObra" class="form-select">
+                                        <option value="">Todas las obras</option>
+                                        <% const obrasUnicas = [...new Set(certificaciones.map(c => c.obraNombre))]; %>
+                                        <% obrasUnicas.forEach(obra => { %>
+                                            <option value="<%= obra %>"><%= obra %></option>
+                                        <% }); %>
+                                    </select>
+                                </div>
+                                <div class="col-md-2"><label for="filtroPeriodo" class="form-label"><i class="bi bi-calendar-range"></i> Período</label>
+                                    <select id="filtroPeriodo" class="form-select">
+                                        <option value="">Todo el tiempo</option>
+                                        <option value="hoy">Hoy</option>
+                                        <option value="semana">Esta semana</option>
+                                        <option value="mes">Este mes</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="btn-group w-100">
+                                        <a href="/api/certificaciones/export/excel" class="btn btn-success"><i class="bi bi-file-earmark-excel"></i> Excel</a>
+                                        <a href="/api/certificaciones/export/pdf" class="btn btn-danger"><i class="bi bi-file-earmark-pdf"></i> Reporte</a>
+                                        <a href="/certificaciones/nueva" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nueva</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion mb-4" id="accordionCertificaciones">
+                        <% if (certificaciones && certificaciones.length > 0) { %>
+                            <% certificaciones.forEach(cert => { %>
+                                <div class="accordion-item" 
+                                     data-texto-busqueda="<%= cert.obraNombre.toLowerCase() %> <%= cert.tipo.toLowerCase() %>"
+                                     data-obra="<%= cert.obraNombre %>"
+                                     data-fecha="<%= cert.fecha %>">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= cert.id %>">
+                                            <div class="w-100 d-flex justify-content-between align-items-center pe-3">
+                                                <div><i class="bi bi-geo-alt-fill text-primary me-2"></i><strong><%= cert.obraNombre %></strong> - <%= cert.tipo %></div>
+                                                <span class="fw-bold text-success fs-5"><%= formatCurrency(cert.monto) %></span>
+                                            </div>
+                                        </button>
+                                    </h2>
+                                    <div id="collapse-<%= cert.id %>" class="accordion-collapse collapse" data-bs-parent="#accordionCertificaciones">
+                                        <div class="accordion-body">
+                                            <div class="row mb-3">
+                                                <div class="col-md-6">
+                                                    <h6 class="text-muted mb-2"><i class="bi bi-info-circle me-1"></i>Información de la Certificación</h6>
+                                                    <p class="mb-1"><strong>Fecha:</strong> <%= moment(cert.fecha).format('DD/MM/YYYY') %></p>
+                                                    <p class="mb-1"><strong>Tipo:</strong> <%= cert.tipo %></p>
+                                                    <p class="mb-0"><strong>Total de items:</strong> <%= cert.itemsCount %></p>
+                                                </div>
+                                                <div class="col-md-6 text-end">
+                                                    <div class="card bg-light">
+                                                        <div class="card-body py-3">
+                                                            <h5 class="card-title text-success mb-0">Total Certificado</h5>
+                                                            <h3 class="text-success mb-0"><%= formatCurrency(cert.monto) %></h3>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <% if (cert.items && cert.items.length > 0) { %>
+                                                <h6 class="text-muted mb-3"><i class="bi bi-list-ul me-1"></i>Detalle de Items</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm table-hover">
+                                                        <thead class="table-light">
+                                                            <tr>
+                                                                <th>Código</th>
+                                                                <th>Descripción</th>
+                                                                <th>Unidad</th>
+                                                                <th class="text-end">Cantidad</th>
+                                                                <th class="text-end">Precio Unit.</th>
+                                                                <th class="text-end">Subtotal</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% cert.items.forEach(item => { %>
+                                                                <tr>
+                                                                    <td><code><%= item.codigo %></code></td>
+                                                                    <td><%= item.descripcion %></td>
+                                                                    <td><span class="badge bg-secondary"><%= item.unidad %></span></td>
+                                                                    <td class="text-end"><%= item.cantidad %></td>
+                                                                    <td class="text-end"><%= formatCurrency(item.precio) %></td>
+                                                                    <td class="text-end"><strong><%= formatCurrency(item.cantidad * item.precio) %></strong></td>
+                                                                </tr>
+                                                            <% }); %>
+                                                        </tbody>
+                                                        <tfoot class="table-light">
+                                                            <tr>
+                                                                <th colspan="5" class="text-end">TOTAL CERTIFICACIÓN:</th>
+                                                                <th class="text-end text-success fs-5"><%= formatCurrency(cert.monto) %></th>
+                                                            </tr>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
+                                            <% } else { %>
+                                                <div class="alert alert-info">
+                                                    <i class="bi bi-info-circle me-2"></i>
+                                                    No hay items registrados en esta certificación.
+                                                </div>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                </div>
+                            <% }); %>
+                        <% } %>
+                    </div>
+                    
+                    <div class="text-center py-5 card card-body" id="empty-state" style="display: none;">
+                        <i class="bi bi-journal-x fs-1 text-muted"></i>
+                        <h5 class="mt-3 text-muted">No se encontraron certificaciones con los filtros aplicados.</h5>
+                    </div>
+
+                    <div class="card shadow-sm mt-4">
+                        <div class="card-header bg-light"><h5 class="card-title mb-0">📊 Resumen por Obra</h5></div>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead><tr><th>Obra</th><th># Cert.</th><th>Total Certificado</th><th>% del Total</th></tr></thead>
+                                <tbody id="resumen-obras-tbody">
+                                    <% 
+                                    const resumen = certificaciones.reduce((acc, cert) => {
+                                        if (!acc[cert.obraNombre]) acc[cert.obraNombre] = { cantidad: 0, total: 0 };
+                                        acc[cert.obraNombre].cantidad++;
+                                        acc[cert.obraNombre].total += cert.monto;
+                                        return acc;
+                                    }, {});
+                                    %>
+                                    <% for (const obra in resumen) { %>
+                                        <% const { cantidad, total } = resumen[obra]; %>
+                                        <% const porcentaje = stats.montoTotal > 0 ? (total / stats.montoTotal) * 100 : 0; %>
+                                        <tr>
+                                            <td><%= obra %></td>
+                                            <td><%= cantidad %></td>
+                                            <td><%= formatCurrency(total) %></td>
+                                            <td>
+                                                <div class="progress"><div class="progress-bar" style="width: <%= porcentaje.toFixed(1) %>%"></div></div>
+                                            </td>
+                                        </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <%- include('../partials/footer') %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/page-certificaciones-filters.js"></script>
+</body>
+</html>
