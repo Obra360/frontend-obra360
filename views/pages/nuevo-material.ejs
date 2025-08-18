@@ -50,8 +50,22 @@
                                     <div class="col-md-6 mb-3">
                                         <label for="obraId" class="form-label">Obra Asociada *</label>
                                         <select class="form-select" id="obraId" name="obraId" required>
-                                            <option value="">Cargando obras...</option>
+                                            <option value="">Seleccionar obra...</option>
+                                            <% if (typeof obras !== 'undefined' && obras.length > 0) { %>
+                                                <% obras.forEach(obra => { %>
+                                                    <option value="<%= obra.id %>">
+                                                        <%= obra.empresa %> - <%= obra.ciudad %> (<%= obra.tipo %>)
+                                                    </option>
+                                                <% }) %>
+                                            <% } else { %>
+                                                <option value="" disabled>No hay obras disponibles</option>
+                                            <% } %>
                                         </select>
+                                        <% if (typeof error !== 'undefined' && error) { %>
+                                            <div class="form-text text-danger">
+                                                <small><%= error %></small>
+                                            </div>
+                                        <% } %>
                                     </div>
                                 </div>
                                 <hr class="my-4">

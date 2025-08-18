@@ -420,33 +420,44 @@ app.post('/obras/eliminar/:id', soloAdminSupervisor, async (req, res) => {
 //         RUTAS DE MATERIALES
 // ===============================================
 
-// RUTA PARA MATERIALES
-app.get('/materiales', (req, res) => {
-  const user = getUserData(req);
-  
-  const materialesData = [
-    { id: 101, nombre: 'Cobre', unidad: 'kg', stock: 180, fechaIngreso: '2025-06-01' },
-    { id: 1234567, nombre: 'Goku', unidad: 'kg', stock: 100, fechaIngreso: '2025-07-01' },
-    { id: 20202020, nombre: 'Agua', unidad: 'litro', stock: 1, fechaIngreso: '2025-07-15' },
-    { id: 102, nombre: 'Cemento Portland', unidad: 'bolsa', stock: 150, fechaIngreso: '2025-07-20' }
-  ];
-
-  res.render('pages/materiales', {
-    title: 'Inventario de Materiales',
-    user,
-    currentPage: 'materiales',
-    materiales: materialesData
-  });
-});
 
 // RUTA PARA MOSTRAR EL FORMULARIO DE NUEVO MATERIAL
-app.get('/materiales/nuevo', soloAdminSupervisor, (req, res) => {
+app.get('/materiales/nuevo', soloAdminSupervisor, async (req, res) => {
   const user = getUserData(req);
-  res.render('pages/nuevo-material', {
-    title: 'Nuevo Material',
-    user,
-    currentPage: 'nuevo-material'
-  });
+  const token = req.cookies.token;
+  
+  if (!token) return res.redirect('/login');
+
+  try {
+    // Fetch obras from your API
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/obras`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    if (!apiResponse.ok) {
+      throw new Error('Error al cargar obras');
+    }
+    
+    const obras = await apiResponse.json();
+    console.log('✅ [MATERIALES] Obras cargadas:', obras.length);
+    
+    res.render('pages/nuevo-material', {
+      title: 'Nuevo Material',
+      user,
+      currentPage: 'nuevo-material',
+      obras: obras || []
+    });
+
+  } catch (error) {
+    console.error("❌ [MATERIALES] Error al cargar obras:", error);
+    res.render('pages/nuevo-material', {
+      title: 'Nuevo Material',
+      user,
+      currentPage: 'nuevo-material',
+      obras: [],
+      error: "No se pudieron cargar las obras disponibles."
+    });
+  }
 });
 
 // RUTA PARA PROCESAR EL FORMULARIO DE NUEVO MATERIAL
@@ -454,15 +465,19 @@ app.post('/materiales/nuevo', soloAdminSupervisor, async (req, res) => {
   const token = req.cookies.token;
   if (!token) return res.redirect('/login');
 
+  console.log('🔍 [MATERIALES] Datos recibidos:', req.body);
+
   try {
     const datosParaAPI = {
       codigoInterno: req.body.codigoInterno,
       nombre: req.body.nombre,
       unidad: req.body.unidad,
-      cantidad: req.body.cantidad,
-      precio: req.body.precio || 0,
+      cantidad: parseFloat(req.body.cantidad) || 0,
+      precio: parseFloat(req.body.precio) || 0,
       obraId: req.body.obraId
     };
+
+    console.log('🔍 [MATERIALES] Datos a enviar al API:', datosParaAPI);
 
     const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/materiales`, {
       method: 'POST',
@@ -473,24 +488,251 @@ app.post('/materiales/nuevo', soloAdminSupervisor, async (req, res) => {
       body: JSON.stringify(datosParaAPI)
     });
 
+    console.log('🔍 [MATERIALES] Response status:', apiResponse.status);
+
+    const responseText = await apiResponse.text();
+    console.log('🔍 [MATERIALES] Response text:', responseText);
+
     if (!apiResponse.ok) {
-      const errorData = await apiResponse.json();
-      throw new Error(errorData.error || 'La API rechazó la creación del material');
+      let errorData;
+      try {
+        errorData = JSON.parse(responseText);
+      } catch (e) {
+        errorData = { error: responseText };
+      }
+      
+      console.log('❌ [MATERIALES] API error:', errorData);
+      throw new Error(errorData.error || errorData.message || 'La API rechazó la creación del material');
     }
     
-    res.redirect('/materiales');
+    console.log('✅ [MATERIALES] Material creado exitosamente');
+    res.redirect('/materiales?success=Material agregado correctamente');
 
   } catch (error) {
-    console.error("Error al crear el material:", error);
-    const user = getUserData(req);
-    res.render('pages/nuevo-material', {
-      title: 'Nuevo Material',
+    console.error("❌ [MATERIALES] Error completo:", error.message);
+    
+    // Re-load obras for the form in case of error
+    try {
+      const obrasResponse = await fetch(`${process.env.API_BASE_URL}/api/obras`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const obras = obrasResponse.ok ? await obrasResponse.json() : [];
+      
+      const user = getUserData(req);
+      res.render('pages/nuevo-material', {
+        title: 'Nuevo Material',
+        user,
+        currentPage: 'nuevo-material',
+        obras: obras,
+        error: `No se pudo guardar el material: ${error.message}`,
+        formData: req.body // Pre-fill form with submitted data
+      });
+    } catch (renderError) {
+      console.error("❌ [MATERIALES] Error al re-renderizar:", renderError);
+      res.redirect('/materiales/nuevo?error=Error al procesar el material');
+    }
+  }
+});
+
+// RUTA PARA MATERIALES (CONECTADA AL BACKEND)
+app.get('/materiales', async (req, res) => {
+  const user = getUserData(req);
+  const token = req.cookies.token;
+  
+  if (!token) return res.redirect('/login');
+
+  try {
+    console.log('🔍 [MATERIALES] Cargando materiales desde API...');
+    
+    // Fetch materials from your API
+    const materialesResponse = await fetch(`${process.env.API_BASE_URL}/api/materiales`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    console.log('🔍 [MATERIALES] Materiales response status:', materialesResponse.status);
+
+    if (!materialesResponse.ok) {
+      const errorText = await materialesResponse.text();
+      console.log('❌ [MATERIALES] Error al obtener materiales:', errorText);
+      throw new Error(`Error ${materialesResponse.status}: ${errorText}`);
+    }
+
+    const materialesData = await materialesResponse.json();
+    console.log('✅ [MATERIALES] Materiales obtenidos:', materialesData.length);
+    console.log('🔍 [MATERIALES] Primer material de ejemplo:', materialesData[0]);
+
+    // Transform materials data to match your template structure
+    // Note: Your API uses snake_case field names
+    const materialesAdaptados = materialesData.map(material => {
+      const precio = parseFloat(material.precio) || 0;
+      const cantidad = parseFloat(material.cantidad) || 0;
+      
+      return {
+        id: material.id,
+        codigoInterno: material.codigo_interno || 'N/A', // snake_case from API
+        nombre: material.nombre,
+        unidad: material.unidad,
+        stock: cantidad,
+        precio: precio,
+        fechaIngreso: material.fecha_ingreso || material.created_at, // Use the correct field
+        obraId: material.obra_id, // snake_case from API
+        // The Obra object is included in the response
+        obraNombre: material.Obra ? `${material.Obra.empresa} - ${material.Obra.ciudad}` : 'Obra no encontrada'
+      };
+    });
+
+    const stats = {
+      total: materialesAdaptados.length,
+      stockBajo: materialesAdaptados.filter(m => m.stock < 10).length,
+      valorTotal: materialesAdaptados.reduce((sum, m) => sum + (m.stock * m.precio), 0)
+    };
+
+    console.log('✅ [MATERIALES] Datos procesados:', {
+      materialesCount: materialesAdaptados.length,
+      stats: stats,
+      primerMaterial: materialesAdaptados[0]
+    });
+
+    res.render('pages/materiales', {
+      title: 'Inventario de Materiales',
       user,
-      currentPage: 'nuevo-material',
-      error: 'No se pudo guardar el material. Por favor, revisa los datos.'
+      currentPage: 'materiales',
+      materiales: materialesAdaptados,
+      stats: stats,
+      success: req.query.success || null
+    });
+
+  } catch (error) {
+    console.error("❌ [MATERIALES] Error completo:", error);
+    
+    res.render('pages/materiales', {
+      title: 'Error de Conexión - Materiales',
+      user,
+      currentPage: 'materiales',
+      materiales: [],
+      stats: { total: 0, stockBajo: 0, valorTotal: 0 },
+      error: `No se pudieron cargar los materiales: ${error.message}`
     });
   }
 });
+
+// API ROUTE: Get material details
+app.get('/api/materiales/:id', async (req, res) => {
+  const token = req.cookies.token;
+  const { id } = req.params;
+  
+  console.log('🔍 [API-MATERIALES] Solicitando detalles del material:', id);
+  
+  if (!token) {
+    console.log('❌ [API-MATERIALES] No token provided');
+    return res.status(401).json({ message: 'No autorizado' });
+  }
+
+  try {
+    // First, let's get all materials and find the one we need
+    // since the individual endpoint might not exist
+    const apiUrl = `${process.env.API_BASE_URL}/api/materiales`;
+    console.log('🔍 [API-MATERIALES] Fetching all materials from:', apiUrl);
+    
+    const apiResponse = await fetch(apiUrl, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    console.log('🔍 [API-MATERIALES] Response status:', apiResponse.status);
+    
+    if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.log('❌ [API-MATERIALES] API error:', errorText);
+      throw new Error(`Error al obtener materiales: ${apiResponse.status}`);
+    }
+    
+    const materiales = await apiResponse.json();
+    const material = materiales.find(m => m.id === id);
+    
+    if (!material) {
+      console.log('❌ [API-MATERIALES] Material no encontrado con ID:', id);
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Material no encontrado' 
+      });
+    }
+    
+    console.log('✅ [API-MATERIALES] Material encontrado:', material.nombre);
+    
+    // Transform the material data to expected format
+    const materialTransformado = {
+      id: material.id,
+      codigoInterno: material.codigo_interno,
+      nombre: material.nombre,
+      unidad: material.unidad,
+      cantidad: material.cantidad,
+      precio: material.precio,
+      precioTotal: material.precio_total,
+      fechaIngreso: material.fecha_ingreso,
+      obraId: material.obra_id,
+      obraNombre: material.Obra ? `${material.Obra.empresa} - ${material.Obra.ciudad}` : 'N/A'
+    };
+    
+    res.json(materialTransformado);
+    
+  } catch (error) {
+    console.error('❌ [API-MATERIALES] Error completo:', error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message,
+      details: 'Error al obtener detalles del material'
+    });
+  }
+});
+
+// API ROUTE: Delete material
+app.delete('/api/materiales/:id', async (req, res) => {
+  const token = req.cookies.token;
+  const { id } = req.params;
+  
+  console.log('🔍 [DELETE-MATERIALES] Eliminando material:', id);
+  
+  if (!token) return res.status(401).json({ message: 'No autorizado' });
+
+  try {
+    // Try to delete using the API
+    const apiUrl = `${process.env.API_BASE_URL}/api/materiales/${id}`;
+    console.log('🔍 [DELETE-MATERIALES] DELETE request to:', apiUrl);
+    
+    const apiResponse = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
+    console.log('🔍 [DELETE-MATERIALES] Response status:', apiResponse.status);
+    
+    if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.log('❌ [DELETE-MATERIALES] API error:', errorText);
+      
+      // If the endpoint doesn't exist, return a message
+      if (apiResponse.status === 404) {
+        return res.status(501).json({ 
+          success: false, 
+          message: 'La funcionalidad de eliminación aún no está implementada en el API' 
+        });
+      }
+      
+      throw new Error(`Error ${apiResponse.status}: ${errorText}`);
+    }
+    
+    console.log('✅ [DELETE-MATERIALES] Material eliminado correctamente');
+    res.json({ success: true, message: 'Material eliminado correctamente' });
+    
+  } catch (error) {
+    console.error('❌ [DELETE-MATERIALES] Error completo:', error.message);
+    res.status(500).json({ 
+      success: false, 
+      message: `Error al eliminar: ${error.message}` 
+    });
+  }
+});
+
 
 // ===============================================
 //         RUTAS DE CERTIFICACIONES
