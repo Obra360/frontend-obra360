@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "webpack --mode=production",
-    "watch": "webpack --mode=development --watch",
+    "build": "echo 'No build step needed - Express app with static assets'",
+    "watch": "echo 'No watch needed - using nodemon for dev'",
     "setup": "node setup-windows.js",
     "setup-unix": "node setup.js",
     "clean": "node -e \"const fs=require('fs'); ['dist','logs','uploads','reports'].forEach(d=>{try{fs.rmSync(d,{recursive:true,force:true})}catch(e){}})\"",
@@ -34,16 +34,8 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.0",
-    "@babel/preset-env": "^7.22.0",
-    "@babel/preset-react": "^7.22.0",
-    "babel-loader": "^9.1.0",
-    "css-loader": "^6.8.0",
     "eslint": "^8.45.0",
-    "nodemon": "^3.0.1",
-    "style-loader": "^3.3.0",
-    "webpack": "^5.88.0",
-    "webpack-cli": "^5.1.0"
+    "nodemon": "^3.1.10"
   },
   "engines": {
     "node": ">=16.0.0",
