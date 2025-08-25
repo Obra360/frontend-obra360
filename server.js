@@ -3,7 +3,6 @@ const path = require('path');
 const moment = require('moment');
 const ejsHelpers = require('./helpers/ejs-helpers');
 const cookieParser = require('cookie-parser');
-const { NODATA } = require('dns');
 require('dotenv').config();
 
 const app = express();
@@ -25,26 +24,15 @@ app.use(cookieParser());
 //         HELPER DE DATOS (SIMULADO)
 // ===============================================
 const getUserData = (req) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) {
-      throw new Error('No token found');
-    }
-    
-    console.log('🔍 [getUserData] Token encontrado, devolviendo usuario simulado');
-    
-    // En una implementación real, decodificarías el token JWT aquí
-    return {
-      id: 1,
-      firstName: 'Admin',
-      lastName: 'Papu',
-      role: 'ADMIN', // ✅ Asegúrate de que sea ADMIN o SUPERVISOR
-      email: 'admin@obra360.com'
-    };
-  } catch (error) {
-    console.log('❌ [getUserData] Error:', error.message);
-    throw error; // ✅ Re-lanzar el error para que se maneje arriba
-  }
+  // En una implementación real, decodificarías el token JWT de la cookie aquí
+  // y devolverías los datos del usuario.
+  return {
+    id: 1,
+    firstName: 'Admin',
+    lastName: 'Papu',
+    role: 'ADMIN',
+    email: 'admin@obra360.com'
+  };
 };
 
 // ===============================================
@@ -158,79 +146,36 @@ app.post('/login', async (req, res) => {
   }
 });
 
-
-
 // ===============================================
 //         RUTA DEL DASHBOARD
 // ===============================================
-// RUTA DEL DASHBOARD - VERSIÓN CORREGIDA
 app.get('/', async (req, res) => {
   const token = req.cookies.token;
-  
-  // Si no hay token, redirigir al login inmediatamente
-  if (!token) {
-    console.log('🔍 [DASHBOARD] No hay token, redirigiendo a login');
-    return res.redirect('/login');
-  }
+  if (!token) return res.redirect('/login');
 
   try {
-    console.log('🔍 [DASHBOARD] Cargando datos del dashboard...');
-    console.log('🔍 [DASHBOARD] Token presente:', token ? 'SÍ' : 'NO');
+    console.log('Cargando datos del dashboard...');
     
-    // Hacemos las llamadas a la API con mejor manejo de errores
+    // Hacemos las llamadas a la API
     const [obrasResponse, certStatsResponse] = await Promise.all([
-      fetch(`${process.env.API_BASE_URL}/api/obras`, { 
-        headers: { 'Authorization': `Bearer ${token}` } 
-      }).catch(err => ({ ok: false, status: 'NETWORK_ERROR', error: err.message })),
-      
-      fetch(`${process.env.API_BASE_URL}/api/certificaciones/stats/resumen`, { 
-        headers: { 'Authorization': `Bearer ${token}` } 
-      }).catch(err => ({ ok: false, status: 'NETWORK_ERROR', error: err.message }))
+      fetch(`${process.env.API_BASE_URL}/api/obras`, { headers: { 'Authorization': `Bearer ${token}` } }),
+      fetch(`${process.env.API_BASE_URL}/api/certificaciones/stats/resumen`, { headers: { 'Authorization': `Bearer ${token}` } })
     ]);
 
-    // ✅ VERIFICACIÓN ESPECÍFICA DE TOKEN EXPIRADO
-    if (obrasResponse.status === 401 || certStatsResponse.status === 401) {
-      console.log('❌ [DASHBOARD] Token expirado detectado (401), limpiando y redirigiendo');
-      
-      // Limpiar cookie expirada
-      res.clearCookie('token');
-      
-      // Redirigir con mensaje
-      return res.redirect('/login?expired=true');
-    }
-
-    // Verificar otras respuestas de error
+    // Verificamos CADA respuesta por separado para un mejor diagnóstico
     if (!obrasResponse.ok) {
-      const errorData = obrasResponse.error || await obrasResponse.text().catch(() => 'Error desconocido');
-      console.log('❌ [DASHBOARD] Error en API de Obras:', obrasResponse.status, '-', errorData);
-      
-      // Si es error de autenticación, limpiar token
-      if (obrasResponse.status === 403) {
-        res.clearCookie('token');
-        return res.redirect('/login?error=auth');
-      }
-      
+      const errorData = await obrasResponse.text();
       throw new Error(`Error en la API de Obras: ${obrasResponse.status} - ${errorData}`);
     }
     
     if (!certStatsResponse.ok) {
-      const errorData = certStatsResponse.error || await certStatsResponse.text().catch(() => 'Error desconocido');
-      console.log('❌ [DASHBOARD] Error en API de Certificaciones:', certStatsResponse.status, '-', errorData);
-      
-      // Si es error de autenticación, limpiar token  
-      if (certStatsResponse.status === 403) {
-        res.clearCookie('token');
-        return res.redirect('/login?error=auth');
-      }
-      
+      const errorData = await certStatsResponse.text();
       throw new Error(`Error en la API de Certificaciones: ${certStatsResponse.status} - ${errorData}`);
     }
 
     // Si ambas respuestas son correctas, continuamos...
     const obras = await obrasResponse.json();
     const certStats = await certStatsResponse.json();
-
-    console.log('✅ [DASHBOARD] Datos obtenidos - Obras:', obras.length, 'Certificaciones:', certStats.totalCertificaciones || 0);
 
     const kpis = {
       totalObras: obras.length,
@@ -264,44 +209,19 @@ app.get('/', async (req, res) => {
       actividadReciente: obras.filter(o => moment(o.createdAt).isAfter(moment().subtract(7, 'days'))).length
     };
     
-    // ✅ Agregar datos del usuario al renderizado
-    const user = getUserData(req);
-    
     res.render('pages/dashboard', {
-      title: 'Dashboard - Obra 360', 
-      user: user, // ✅ Pasar usuario
-      kpis, 
-      obrasRecientes, 
-      graficos, 
-      alertas,
-      notificaciones: [], 
-      currentPage: 'dashboard'
+      title: 'Dashboard - Obra 360', kpis, obrasRecientes, graficos, alertas,
+      notificaciones: [], currentPage: 'dashboard'
     });
 
-    console.log('✅ [DASHBOARD] Dashboard renderizado correctamente');
-
   } catch (error) {
-    console.error('❌ [DASHBOARD] Error al cargar el dashboard:', error);
-    
-    // ✅ Si hay error, intentar obtener usuario para la vista de error
-    let user;
-    try {
-      user = getUserData(req);
-    } catch (userError) {
-      console.log('⚠️ [DASHBOARD] No se pudo obtener usuario, usando datos por defecto');
-      user = { firstName: 'Usuario', lastName: '', role: 'USER', email: 'unknown' };
-    }
-    
+    console.error('Error al cargar el dashboard:', error);
     res.render('pages/dashboard', {
       title: 'Error de Dashboard',
-      user: user, // ✅ Siempre pasar usuario
       kpis: { totalObras: 0, obrasTendencia: '+0', obrasActivas: 0, inversionTotal: 0, certificaciones: 0 },
-      obrasRecientes: [], 
-      graficos: { obrasPorMes: new Array(12).fill(0), distribucionTipo: [0, 0] },
-      alertas: { obrasSinMateriales: 0, actividadReciente: 0 }, 
-      notificaciones: [],
-      currentPage: 'dashboard', 
-      error: "No se pudieron cargar los datos del dashboard. Verifique su conexión."
+      obrasRecientes: [], graficos: { obrasPorMes: new Array(12).fill(0), distribucionTipo: [0, 0] },
+      alertas: { obrasSinMateriales: 0, actividadReciente: 0 }, notificaciones: [],
+      currentPage: 'dashboard', error: "No se pudieron cargar los datos del dashboard."
     });
   }
 });
@@ -1342,79 +1262,48 @@ app.delete('/personal/:id', verificarPermisosPersonal, async (req, res) => {
 // Agregar estas rutas en tu server.js después de las rutas de personal
 
 // ACTUALIZAR LA RUTA EXISTENTE DE CONTROL DE HORAS (Vista principal)
-
 app.get('/personal/control-horas', verificarPermisosPersonal, async (req, res) => {
-  const user = getUserData(req); // ✅ Usar getUserData, no req.user
+  const user = req.user;
   const token = req.cookies.token;
-  
-  console.log(`🔍 Usuario ${user.email} autorizado para control de horas`);
-  
-  if (!token) {
-    console.log('❌ No hay token, redirigiendo a login');
-    return res.redirect('/login');
-  }
+  if (!token) return res.redirect('/login');
 
   try {
     // Obtener fecha de hoy
     const hoy = moment().format('YYYY-MM-DD');
-    console.log('🔍 [CONTROL-HORAS] Obteniendo datos para fecha:', hoy);
     
-    // Inicializar stats por defecto
+    // Obtener resumen del día
+    const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    
     let stats = {
       presentes: 0,
       horasTrabajadas: '0:00',
       horasExtra: '0:00'
     };
     
-    // Intentar obtener el resumen del backend (opcional, no crítico)
-    try {
-      const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      
-      if (resumenResponse.ok) {
-        const resumen = await resumenResponse.json();
-        stats = {
-          presentes: resumen.empleadosPresentes || 0,
-          horasTrabajadas: resumen.horasTotales || '0:00',
-          horasExtra: resumen.horasExtra || '0:00'
-        };
-        // esto es solo para debuggear, lo agregue para saber si hacia el llamado a la api, los console.log son borrables no aportan Nada
-        console.log('✅ [CONTROL-HORAS] Stats obtenidos:', stats);
-      } else {
-        console.log('⚠️ [CONTROL-HORAS] No se pudo obtener resumen del backend, usando valores por defecto');
-      }
-    } catch (apiError) {
-      console.log('⚠️ [CONTROL-HORAS] Error de API (no crítico):', apiError.message);
-      // Mantener stats por defecto
+    if (resumenResponse.ok) {
+      const resumen = await resumenResponse.json();
+      stats = {
+        presentes: resumen.empleadosPresentes || 0,
+        horasTrabajadas: resumen.horasTotales || '0:00',
+        horasExtra: resumen.horasExtra || '0:00'
+      };
     }
 
-    // SIEMPRE renderizar la página, incluso si el API falla
     res.render('pages/control-horas', {
       title: 'Control de Horas',
-      user: user, // ✅ Pasar el usuario correcto
+      user,
       currentPage: 'control-horas',
-      stats: stats,
-      moment: moment
+      stats
     });
-    
-    console.log('✅ [CONTROL-HORAS] Página renderizada correctamente');
-    
   } catch (error) {
-    console.error("❌ [CONTROL-HORAS] Error crítico:", error);
-    
-    // En caso de error crítico, aún renderizar con valores por defecto
+    console.error("Error al cargar control de horas:", error);
     res.render('pages/control-horas', {
-      title: 'Control de Horas - Error',
-      user: user, // ✅ SIEMPRE pasar user
+      title: 'Control de Horas',
+      user,
       currentPage: 'control-horas',
-      stats: { 
-        presentes: 0, 
-        horasTrabajadas: '0:00', 
-        horasExtra: '0:00' 
-      },
-      error: "No se pudieron cargar los datos del servidor.",
-      moment: moment
+      stats: { presentes: 0, horasTrabajadas: '0:00', horasExtra: '0:00' }
     });
   }
 });
@@ -1437,7 +1326,7 @@ app.get('/api/control-horas/personas', verificarPermisosPersonal, async (req, re
     const personas = await apiResponse.json();
     res.json(personas);
   } catch (error) {
-    console.error('❌ [API-PERSONAS] Error:', error);
+    console.error('Error obteniendo personas:', error);
     res.status(500).json({ error: 'Error al obtener personas' });
   }
 });
