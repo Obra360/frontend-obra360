@@ -5,8 +5,28 @@ let modalPersona = null;
 let modalRegistro = null;
 let modalEditar = null;
 
+// Función auxiliar para obtener el token
+function getAuthToken() {
+    return localStorage.getItem('token') || sessionStorage.getItem('token');
+}
+
+// Función auxiliar para headers con autenticación
+function getAuthHeaders() {
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getAuthToken()}`
+    };
+}
+
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
+    // Verificar autenticación
+    const token = getAuthToken();
+    if (!token) {
+        window.location.href = '/login';
+        return;
+    }
+    
     // Inicializar modales
     modalPersona = new bootstrap.Modal(document.getElementById('modalPersona'));
     modalRegistro = new bootstrap.Modal(document.getElementById('modalRegistro'));
@@ -36,13 +56,20 @@ document.addEventListener('DOMContentLoaded', function() {
 // Funciones de Personas
 async function cargarPersonas() {
     try {
-        const response = await fetch('/api/personas');
+        const response = await fetch('/api/control-horas/personas', {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
+        });
         if (response.ok) {
             personas = await response.json();
             actualizarSelectPersonas();
+        } else if (response.status === 401) {
+            window.location.href = '/login';
         }
     } catch (error) {
         console.error('Error cargando personas:', error);
+        mostrarNotificacion('Error al cargar personas', 'danger');
     }
 }
 
@@ -84,11 +111,9 @@ async function guardarPersona() {
     }
     
     try {
-        const response = await fetch('/api/personas', {
+        const response = await fetch('/api/control-horas/personas', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({ nombre, apellido, dni })
         });
         
@@ -99,7 +124,7 @@ async function guardarPersona() {
             mostrarNotificacion('Persona creada exitosamente', 'success');
         } else {
             const error = await response.json();
-            mostrarNotificacion(error.message || 'Error al crear persona', 'danger');
+            mostrarNotificacion(error.error || 'Error al crear persona', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -119,14 +144,21 @@ async function cargarRegistros() {
     if (personaId) params.append('personaId', personaId);
     
     try {
-        const response = await fetch(`/api/control-horas?${params}`);
+        const response = await fetch(`/api/control-horas/registros?${params}`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
+        });
         if (response.ok) {
             registros = await response.json();
             renderizarTabla();
             actualizarEstadisticas();
+        } else if (response.status === 401) {
+            window.location.href = '/login.html';
         }
     } catch (error) {
         console.error('Error cargando registros:', error);
+        mostrarNotificacion('Error al cargar registros', 'danger');
     }
 }
 
@@ -163,10 +195,10 @@ function renderizarTabla() {
                 <td class="text-warning">${registro.horasExtra || '0'}h</td>
                 <td class="fw-bold">${total}</td>
                 <td class="text-center">
-                    <button class="btn btn-sm btn-outline-primary" onclick="editarRegistro(${registro.id})">
+                    <button class="btn btn-sm btn-outline-primary" onclick="editarRegistro('${registro.id}')">
                         <i class="bi bi-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="eliminarRegistro(${registro.id})">
+                    <button class="btn btn-sm btn-outline-danger" onclick="eliminarRegistro('${registro.id}')">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
@@ -194,11 +226,9 @@ async function guardarRegistro() {
     }
     
     try {
-        const response = await fetch('/api/control-horas/registro', {
+        const response = await fetch('/api/control-horas/marcar', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 personaId,
                 tipo,
@@ -214,7 +244,7 @@ async function guardarRegistro() {
             mostrarNotificacion('Registro guardado exitosamente', 'success');
         } else {
             const error = await response.json();
-            mostrarNotificacion(error.message || 'Error al guardar registro', 'danger');
+            mostrarNotificacion(error.error || 'Error al guardar registro', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -241,11 +271,9 @@ async function actualizarRegistro() {
     const horasExtra = document.getElementById('editarHorasExtra').value;
     
     try {
-        const response = await fetch(`/api/control-horas/${id}`, {
+        const response = await fetch(`/api/control-horas/registros/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: getAuthHeaders(),
             body: JSON.stringify({
                 horaEntrada,
                 horaSalida,
@@ -259,7 +287,7 @@ async function actualizarRegistro() {
             mostrarNotificacion('Registro actualizado exitosamente', 'success');
         } else {
             const error = await response.json();
-            mostrarNotificacion(error.message || 'Error al actualizar registro', 'danger');
+            mostrarNotificacion(error.error || 'Error al actualizar registro', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -271,15 +299,19 @@ async function eliminarRegistro(id) {
     if (!confirm('¿Está seguro de eliminar este registro?')) return;
     
     try {
-        const response = await fetch(`/api/control-horas/${id}`, {
-            method: 'DELETE'
+        const response = await fetch(`/api/control-horas/registros/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
         });
         
         if (response.ok) {
             cargarRegistros();
             mostrarNotificacion('Registro eliminado exitosamente', 'success');
         } else {
-            mostrarNotificacion('Error al eliminar registro', 'danger');
+            const error = await response.json();
+            mostrarNotificacion(error.error || 'Error al eliminar registro', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
@@ -322,40 +354,25 @@ function formatearFecha(fecha) {
     return moment(fecha).format('DD/MM/YYYY');
 }
 
-function actualizarEstadisticas() {
+async function actualizarEstadisticas() {
     const hoy = moment().format('YYYY-MM-DD');
-    const registrosHoy = registros.filter(r => r.fecha === hoy);
     
-    // Presentes hoy (personas con entrada registrada)
-    const presentesHoy = new Set(
-        registrosHoy
-            .filter(r => r.horaEntrada)
-            .map(r => r.personaId)
-    ).size;
-    
-    // Total horas trabajadas hoy
-    let totalMinutosTrabajados = 0;
-    let totalHorasExtra = 0;
-    
-    registrosHoy.forEach(registro => {
-        if (registro.horaEntrada && registro.horaSalida) {
-            const [horaE, minE] = registro.horaEntrada.split(':').map(Number);
-            const [horaS, minS] = registro.horaSalida.split(':').map(Number);
-            let minutos = (horaS * 60 + minS) - (horaE * 60 + minE);
-            if (minutos < 0) minutos += 24 * 60;
-            totalMinutosTrabajados += minutos;
+    try {
+        const response = await fetch(`/api/control-horas/resumen/${hoy}`, {
+            headers: {
+                'Authorization': `Bearer ${getAuthToken()}`
+            }
+        });
+        
+        if (response.ok) {
+            const resumen = await response.json();
+            document.getElementById('presentesHoy').textContent = resumen.empleadosPresentes || 0;
+            document.getElementById('horasTrabajadas').textContent = resumen.horasTotales || '0:00';
+            document.getElementById('horasExtraTotal').textContent = resumen.horasExtra || '0:00';
         }
-        totalHorasExtra += parseFloat(registro.horasExtra) || 0;
-    });
-    
-    const horasTrabajadas = Math.floor(totalMinutosTrabajados / 60);
-    const minutosTrabajados = totalMinutosTrabajados % 60;
-    
-    document.getElementById('presentesHoy').textContent = presentesHoy;
-    document.getElementById('horasTrabajadas').textContent = 
-        `${horasTrabajadas}:${minutosTrabajados.toString().padStart(2, '0')}`;
-    document.getElementById('horasExtraTotal').textContent = 
-        `${totalHorasExtra.toFixed(1)}h`;
+    } catch (error) {
+        console.error('Error actualizando estadísticas:', error);
+    }
 }
 
 function buscarPersona(event) {
@@ -382,7 +399,8 @@ async function exportarExcel() {
     if (fechaHasta) params.append('fechaHasta', fechaHasta);
     if (personaId) params.append('personaId', personaId);
     
-    window.location.href = `/api/control-horas/exportar?${params}`;
+    const token = getAuthToken();
+    window.location.href = `/api/control-horas/exportar?${params}&token=${token}`;
 }
 
 function mostrarNotificacion(mensaje, tipo = 'info') {

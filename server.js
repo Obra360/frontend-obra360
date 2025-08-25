@@ -73,17 +73,31 @@ const soloAdmin = (req, res, next) => {
 const verificarPermisosPersonal = (req, res, next) => {
   const user = getUserData(req);
   
-  // Solo ADMIN y SUPERVISOR pueden acceder a la gestión de personal
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPERVISOR')) {
+  // Si no hay usuario, redirigir al login
+  if (!user) {
+    console.log('No hay usuario autenticado, redirigiendo al login...');
+    return res.redirect('/login');
+  }
+  
+  // Verificar rol
+  if (user.role !== 'ADMIN' && user.role !== 'SUPERVISOR') {
+    console.log(`Usuario ${user.email} sin permisos suficientes (rol: ${user.role})`);
     return res.status(403).render('pages/error', {
       title: 'Acceso Denegado',
       error: 'No tienes permisos para acceder a la gestión de personal.',
-      currentPage: 'error'
+      currentPage: 'error',
+      user: user // Pasar user incluso en error
     });
   }
   
+  // IMPORTANTE: Asignar el usuario al request
+  req.user = user;
+  res.locals.user = user; // También agregarlo a locals para las vistas
+  
+  console.log(`Usuario ${user.email} autorizado para control de horas`);
   next();
 };
+
 
 // Middleware global para variables de template
 app.use((req, res, next) => {
@@ -1242,43 +1256,316 @@ app.delete('/personal/:id', verificarPermisosPersonal, async (req, res) => {
   }
 });
 
-// RUTA PARA CONTROL DE HORAS
+// ===============================================
+//     RUTAS DE CONTROL DE HORAS (FRONTEND PROXY)
+// ===============================================
+// Agregar estas rutas en tu server.js después de las rutas de personal
+
+// ACTUALIZAR LA RUTA EXISTENTE DE CONTROL DE HORAS (Vista principal)
 app.get('/personal/control-horas', verificarPermisosPersonal, async (req, res) => {
-  const user = getUserData(req);
+  const user = req.user;
   const token = req.cookies.token;
   if (!token) return res.redirect('/login');
 
   try {
-    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/asistencia`, {
+    // Obtener fecha de hoy
+    const hoy = moment().format('YYYY-MM-DD');
+    
+    // Obtener resumen del día
+    const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-    if (!apiResponse.ok) throw new Error('Error al obtener asistencias');
     
-    const asistenciasData = await apiResponse.json();
-
-    const stats = {
+    let stats = {
       presentes: 0,
       horasTrabajadas: '0:00',
       horasExtra: '0:00'
     };
+    
+    if (resumenResponse.ok) {
+      const resumen = await resumenResponse.json();
+      stats = {
+        presentes: resumen.empleadosPresentes || 0,
+        horasTrabajadas: resumen.horasTotales || '0:00',
+        horasExtra: resumen.horasExtra || '0:00'
+      };
+    }
 
     res.render('pages/control-horas', {
       title: 'Control de Horas',
       user,
       currentPage: 'control-horas',
-      asistencias: asistenciasData,
-      stats: stats
+      stats
     });
   } catch (error) {
     console.error("Error al cargar control de horas:", error);
     res.render('pages/control-horas', {
-      title: 'Error de Conexión',
+      title: 'Control de Horas',
       user,
       currentPage: 'control-horas',
-      asistencias: [],
-      stats: { presentes: 0, horasTrabajadas: '0:00', horasExtra: '0:00' },
-      error: "No se pudieron cargar los datos de asistencia."
+      stats: { presentes: 0, horasTrabajadas: '0:00', horasExtra: '0:00' }
     });
+  }
+});
+
+// API: Obtener todas las personas
+app.get('/api/control-horas/personas', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/personas`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.text();
+      throw new Error(`Error del backend: ${apiResponse.status} - ${errorData}`);
+    }
+
+    const personas = await apiResponse.json();
+    res.json(personas);
+  } catch (error) {
+    console.error('Error obteniendo personas:', error);
+    res.status(500).json({ error: 'Error al obtener personas' });
+  }
+});
+
+// API: Crear nueva persona
+app.post('/api/control-horas/personas', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/personas`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      return res.status(apiResponse.status).json(errorData);
+    }
+
+    const nuevaPersona = await apiResponse.json();
+    res.status(201).json(nuevaPersona);
+  } catch (error) {
+    console.error('Error creando persona:', error);
+    res.status(500).json({ error: 'Error al crear persona' });
+  }
+});
+
+// API: Obtener registros de control de horas
+app.get('/personal/control-horas', verificarPermisosPersonal, async (req, res) => {
+  // El usuario ya viene del middleware
+  const user = req.user;
+  const token = req.cookies.token;
+  
+  // Si por alguna razón no hay usuario, redirigir al login
+  if (!user) {
+    return res.redirect('/login');
+  }
+
+  try {
+    // Obtener fecha de hoy
+    const hoy = moment().format('YYYY-MM-DD');
+    
+    // Inicializar stats por defecto
+    let stats = {
+      presentes: 0,
+      horasTrabajadas: '0:00',
+      horasExtra: '0:00'
+    };
+    
+    // Si hay token, intentar obtener el resumen del backend
+    if (token) {
+      try {
+        const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        
+        if (resumenResponse.ok) {
+          const resumen = await resumenResponse.json();
+          stats = {
+            presentes: resumen.empleadosPresentes || 0,
+            horasTrabajadas: resumen.horasTotales || '0:00',
+            horasExtra: resumen.horasExtra || '0:00'
+          };
+        }
+      } catch (error) {
+        console.log('Error obteniendo resumen:', error);
+        // Mantener stats por defecto
+      }
+    }
+
+    // IMPORTANTE: Siempre pasar el objeto user
+    res.render('pages/control-horas', {
+      title: 'Control de Horas',
+      user: user, // Asegurarse de pasar user
+      currentPage: 'control-horas',
+      stats: stats,
+      moment: moment // También pasar moment si lo usas en la vista
+    });
+    
+  } catch (error) {
+    console.error("Error al cargar control de horas:", error);
+    
+    // En caso de error, aún así renderizar con valores por defecto
+    res.render('pages/control-horas', {
+      title: 'Control de Horas',
+      user: user, // SIEMPRE pasar user
+      currentPage: 'control-horas',
+      stats: { 
+        presentes: 0, 
+        horasTrabajadas: '0:00', 
+        horasExtra: '0:00' 
+      },
+      error: "Error al cargar los datos.",
+      moment: moment
+    });
+  }
+});
+
+
+// API: Registrar entrada/salida
+app.post('/api/control-horas/marcar', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/marcar`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      return res.status(apiResponse.status).json(errorData);
+    }
+
+    const resultado = await apiResponse.json();
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error registrando:', error);
+    res.status(500).json({ error: 'Error al registrar' });
+  }
+});
+
+// API: Actualizar registro
+app.put('/api/control-horas/registros/:id', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const { id } = req.params;
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/registros/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(req.body)
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      return res.status(apiResponse.status).json(errorData);
+    }
+
+    const resultado = await apiResponse.json();
+    res.json(resultado);
+  } catch (error) {
+    console.error('Error actualizando registro:', error);
+    res.status(500).json({ error: 'Error al actualizar registro' });
+  }
+});
+
+// API: Eliminar registro
+app.delete('/api/control-horas/registros/:id', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const { id } = req.params;
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/registros/${id}`, {
+      method: 'DELETE',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.json();
+      return res.status(apiResponse.status).json(errorData);
+    }
+
+    res.json({ message: 'Registro eliminado correctamente' });
+  } catch (error) {
+    console.error('Error eliminando registro:', error);
+    res.status(500).json({ error: 'Error al eliminar registro' });
+  }
+});
+
+// API: Obtener resumen del día
+app.get('/api/control-horas/resumen/:fecha', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const { fecha } = req.params;
+    const apiResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${fecha}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!apiResponse.ok) {
+      const errorData = await apiResponse.text();
+      throw new Error(`Error del backend: ${apiResponse.status} - ${errorData}`);
+    }
+
+    const resumen = await apiResponse.json();
+    res.json(resumen);
+  } catch (error) {
+    console.error('Error obteniendo resumen:', error);
+    res.status(500).json({ error: 'Error al obtener resumen' });
+  }
+});
+
+// API: Exportar a Excel/CSV
+app.get('/api/control-horas/exportar', verificarPermisosPersonal, async (req, res) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+  try {
+    const queryParams = new URLSearchParams(req.query);
+    const apiUrl = `${process.env.API_BASE_URL}/api/control-horas/exportar?${queryParams}`;
+
+    const apiResponse = await fetch(apiUrl, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (!apiResponse.ok) {
+      throw new Error('Error al exportar datos');
+    }
+
+    // Copiar headers de la respuesta del backend
+    const contentType = apiResponse.headers.get('content-type');
+    const contentDisposition = apiResponse.headers.get('content-disposition');
+    
+    if (contentType) res.setHeader('Content-Type', contentType);
+    if (contentDisposition) res.setHeader('Content-Disposition', contentDisposition);
+
+    // Transmitir el archivo
+    const buffer = await apiResponse.buffer();
+    res.send(buffer);
+  } catch (error) {
+    console.error('Error exportando:', error);
+    res.status(500).json({ error: 'Error al exportar' });
   }
 });
 
