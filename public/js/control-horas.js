@@ -5,77 +5,101 @@ let modalPersona = null;
 let modalRegistro = null;
 let modalEditar = null;
 
-// Función auxiliar para obtener el token
-function getAuthToken() {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
-}
-
-// Función auxiliar para headers con autenticación
+// ✅ FUNCIÓN CORREGIDA: No buscar token en localStorage, usar cookies del navegador
 function getAuthHeaders() {
     return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${getAuthToken()}`
+        'Content-Type': 'application/json'
+        // ✅ No incluir Authorization header - el token viene automáticamente por cookie
     };
 }
 
-// Inicialización
+// ✅ FUNCIÓN AUXILIAR: Verificar si estamos autenticados
+function isAuthenticated() {
+    // En lugar de verificar localStorage, verificamos si estamos en una página autenticada
+    // El servidor ya se encargó de verificar el token cuando cargó la página
+    return document.getElementById('mainContent') !== null; // Si la página cargó, estamos autenticados
+}
+
+// ✅ INICIALIZACIÓN CORREGIDA
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar autenticación
-    const token = getAuthToken();
-    if (!token) {
-        window.location.href = '/login';
+    console.log('🔍 [CONTROL-HORAS-JS] Iniciando aplicación...');
+    
+    // NO verificar token aquí - el servidor ya lo hizo
+    if (!isAuthenticated()) {
+        console.log('❌ [CONTROL-HORAS-JS] Página no autenticada');
         return;
     }
     
-    // Inicializar modales
-    modalPersona = new bootstrap.Modal(document.getElementById('modalPersona'));
-    modalRegistro = new bootstrap.Modal(document.getElementById('modalRegistro'));
-    modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
-    
-    // Cargar datos iniciales
-    cargarPersonas();
-    cargarRegistros();
-    
-    // Actualizar hora actual cada segundo
-    actualizarHoraActual();
-    setInterval(actualizarHoraActual, 1000);
-    
-    // Event listeners
-    document.getElementById('buscarPersona').addEventListener('input', buscarPersona);
-    
-    // Autocompletar hora actual al seleccionar tipo de registro
-    document.getElementById('tipoRegistro').addEventListener('change', function() {
-        if (this.value) {
-            const ahora = new Date();
-            document.getElementById('registroHora').value = 
-                ahora.toTimeString().slice(0, 5);
+    try {
+        // Inicializar modales
+        modalPersona = new bootstrap.Modal(document.getElementById('modalPersona'));
+        modalRegistro = new bootstrap.Modal(document.getElementById('modalRegistro'));
+        modalEditar = new bootstrap.Modal(document.getElementById('modalEditar'));
+        
+        // Cargar datos iniciales (con manejo de errores mejorado)
+        cargarPersonas();
+        cargarRegistros();
+        
+        // Actualizar hora actual cada segundo
+        actualizarHoraActual();
+        setInterval(actualizarHoraActual, 1000);
+        
+        // Event listeners
+        const buscarInput = document.getElementById('buscarPersona');
+        if (buscarInput) {
+            buscarInput.addEventListener('input', buscarPersona);
         }
-    });
+        
+        // Autocompletar hora actual al seleccionar tipo de registro
+        const tipoRegistro = document.getElementById('tipoRegistro');
+        if (tipoRegistro) {
+            tipoRegistro.addEventListener('change', function() {
+                if (this.value) {
+                    const ahora = new Date();
+                    const horaInput = document.getElementById('registroHora');
+                    if (horaInput) {
+                        horaInput.value = ahora.toTimeString().slice(0, 5);
+                    }
+                }
+            });
+        }
+        
+        console.log('✅ [CONTROL-HORAS-JS] Aplicación inicializada correctamente');
+        
+    } catch (error) {
+        console.error('❌ [CONTROL-HORAS-JS] Error en inicialización:', error);
+    }
 });
 
-// Funciones de Personas
+// ✅ FUNCIONES DE PERSONAS CORREGIDAS
 async function cargarPersonas() {
     try {
-        const response = await fetch('/api/control-horas/personas', {
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
-            }
-        });
+        console.log('🔍 [CONTROL-HORAS-JS] Cargando personas...');
+        
+        const response = await fetch('/api/control-horas/personas');
+        
         if (response.ok) {
             personas = await response.json();
             actualizarSelectPersonas();
+            console.log('✅ [CONTROL-HORAS-JS] Personas cargadas:', personas.length);
         } else if (response.status === 401) {
-            window.location.href = '/login';
+            console.log('❌ [CONTROL-HORAS-JS] Token expirado, redirigiendo...');
+            window.location.href = '/login?expired=true';
+        } else {
+            console.log('⚠️ [CONTROL-HORAS-JS] Error cargando personas:', response.status);
+            // No romper la app por este error
         }
     } catch (error) {
-        console.error('Error cargando personas:', error);
-        mostrarNotificacion('Error al cargar personas', 'danger');
+        console.error('❌ [CONTROL-HORAS-JS] Error de red cargando personas:', error);
+        mostrarNotificacion('Error de conexión al cargar personas', 'warning');
     }
 }
 
 function actualizarSelectPersonas() {
     const selectRegistro = document.getElementById('registroPersona');
     const selectFiltro = document.getElementById('filtroPersona');
+    
+    if (!selectRegistro || !selectFiltro) return;
     
     // Limpiar selects
     selectRegistro.innerHTML = '<option value="">Seleccionar persona</option>';
@@ -96,14 +120,19 @@ function actualizarSelectPersonas() {
 }
 
 function mostrarModalPersona() {
-    document.getElementById('formPersona').reset();
-    modalPersona.show();
+    const form = document.getElementById('formPersona');
+    if (form) {
+        form.reset();
+    }
+    if (modalPersona) {
+        modalPersona.show();
+    }
 }
 
 async function guardarPersona() {
-    const nombre = document.getElementById('personaNombre').value.trim();
-    const apellido = document.getElementById('personaApellido').value.trim();
-    const dni = document.getElementById('personaDni').value.trim();
+    const nombre = document.getElementById('personaNombre')?.value.trim();
+    const apellido = document.getElementById('personaApellido')?.value.trim();
+    const dni = document.getElementById('personaDni')?.value.trim();
     
     if (!nombre || !apellido || !dni) {
         alert('Por favor complete todos los campos');
@@ -118,25 +147,27 @@ async function guardarPersona() {
         });
         
         if (response.ok) {
-            modalPersona.hide();
+            if (modalPersona) modalPersona.hide();
             cargarPersonas();
             cargarRegistros();
             mostrarNotificacion('Persona creada exitosamente', 'success');
+        } else if (response.status === 401) {
+            window.location.href = '/login?expired=true';
         } else {
             const error = await response.json();
             mostrarNotificacion(error.error || 'Error al crear persona', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
-        mostrarNotificacion('Error al crear persona', 'danger');
+        mostrarNotificacion('Error de conexión al crear persona', 'danger');
     }
 }
 
-// Funciones de Registros
+// ✅ FUNCIONES DE REGISTROS CORREGIDAS
 async function cargarRegistros() {
-    const fechaDesde = document.getElementById('fechaDesde').value;
-    const fechaHasta = document.getElementById('fechaHasta').value;
-    const personaId = document.getElementById('filtroPersona').value;
+    const fechaDesde = document.getElementById('fechaDesde')?.value;
+    const fechaHasta = document.getElementById('fechaHasta')?.value;
+    const personaId = document.getElementById('filtroPersona')?.value;
     
     const params = new URLSearchParams();
     if (fechaDesde) params.append('fechaDesde', fechaDesde);
@@ -144,26 +175,32 @@ async function cargarRegistros() {
     if (personaId) params.append('personaId', personaId);
     
     try {
-        const response = await fetch(`/api/control-horas/registros?${params}`, {
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
-            }
-        });
+        console.log('🔍 [CONTROL-HORAS-JS] Cargando registros...');
+        
+        const response = await fetch(`/api/control-horas/registros?${params}`);
+        
         if (response.ok) {
             registros = await response.json();
             renderizarTabla();
             actualizarEstadisticas();
+            console.log('✅ [CONTROL-HORAS-JS] Registros cargados:', registros.length);
         } else if (response.status === 401) {
-            window.location.href = '/login.html';
+            console.log('❌ [CONTROL-HORAS-JS] Token expirado');
+            window.location.href = '/login?expired=true';
+        } else {
+            console.log('⚠️ [CONTROL-HORAS-JS] Error cargando registros:', response.status);
+            registros = [];
+            renderizarTabla();
         }
     } catch (error) {
-        console.error('Error cargando registros:', error);
-        mostrarNotificacion('Error al cargar registros', 'danger');
+        console.error('❌ [CONTROL-HORAS-JS] Error de red cargando registros:', error);
+        mostrarNotificacion('Error de conexión al cargar registros', 'warning');
     }
 }
 
 function renderizarTabla() {
     const tbody = document.getElementById('tablaRegistros');
+    if (!tbody) return;
     
     if (registros.length === 0) {
         tbody.innerHTML = `
@@ -208,17 +245,27 @@ function renderizarTabla() {
 }
 
 function mostrarModalRegistro() {
-    document.getElementById('formRegistro').reset();
-    document.getElementById('registroFecha').value = moment().format('YYYY-MM-DD');
-    modalRegistro.show();
+    const form = document.getElementById('formRegistro');
+    if (form) {
+        form.reset();
+    }
+    
+    const fechaInput = document.getElementById('registroFecha');
+    if (fechaInput && typeof moment !== 'undefined') {
+        fechaInput.value = moment().format('YYYY-MM-DD');
+    }
+    
+    if (modalRegistro) {
+        modalRegistro.show();
+    }
 }
 
 async function guardarRegistro() {
-    const personaId = document.getElementById('registroPersona').value;
-    const tipo = document.getElementById('tipoRegistro').value;
-    const fecha = document.getElementById('registroFecha').value;
-    const hora = document.getElementById('registroHora').value;
-    const esHoraExtra = document.getElementById('esHoraExtra').checked;
+    const personaId = document.getElementById('registroPersona')?.value;
+    const tipo = document.getElementById('tipoRegistro')?.value;
+    const fecha = document.getElementById('registroFecha')?.value;
+    const hora = document.getElementById('registroHora')?.value;
+    const esHoraExtra = document.getElementById('esHoraExtra')?.checked;
     
     if (!personaId || !tipo || !fecha || !hora) {
         alert('Por favor complete todos los campos');
@@ -239,87 +286,22 @@ async function guardarRegistro() {
         });
         
         if (response.ok) {
-            modalRegistro.hide();
+            if (modalRegistro) modalRegistro.hide();
             cargarRegistros();
             mostrarNotificacion('Registro guardado exitosamente', 'success');
+        } else if (response.status === 401) {
+            window.location.href = '/login?expired=true';
         } else {
             const error = await response.json();
             mostrarNotificacion(error.error || 'Error al guardar registro', 'danger');
         }
     } catch (error) {
         console.error('Error:', error);
-        mostrarNotificacion('Error al guardar registro', 'danger');
+        mostrarNotificacion('Error de conexión al guardar registro', 'danger');
     }
 }
 
-async function editarRegistro(id) {
-    const registro = registros.find(r => r.id === id);
-    if (!registro) return;
-    
-    document.getElementById('editarId').value = id;
-    document.getElementById('editarHoraEntrada').value = registro.horaEntrada || '';
-    document.getElementById('editarHoraSalida').value = registro.horaSalida || '';
-    document.getElementById('editarHorasExtra').value = registro.horasExtra || 0;
-    
-    modalEditar.show();
-}
-
-async function actualizarRegistro() {
-    const id = document.getElementById('editarId').value;
-    const horaEntrada = document.getElementById('editarHoraEntrada').value;
-    const horaSalida = document.getElementById('editarHoraSalida').value;
-    const horasExtra = document.getElementById('editarHorasExtra').value;
-    
-    try {
-        const response = await fetch(`/api/control-horas/registros/${id}`, {
-            method: 'PUT',
-            headers: getAuthHeaders(),
-            body: JSON.stringify({
-                horaEntrada,
-                horaSalida,
-                horasExtra
-            })
-        });
-        
-        if (response.ok) {
-            modalEditar.hide();
-            cargarRegistros();
-            mostrarNotificacion('Registro actualizado exitosamente', 'success');
-        } else {
-            const error = await response.json();
-            mostrarNotificacion(error.error || 'Error al actualizar registro', 'danger');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarNotificacion('Error al actualizar registro', 'danger');
-    }
-}
-
-async function eliminarRegistro(id) {
-    if (!confirm('¿Está seguro de eliminar este registro?')) return;
-    
-    try {
-        const response = await fetch(`/api/control-horas/registros/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
-            }
-        });
-        
-        if (response.ok) {
-            cargarRegistros();
-            mostrarNotificacion('Registro eliminado exitosamente', 'success');
-        } else {
-            const error = await response.json();
-            mostrarNotificacion(error.error || 'Error al eliminar registro', 'danger');
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        mostrarNotificacion('Error al eliminar registro', 'danger');
-    }
-}
-
-// Funciones auxiliares
+// ✅ RESTO DE FUNCIONES AUXILIARES (sin cambios críticos)
 function actualizarHoraActual() {
     const ahora = new Date();
     const horaActual = ahora.toLocaleTimeString('es-AR');
@@ -351,29 +333,33 @@ function calcularTotalHoras(horasTrabajadas, horasExtra) {
 }
 
 function formatearFecha(fecha) {
-    return moment(fecha).format('DD/MM/YYYY');
+    if (typeof moment !== 'undefined') {
+        return moment(fecha).format('DD/MM/YYYY');
+    } else {
+        return new Date(fecha).toLocaleDateString('es-AR');
+    }
 }
 
 async function actualizarEstadisticas() {
-    const hoy = moment().format('YYYY-MM-DD');
+    const hoy = typeof moment !== 'undefined' ? moment().format('YYYY-MM-DD') : new Date().toISOString().split('T')[0];
     
     try {
-        const response = await fetch(`/api/control-horas/resumen/${hoy}`, {
-            headers: {
-                'Authorization': `Bearer ${getAuthToken()}`
-            }
-        });
+        const response = await fetch(`/api/control-horas/resumen/${hoy}`);
         
         if (response.ok) {
             const resumen = await response.json();
-            document.getElementById('presentesHoy').textContent = resumen.empleadosPresentes || 0;
-            document.getElementById('horasTrabajadas').textContent = resumen.horasTotales || '0:00';
-            document.getElementById('horasExtraTotal').textContent = resumen.horasExtra || '0:00';
-        }
-    } catch (error) {
-        console.error('Error actualizando estadísticas:', error);
-    }
-}
+                        const presentesEl = document.getElementById('presentesHoy');
+                        const horasTrabajadasEl = document.getElementById('horasTrabajadas');
+                        const horasExtraEl = document.getElementById('horasExtraTotal');
+            
+                        if (presentesEl) presentesEl.textContent = resumen.empleadosPresentes || 0;
+                        if (horasTrabajadasEl) horasTrabajadasEl.textContent = resumen.horasTotales || '0:00';
+                        if (horasExtraEl) horasExtraEl.textContent = resumen.horasExtra || '0:00';
+                    }
+                } catch (error) {
+                    console.error('Error actualizando estadísticas:', error);
+                }
+            }
 
 function buscarPersona(event) {
     const busqueda = event.target.value.toLowerCase();
@@ -390,17 +376,93 @@ function aplicarFiltros() {
 }
 
 async function exportarExcel() {
-    const fechaDesde = document.getElementById('fechaDesde').value;
-    const fechaHasta = document.getElementById('fechaHasta').value;
-    const personaId = document.getElementById('filtroPersona').value;
+    const fechaDesde = document.getElementById('fechaDesde')?.value;
+    const fechaHasta = document.getElementById('fechaHasta')?.value;
+    const personaId = document.getElementById('filtroPersona')?.value;
     
     const params = new URLSearchParams();
     if (fechaDesde) params.append('fechaDesde', fechaDesde);
     if (fechaHasta) params.append('fechaHasta', fechaHasta);
     if (personaId) params.append('personaId', personaId);
     
-    const token = getAuthToken();
-    window.location.href = `/api/control-horas/exportar?${params}&token=${token}`;
+    // ✅ No incluir token en URL - usar cookie automática
+    window.location.href = `/api/control-horas/exportar?${params}`;
+}
+
+async function editarRegistro(id) {
+    const registro = registros.find(r => r.id === id);
+    if (!registro) return;
+    
+    const editarIdEl = document.getElementById('editarId');
+    const editarEntradaEl = document.getElementById('editarHoraEntrada');
+    const editarSalidaEl = document.getElementById('editarHoraSalida');
+    const editarExtraEl = document.getElementById('editarHorasExtra');
+    
+    if (editarIdEl) editarIdEl.value = id;
+    if (editarEntradaEl) editarEntradaEl.value = registro.horaEntrada || '';
+    if (editarSalidaEl) editarSalidaEl.value = registro.horaSalida || '';
+    if (editarExtraEl) editarExtraEl.value = registro.horasExtra || 0;
+    
+    if (modalEditar) modalEditar.show();
+}
+
+async function actualizarRegistro() {
+    const id = document.getElementById('editarId')?.value;
+    const horaEntrada = document.getElementById('editarHoraEntrada')?.value;
+    const horaSalida = document.getElementById('editarHoraSalida')?.value;
+    const horasExtra = document.getElementById('editarHorasExtra')?.value;
+    
+    if (!id) return;
+    
+    try {
+        const response = await fetch(`/api/control-horas/registros/${id}`, {
+            method: 'PUT',
+            headers: getAuthHeaders(),
+            body: JSON.stringify({
+                horaEntrada,
+                horaSalida,
+                horasExtra
+            })
+        });
+        
+        if (response.ok) {
+            if (modalEditar) modalEditar.hide();
+            cargarRegistros();
+            mostrarNotificacion('Registro actualizado exitosamente', 'success');
+        } else if (response.status === 401) {
+            window.location.href = '/login?expired=true';
+        } else {
+            const error = await response.json();
+            mostrarNotificacion(error.error || 'Error al actualizar registro', 'danger');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error de conexión al actualizar registro', 'danger');
+    }
+}
+
+async function eliminarRegistro(id) {
+    if (!confirm('¿Está seguro de eliminar este registro?')) return;
+    
+    try {
+        const response = await fetch(`/api/control-horas/registros/${id}`, {
+            method: 'DELETE'
+            // ✅ No incluir headers - usar cookie automática
+        });
+        
+        if (response.ok) {
+            cargarRegistros();
+            mostrarNotificacion('Registro eliminado exitosamente', 'success');
+        } else if (response.status === 401) {
+            window.location.href = '/login?expired=true';
+        } else {
+            const error = await response.json();
+            mostrarNotificacion(error.error || 'Error al eliminar registro', 'danger');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        mostrarNotificacion('Error de conexión al eliminar registro', 'danger');
+    }
 }
 
 function mostrarNotificacion(mensaje, tipo = 'info') {
@@ -416,6 +478,21 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     document.body.appendChild(alertDiv);
     
     setTimeout(() => {
-        alertDiv.remove();
+        if (alertDiv.parentNode) {
+            alertDiv.remove();
+        }
     }, 5000);
 }
+
+// ✅ EXPORT GLOBAL FUNCTIONS para que funcionen desde HTML
+window.mostrarModalPersona = mostrarModalPersona;
+window.guardarPersona = guardarPersona;
+window.mostrarModalRegistro = mostrarModalRegistro;
+window.guardarRegistro = guardarRegistro;
+window.editarRegistro = editarRegistro;
+window.actualizarRegistro = actualizarRegistro;
+window.eliminarRegistro = eliminarRegistro;
+window.aplicarFiltros = aplicarFiltros;
+window.exportarExcel = exportarExcel;
+
+console.log('✅ [CONTROL-HORAS-JS] Script cargado completamente');
