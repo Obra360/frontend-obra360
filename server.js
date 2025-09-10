@@ -1359,76 +1359,76 @@ app.post('/api/control-horas/personas', verificarPermisosPersonal, async (req, r
   }
 });
 
-// // API: Obtener registros de control de horas
-// app.get('/personal/control-horas', verificarPermisosPersonal, async (req, res) => {
-//   // El usuario ya viene del middleware
-//   const user = req.user;
-//   const token = req.cookies.token;
+// API: Obtener registros de control de horas
+app.get('/personal/control-horas', verificarPermisosPersonal, async (req, res) => {
+  // El usuario ya viene del middleware
+  const user = req.user;
+  const token = req.cookies.token;
   
-//   // Si por alguna razón no hay usuario, redirigir al login
-//   if (!user) {
-//     return res.redirect('/login');
-//   }
+  // Si por alguna razón no hay usuario, redirigir al login
+  if (!user) {
+    return res.redirect('/login');
+  }
 
-//   try {
-//     // Obtener fecha de hoy
-//     const hoy = moment().format('YYYY-MM-DD');
+  try {
+    // Obtener fecha de hoy
+    const hoy = moment().format('YYYY-MM-DD');
     
-//     // Inicializar stats por defecto
-//     let stats = {
-//       presentes: 0,
-//       horasTrabajadas: '0:00',
-//       horasExtra: '0:00'
-//     };
+    // Inicializar stats por defecto
+    let stats = {
+      presentes: 0,
+      horasTrabajadas: '0:00',
+      horasExtra: '0:00'
+    };
     
-//     // Si hay token, intentar obtener el resumen del backend
-//     if (token) {
-//       try {
-//         const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
-//           headers: { 'Authorization': `Bearer ${token}` }
-//         });
+    // Si hay token, intentar obtener el resumen del backend
+    if (token) {
+      try {
+        const resumenResponse = await fetch(`${process.env.API_BASE_URL}/api/control-horas/resumen/${hoy}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         
-//         if (resumenResponse.ok) {
-//           const resumen = await resumenResponse.json();
-//           stats = {
-//             presentes: resumen.empleadosPresentes || 0,
-//             horasTrabajadas: resumen.horasTotales || '0:00',
-//             horasExtra: resumen.horasExtra || '0:00'
-//           };
-//         }
-//       } catch (error) {
-//         console.log('Error obteniendo resumen:', error);
-//         // Mantener stats por defecto
-//       }
-//     }
+        if (resumenResponse.ok) {
+          const resumen = await resumenResponse.json();
+          stats = {
+            presentes: resumen.empleadosPresentes || 0,
+            horasTrabajadas: resumen.horasTotales || '0:00',
+            horasExtra: resumen.horasExtra || '0:00'
+          };
+        }
+      } catch (error) {
+        console.log('Error obteniendo resumen:', error);
+        // Mantener stats por defecto
+      }
+    }
 
-//     // IMPORTANTE: Siempre pasar el objeto user
-//     res.render('pages/control-horas', {
-//       title: 'Control de Horas',
-//       user: user, // Asegurarse de pasar user
-//       currentPage: 'control-horas',
-//       stats: stats,
-//       moment: moment // También pasar moment si lo usas en la vista
-//     });
+    // IMPORTANTE: Siempre pasar el objeto user
+    res.render('pages/control-horas', {
+      title: 'Control de Horas',
+      user: user, // Asegurarse de pasar user
+      currentPage: 'control-horas',
+      stats: stats,
+      moment: moment // También pasar moment si lo usas en la vista
+    });
     
-//   } catch (error) {
-//     console.error("Error al cargar control de horas:", error);
+  } catch (error) {
+    console.error("Error al cargar control de horas:", error);
     
-//     // En caso de error, aún así renderizar con valores por defecto
-//     res.render('pages/control-horas', {
-//       title: 'Control de Horas',
-//       user: user, // SIEMPRE pasar user
-//       currentPage: 'control-horas',
-//       stats: { 
-//         presentes: 0, 
-//         horasTrabajadas: '0:00', 
-//         horasExtra: '0:00' 
-//       },
-//       error: "Error al cargar los datos.",
-//       moment: moment
-//     });
-//   }
-// });
+    // En caso de error, aún así renderizar con valores por defecto
+    res.render('pages/control-horas', {
+      title: 'Control de Horas',
+      user: user, // SIEMPRE pasar user
+      currentPage: 'control-horas',
+      stats: { 
+        presentes: 0, 
+        horasTrabajadas: '0:00', 
+        horasExtra: '0:00' 
+      },
+      error: "Error al cargar los datos.",
+      moment: moment
+    });
+  }
+});
 
 
 // API: Registrar entrada/salida

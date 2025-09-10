@@ -1,38 +1,41 @@
 // public/js/page-materiales.js
-document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('fileInput');
+document.addEventListener("DOMContentLoaded", () => {
+  const fileInput = document.getElementById("fileInput");
 
-    fileInput.addEventListener('change', async (event) => {
-        const file = event.target.files[0];
-        if (!file) {
-            return;
+  // REEMPLAZAR todo el event listener por:
+  fileInput.addEventListener("change", async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("excelFile", file);
+
+    alert("Iniciando importación...");
+
+    try {
+      // USAR authUtils.apiRequest en lugar de fetch directo
+      const result = await window.authUtils.apiRequest(
+        "/api/materiales/importar",
+        {
+          method: "POST",
+          headers: {}, // No poner Content-Type para FormData
+          body: formData,
         }
+      );
 
-        const formData = new FormData();
-        formData.append('excelFile', file);
+      if (result.success) {
+        alert("¡Importación exitosa! " + result.data.message);
+        window.location.reload();
+      } else {
+        alert("Error al importar: " + result.error);
+      }
+    } catch (error) {
+      console.error("Error de red:", error);
+      alert("Error de conexión con el servidor.");
+    }
+  });
 
-        // Muestra un mensaje de carga
-        alert('Iniciando importación...');
-
-        try {
-            const response = await fetch('/api/materiales/importar', {
-                method: 'POST',
-                body: formData
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert('¡Importación exitosa! ' + result.message);
-                window.location.reload(); // Recarga la página para mostrar los nuevos datos
-            } else {
-                alert('Error al importar: ' + (result.message || result.error));
-            }
-        } catch (error) {
-            console.error('Error de red:', error);
-            alert('Error de conexión con el servidor.');
-        }
-    });
-
-    // ... (mantén las funciones verDetalles, editarMaterial y eliminarMaterial aquí si existen)
+  // ... (mantén las funciones verDetalles, editarMaterial y eliminarMaterial aquí si existen)
 });
