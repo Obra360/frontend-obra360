@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const filtroPeriodo = document.getElementById('filtroPeriodo');
     const certificacionesItems = document.querySelectorAll('#accordionCertificaciones .accordion-item');
     const emptyState = document.getElementById('empty-state');
+    // asd
 
     function aplicarFiltros() {
         const busqueda = buscarInput.value.toLowerCase();
